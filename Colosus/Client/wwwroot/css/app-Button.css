@@ -1,0 +1,38 @@
+﻿.special-button {
+    border: none;
+    min-height: var(--Min-Height);
+    text-align: center;
+    background: #00000063;
+    border: var(--panel-border);
+    border-radius: var(--Border-Radius);
+    font-size: var(--Font-Size);
+    min-width: var(--Min-Width);
+    width: 100%;
+    margin: var(--Margin);
+    padding: 0px;
+}
+
+.header-button {
+    width: 50px;
+    min-width: 5px;
+    height: 50px;
+    min-height: 50px;
+    border: none;
+    background-color: transparent;
+    color: var(--font-color);
+    margin: 5px;
+}
+
+.header-right-button {
+    margin-left: auto;
+}
+
+
+.special-button:active {
+    border: var(--Border);
+}
+
+.table-button {
+    min-width: 50px;
+    width: 50px;
+}

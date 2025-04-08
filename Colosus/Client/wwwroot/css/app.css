@@ -1,0 +1,57 @@
+@import "app-Veriables.css";
+@import "app-Button.css";
+@import "app-Input.css";
+@import "app-Text.css";
+@import "app-Blazor.css";
+@import "app-Notification.css";
+@import "app-ComboBox.css";
+
+
+body, #app, html {
+    background-repeat: no-repeat;
+    background-color: var(--background-color);
+    background-image: url(/glow-page-dark.png);
+    color: var(--font-color);
+}
+
+.header {
+    height: 60px;
+    background-color: var(--panel-background);
+    border-radius: var(--Border-Radius);
+    border: var(--panel-border);
+    display: flex;
+}
+
+
+.content {
+    height: 94vh;
+    width: 100%;
+    display: flex;
+}
+
+
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    table-layout: fixed; /* Eþit geniþlik için */
+}
+
+table, th, td {
+    border: var(--Border);
+    text-align: center;
+    padding: 10px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}

@@ -1,0 +1,32 @@
+﻿<button style="@Style" class="special-button @Class.ToString()" @onclick="()=> OnClick.InvokeAsync()">
+    @if (!string.IsNullOrEmpty(Text) && string.IsNullOrEmpty(Icon))
+    {
+        <p style="font-size:12px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis; margin:0px;">@Text</p>
+    }
+    else if (!string.IsNullOrEmpty(Icon) && string.IsNullOrEmpty(Text))
+    {
+        <i class="@Icon"></i>
+    }
+    else if (!string.IsNullOrEmpty(Icon) && !string.IsNullOrEmpty(Text))
+    {
+        <i style="padding-top:5px;" class="@Icon"></i>
+        <p style="font-size:12px;white-space: nowrap;overflow: hidden; text-overflow: ellipsis; margin:0px;">@Text</p>
+    }
+    else @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        
+    }
+</button>
+@code {
+    [Parameter] public string Text { get; set; } = "";
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public string Class { get; set; } = "";
+    [Parameter] public string Icon { get; set; } = "";
+    [Parameter] public string Style { get; set; } = "";
+    [Parameter] public RenderFragment ChildContent { get; set; } = null;
+
+}

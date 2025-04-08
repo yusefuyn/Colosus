@@ -1,0 +1,67 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+using Colosus.Sql.Entity.Abstracts;
+using Colosus.Sql.Entity.Concretes;
+using Colosus.Entity.Concretes.DatabaseModel;
+namespace Colosus.Sql.MSSql
+{
+    public class MSSqlContext : BasedDbContext, IContext
+    {
+        public DbSet<User> Users { get; set;  }
+        public DbSet<Product> Products { get; set;  }
+        public DbSet<ProductStock> Stocks { get; set; }
+        public DbSet<CorporateCustomer> CorporateCustomers { get; set; }
+        public DbSet<IndividualCustomer> IndividualCustomers { get; set; }
+        public DbSet<CustomerFirmRelation> CustomerFirmRelations { get; set; }
+        public DbSet<Debt> Debts { get; set; }
+        public DbSet<ContactAddress> ContactAddresses { get; set; }
+        public DbSet<Firm> Firms { get; set; }
+        public DbSet<CategoryFirmRelation> CategoryFirmRelations { get; set; }
+        public DbSet<ProductFirmRelation> ProductFirmRelations { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<ProductCategoryRelation> ProductCategoryRelations { get; set; }
+        public DatabaseFacade Database { get; set; }
+        public string DatabaseConnectionStringName { get; set; } = "ColosusMSSqlServerConnection";
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<FirmRole> FirmRoles { get; set; }
+        public DbSet<FirmUserRelation> FirmUserRelations { get; set; }
+        public DbSet<UserRoleRelations> UserRoleRelations { get; set; }
+        public DbSet<PaymentAddress> PaymentAddresseses { get; set; }
+
+        private readonly string _connectionString;
+
+        /// <summary>
+        /// Bağlantı için dolu.
+        /// </summary>
+        /// <param name="ConnectionString"></param>
+        public MSSqlContext(string ConnectionString)
+        {
+            _connectionString = ConnectionString;
+            this.Database = base.Database;
+        }
+
+
+        /// <summary>
+        /// Migration için boş.
+        /// </summary>
+        public MSSqlContext()
+        {
+            
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(_connectionString);
+        }
+
+        public void MigrateDb()
+        {
+            this.Database.Migrate();
+        }
+    }
+}

@@ -1,0 +1,142 @@
+﻿@page "/Customer/Index"
+@using Colosus.Client.Services.Customer
+@using Colosus.Entity.Concretes
+@using Colosus.Operations.Abstracts
+@inject ICustomerService customerService
+@inject NavigationManager navigationManager
+@inject IDataConverter dataConverter
+<div class="container">
+    <Colosus.Client.Components.Button Text="Ekle"
+                                      OnClick='()=> navigationManager.NavigateTo("/Customer/Add")'></Colosus.Client.Components.Button>
+    <br />
+    @if (Customers != null)
+    {
+        <div class="Container">
+            <div class="container-header">
+                <h3>Bireysel Müşteriler</h3>
+            </div>
+            @if (Customers.individualCustomers.Count > 0)
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Adı Soyadı </th>
+                            <th>Not</th>
+                            <th>Operasyonlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Customers.individualCustomers)
+                        {
+                            <tr>
+                                <td>@item.FirstName @item.MiddleName @item.LastName</td>
+                                <td>@item.Note</td>
+                                <td>
+                                    <Colosus.Client.Components.Button Class="table-button" Icon="fa fa-info"
+                                                                      OnClick="async ()=> await Task.Delay(10)"></Colosus.Client.Components.Button>
+                                    <Colosus.Client.Components.Button Class="table-button"
+                                                                      Icon="fa fa-c"
+                                                                      OnClick='async ()=>navigationManager.NavigateTo("/Customer/debt/" + item.PublicKey)'></Colosus.Client.Components.Button>
+                                    <Colosus.Client.Components.Button Class="table-button"
+                                                                      Icon="fa fa-remove"
+                                                                      OnClick="async ()=> await DeleteCustomer(item.PublicKey)"></Colosus.Client.Components.Button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+
+                <p>Hiç bireysel müşteri eklenmemiş.</p>
+
+            }
+
+        </div>
+
+
+
+        <div class="Container">
+            <div class="container-header">
+                <h3>Kurumsal Müşteriler</h3>
+            </div>
+            @if (Customers.corporateCustomers.Count > 0)
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Adı</th>
+                            <th>Vergi Dairesi</th>
+                            <th>Vergi No</th>
+                            <th>Operasyonlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Customers.corporateCustomers)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.TaxOffice</td>
+                                <td>@item.TaxNo</td>
+                                <td>
+                                    <Colosus.Client.Components.Button Class="table-button"
+                                                                      Icon="fa fa-info"
+                                                                      OnClick="async ()=> await Task.Delay(10)"></Colosus.Client.Components.Button>
+                                    <Colosus.Client.Components.Button Class="table-button"
+                                                                      Icon="fa fa-c"
+                                                                      OnClick='async ()=>navigationManager.NavigateTo("/Customer/debt/" + item.PublicKey)'></Colosus.Client.Components.Button>
+                                    <Colosus.Client.Components.Button Class="table-button"
+                                                                      Icon="fa fa-remove"
+                                                                      OnClick="async ()=> await DeleteCustomer(item.PublicKey)"></Colosus.Client.Components.Button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+
+                <p>Hiç kurumsal müşteri eklenmemiş.</p>
+
+            }
+
+        </div>
+
+    }
+    else
+    {
+
+        <p>Bir sorun meydana geldi</p>
+
+    }
+
+
+</div>
+@code {
+    private async Task DeleteCustomer(string CustomerPublicKey)
+    {
+        RequestResult result = await customerService.DeleteCustomer(CustomerPublicKey);
+        if (result.Result == EnumRequestResult.Ok)
+            await RefreshData();
+    }
+
+    Colosus.Entity.Concretes.DTO.Customers Customers = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    private async Task RefreshData()
+    {
+        RequestResult res = await customerService.GetMyCustomers(AppState.SelectedFirmPublicKey);
+        if (res != null && res.Result == EnumRequestResult.Ok)
+        {
+            Customers = dataConverter.Deserialize<Colosus.Entity.Concretes.DTO.Customers>(res.Data);
+            StateHasChanged();
+        }
+        else
+            AppState.AddMessage("Bir sorun meydana geldi.");
+    }
+}

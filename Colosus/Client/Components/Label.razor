@@ -1,0 +1,11 @@
+﻿<p class="special-label @Class.ToString()" style="@Style.ToString()">
+    @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+</p>
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; } = null;
+    [Parameter] public string Class { get; set; } = "";
+    [Parameter] public string Style { get; set; } = "";
+}

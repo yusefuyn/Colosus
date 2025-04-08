@@ -1,0 +1,62 @@
+﻿<div class="modal fade" id="StockInput" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="StockInput-Title">Modal Başlık</h5>
+                <button type="button" class="btn-close" style="width:30px;height:30px;" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-container">
+                    <Colosus.Client.Components.Label>Miktar Giriniz :</Colosus.Client.Components.Label>
+                    <input class="special-input input" style="width:100%;" type="number" id="StockInput-Amount">
+                </div>
+                <div class="input-container">
+                    <Colosus.Client.Components.Label>Açıklama Giriniz :</Colosus.Client.Components.Label>
+                    <input class="special-input input" style="width:100%;" type="text" id="StockInput-Description">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancel" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary ok">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+        window.stockModal = function (title,yesbtn = 'Evet', nobtn = 'İptal') {
+        return new Promise((resolve, reject) => {
+            var modal = document.getElementById('StockInput');
+            var modalTitle = document.getElementById('StockInput-Title');
+            var modalAmount = document.getElementById('StockInput-Amount');
+            var modalDescription = document.getElementById('StockInput-Description');
+
+            modalAmount.value = "";
+            modalDescription.value = "";
+
+            modalTitle.textContent = title;
+
+            var bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+
+            var okButton = modal.querySelector('.ok');
+            okButton.textContent = yesbtn;
+            okButton.onclick = function () {
+                bootstrapModal.hide();
+                let result = {
+                    Description: modalDescription.value.toString(),  
+                    Amount: modalAmount.value.toString()            
+                };
+
+                resolve(result);
+            };
+            var cancelButton = modal.querySelector('.cancel');
+            cancelButton.textContent = nobtn;
+            cancelButton.onclick = function () {
+                bootstrapModal.hide();
+            };
+        });
+    };
+
+
+</script>

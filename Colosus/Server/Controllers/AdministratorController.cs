@@ -1,0 +1,106 @@
+﻿using Colosus.Business.Abstracts;
+using Colosus.Entity.Concretes;
+using Colosus.Entity.Concretes.DatabaseModel;
+using Colosus.Operations.Abstracts;
+using Colosus.Server.Facades.Administrator;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Colosus.Server.Controllers
+{
+
+    [ApiController]
+    [Route("/api/[controller]/[action]")]
+    public class AdministratorController : Controller
+    {
+        IAdministratorFacades administratorFacades;
+        public AdministratorController(IAdministratorFacades administratorFacades)
+        {
+            this.administratorFacades = administratorFacades;
+        }
+
+
+        [HttpPost]
+        public string UpdateDatabase([FromBody] RequestParameter parameter)
+        {
+            RequestResult result = new("Update Database");
+            administratorFacades.operationRunner.ActionRunner(() =>
+            {
+                result.Result = EnumRequestResult.Ok;
+                result.Description = "Successfuly Update Database Operation";
+                administratorFacades.operations.DatabaseUpdate();
+            }, () =>
+            {
+                result.Result = EnumRequestResult.Not;
+                result.Description = $"Error #{DateTime.Now}";
+            });
+
+            return administratorFacades.dataConverter.Serialize(result);
+        }
+
+
+        [HttpPost]
+        public string Setup([FromBody] RequestParameter parameter)
+        {
+            RequestResult result = new("Setup");
+            administratorFacades.operationRunner.ActionRunner(() =>
+            {
+
+                result.Result = EnumRequestResult.Ok;
+                result.Description = "Successfuly Setup Operation";
+                string Password = parameter.Data.ToString();
+
+                if (string.IsNullOrEmpty(Password) && administratorFacades.hash.Calc(Password) != administratorFacades.hash.Calc("219619"))
+                {
+                    result.Result = EnumRequestResult.Not;
+                    result.Description = "Incorected Passwd";
+                }
+                else
+                    administratorFacades.operations.DatabaseUpdate();
+
+                User administratorUser = new()
+                {
+                    PrivateKey = administratorFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.User),
+                    PublicKey = administratorFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.User),
+                    ReferancePrivateKey = "System",
+                    UserName = "Yussefuynstein",
+                    Password = administratorFacades.hash.Calc("219619yusuf_"),
+                    FirstName = "Yusuf",
+                    EMail = "yussefuynstein@gmail.com",
+                    LastName = "Kıdır",
+                };
+
+
+                administratorFacades.operations.SaveEntity(administratorUser);
+
+                Role administratorRole = new()
+                {
+                    Name = "Administrator",
+                    PrivateKey = administratorFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.Role),
+                    PublicKey = administratorFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.Role),
+                };
+
+                administratorFacades.operations.SaveEntity(administratorRole);
+
+                UserRoleRelations administratorRoleRelation = new()
+                {
+                    PrivateKey = administratorFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.RoleRelation),
+                    PublicKey = administratorFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.RoleRelation),
+                    RolePrivateKey = administratorRole.PrivateKey,
+                    UserPrivateKey = administratorUser.PrivateKey,
+                    IssuerPrivateKey = "System",
+                };
+
+                administratorFacades.operations.SaveEntity(administratorRoleRelation);
+            }, () =>
+            {
+                result.Result = EnumRequestResult.Not;
+                result.Description = $"Error #{DateTime.Now}";
+            });
+
+            return administratorFacades.dataConverter.Serialize(result);
+        }
+
+
+
+    }
+}

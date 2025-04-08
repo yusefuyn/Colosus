@@ -1,0 +1,58 @@
+﻿@inject IProductService productService
+@inject ICategoryService categoryServie
+@inject IDataConverter dataConverter
+@inject NavigationManager navigationManager
+
+@page "/Product/Add"
+@using Colosus.Client.Services.Category
+@using Colosus.Client.Services.Product
+@using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Operations.Abstracts
+
+<div class="center-container">
+    <div class="container-header">
+        <h3>Ürün ekle</h3>
+    </div>
+
+    <Colosus.Client.Components.Entry Placeholder="Ürün Adı" @bind-Text="product.Name"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry Placeholder="Alış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
+                                     TextChanged="(e)=> product.PurchasePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry Placeholder="Satış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
+                                     TextChanged="(e)=> product.SalePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.ComboBox Ttemp="Colosus.Entity.Concretes.DatabaseModel.Category"
+                                        DataBinding="xd=> xd.PublicKey"
+                                        ValueBinding="xd=> xd.Name"
+                                        Source="Categories"
+                                        SelectedValueChanged="(e)=>  product.CategoryPublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
+    <Colosus.Client.Components.Button Text="Ekle" OnClick=" async ()=>await AddProduct()"></Colosus.Client.Components.Button>
+</div>
+
+@code {
+    List<Colosus.Entity.Concretes.DatabaseModel.Category> Categories = new();
+    Colosus.Entity.Concretes.CreateModel.Product product = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    public async Task RefreshData()
+    {
+        var catRes = await categoryServie.GetsCategory(AppState.SelectedFirmPublicKey, 1);
+        if (catRes != null)
+            Categories = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DatabaseModel.Category>>(catRes.Data);
+    }
+
+    public async Task AddProduct()
+    {
+        product.FirmPublicKey = AppState.SelectedFirmPublicKey;
+        var res = await productService.AddProduct(product);
+        if (res == null)
+        {
+            AppState.AddMessage("Bir sorun meydana geldi lütfen daha sonra tekrar deneyiniz");
+            return;
+        }
+        AppState.AddMessage(res.Description);
+        navigationManager.NavigateTo("/Product/Index");
+
+    }
+}

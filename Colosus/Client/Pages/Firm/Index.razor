@@ -1,0 +1,13 @@
+﻿@page "/Firm/Index"
+@inject NavigationManager navigationManager
+<div class="container">
+
+    <div class="container-header">
+        <h3>Firmalarınız</h3>
+        <Colosus.Client.Components.Button Text="Ekle" OnClick='()=> navigationManager.NavigateTo("/Firm/Add")'></Colosus.Client.Components.Button>
+    </div>
+
+</div>
+@code {
+
+}

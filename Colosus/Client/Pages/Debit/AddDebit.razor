@@ -1,0 +1,33 @@
+﻿@using Colosus.Client.Services.Customer
+@using Colosus.Entity.Concretes.DatabaseModel
+@inject ICustomerService customerService
+
+<Colosus.Client.Components.Entry Placeholder="Miktar"
+                                 TextChanged="(e)=>debt.Price = Convert.ToDecimal(e.ToString())"
+                                 Type="Components.Entry.EntryTypeEnum.Number"></Colosus.Client.Components.Entry>
+<Colosus.Client.Components.Entry @bind-Text="debt.Note"
+                                 Placeholder="Note"
+                                 Type="Components.Entry.EntryTypeEnum.Text"></Colosus.Client.Components.Entry>
+<Colosus.Client.Components.Entry Placeholder="Ödeme Tarihi"
+                                 TextChanged="(e)=>debt.PayDate = DateTime.Parse(e)"
+                                 Type="Components.Entry.EntryTypeEnum.Date"></Colosus.Client.Components.Entry>
+<Colosus.Client.Components.Button Text="Ekle"
+                                  OnClick="async ()=>await AddDeb()"></Colosus.Client.Components.Button>
+@code {
+
+    [Parameter] public DebitType Type { get; set; }
+    [Parameter] public string CustomerPublicKey { get; set; }
+
+    private Colosus.Entity.Concretes.CreateModel.Debt debt = new();
+
+    [Parameter] public Task CloseAction { get; set; }
+    public async Task AddDeb()
+    {
+        debt.CustomerPublicKey = this.CustomerPublicKey;
+        debt.Type = Type;
+        await customerService.AddDebt(debt);
+        if (CloseAction != null)
+            CloseAction.Start();
+    }
+
+}

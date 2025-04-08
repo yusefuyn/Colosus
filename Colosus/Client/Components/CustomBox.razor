@@ -1,0 +1,35 @@
+﻿@if (_Show)
+{
+    <div class="modal fade show" id="customBox" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display:block;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                    <Button Class="btn-close special-button" Style="width:30px;min-width:30px;height:30px;min-height:30px;" Icon="fa fa-close" OnClick="Close"></Button>
+                </div>
+                <div class="modal-body">
+                    @ChildContent
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string Title { get; set; }
+
+    private bool _Show { get; set; } = false;
+
+    public void Show()
+    {
+        _Show = true; // Modal'ı göster
+        StateHasChanged(); // UI güncellemesi için
+    }
+
+    public void Close()
+    {
+        _Show = false; // Modal'ı gizle
+        StateHasChanged(); // UI güncellemesi için
+    }
+}

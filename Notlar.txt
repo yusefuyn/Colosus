@@ -1,0 +1,59 @@
+-------------------Yapýlacaklar --------------------
+
+
+1. Cari Hesap Yönetimi:
+Müþteri ve Tedarikçi Hesaplarý: Her müþteri ve tedarikçi için ayrý cari hesaplar oluþturulmalý.
+
+Hesap Bakiyesi Takibi: Cari hesaplarýn bakiye takibi yapýlmalý, alacak ve borç bakiyeleri düzenli olarak güncellenmeli.
+
+Ödeme ve Tahsilat Kayýtlarý: Yapýlan ödemeler ve tahsilatlar kaydedilmeli, ödeme türleri (nakit, kredi kartý, havale vb.) belirtilmeli.
+
+2. Hesap Hareketleri:
+Gelir ve Gider Kayýtlarý: Müþteri ve tedarikçi hesaplarýndaki her hareket kaydedilmeli. Bu hareketler, tarih, tutar, iþlem türü (ödemeler, tahsilatlar vb.) ve açýklama gibi bilgilerle belgelenmeli.
+
+Fatura Kayýtlarý: Satýþ ve alým faturalarý sistemde izlenmeli. Her fatura numarasý, tarihi ve tutarý sistemde saklanmalý.
+
+Vergi Hesaplamalarý: Faturalar üzerinden hesaplanan vergiler (KDV gibi) otomatik olarak hesaplanmalý.
+
+3. Raporlama:
+Cari Hesap Raporlarý: Müþteri ve tedarikçi bazýnda bakiye raporlarý, alacak-borç raporlarý hazýrlanabilmeli.
+
+Ödeme ve Tahsilat Raporlarý: Ödeme ve tahsilatlarýn tarih aralýklarýna göre raporlanabilmesi.
+
+Açýk Hesaplar Raporu: Ödenmemiþ faturalar ve alacaklar tespit edilebilmeli.
+
+4. Ödeme ve Alacak Takibi:
+Vadeli Ödemeler: Vadeli ödemeler için hatýrlatýcýlar veya bildirimler eklenmeli.
+
+E-defter ve E-fatura Entegrasyonu: Yasal olarak gerekli e-defter ve e-fatura sistemleriyle entegrasyon saðlanmalý.
+
+Kredi Limitleri: Müþteri hesaplarý için belirli kredi limitleri tanýmlanmalý, limit aþýmý durumunda uyarýlar yapýlmalý.
+
+5. Entegrasyon:
+Muhasebe Yazýlýmý Entegrasyonu: Cari hesap bilgileri, muhasebe sistemine entegre olmalý. Böylece finansal tablolar (bilanço, gelir tablosu) doðru bir þekilde oluþturulabilir.
+
+Stok Yönetimi Entegrasyonu: Stok takibi ile entegrasyon saðlanarak satýlan ürünlerin cari hesaba yansýmasý saðlanmalý.
+
+Banka Hesaplarý Entegrasyonu: Banka hesaplarýyla entegrasyon sayesinde ödeme ve tahsilatlar doðrudan sisteme aktarýlmalý.
+
+6. Güvenlik ve Yetkilendirme:
+Kullanýcý Yetkileri: Sistemdeki kullanýcýlarýn her birine belirli yetkiler verilmeli. Örneðin, bazý kullanýcýlar sadece okuma eriþimi alýrken, bazýlarý iþlemleri gerçekleþtirebilir.
+
+Veri Güvenliði: Kullanýcý verileri ve finansal bilgiler þifrelenmeli ve güvenlik önlemleri alýnmalý.
+
+7. Otomatik Uyarýlar ve Hatýrlatýcýlar:
+Ödeme Hatýrlatýcýlarý: Vadesi gelen ödemeler için otomatik hatýrlatýcýlar oluþturulmalý.
+
+Fatura Hatýrlatýcýlarý: Satýcý veya alýcýya ait fatura vadesi yaklaþtýkça bildirimler gönderilmeli.
+
+8. Esnek Hesaplandýrmalar:
+Ýndirim ve Ekstra Ücretler: Fiyat indirimleri, kampanyalar veya ekstra ücretler uygulanabilmeli.
+
+Taksitli Ödemeler: Taksitli ödeme planlarý oluþturulabilmeli ve her taksit ödemesi takibi yapýlmalý.
+
+
+
+----------------------Dikkat edilecekler --------------------------
+Objelerdeki PublicKey'ler datalarýn dýþarý aktarýmýnda kullanýlacak.
+Operasyonlarda PrivateKey'ler kullanýlacak.
+Key kullanýlmayacak.

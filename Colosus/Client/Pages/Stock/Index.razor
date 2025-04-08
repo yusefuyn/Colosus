@@ -1,0 +1,107 @@
+﻿@inject IProductService productService
+@inject IDataConverter dataConverter
+@inject IJSRuntime jSRuntime
+@inject NavigationManager navigationManager
+@page "/Stock/Index"
+@using Colosus.Client.Services.Product
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Operations.Abstracts
+<div class="container">
+    <div class="container-header">
+        <h3>Stok</h3>
+    </div>
+
+    @if (Products != null && Products.Count > 0)
+    {
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Ürün Adı</th>
+                    <th>Alış Fiyat</th>
+                    <th>Satış Fiyat</th>
+                    <th>Kategori Adı</th>
+                    <th>Stokta</th>
+                    <th>Firma</th>
+                    <th>Operasyonlar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Products)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.PurchasePrice.ToString()</td>
+                        <td>@item.SalePrice.ToString()</td>
+                        <td>@item.CategoryName.ToString()</td>
+                        <td>@item.Stock.ToString() Adet</td>
+                        <td>@item.FirmName.ToString()</td>
+                        <td>
+                            <Colosus.Client.Components.Button Class="table-button"
+                                                              Icon="fa fa-plus"
+                                                              OnClick="async ()=> await AddStock(item.PublicKey,item.Name)"></Colosus.Client.Components.Button>
+                            <Colosus.Client.Components.Button Class="table-button"
+                                                              Icon="fa fa-angle-double-up"
+                                                              OnClick='()=> navigationManager.NavigateTo("/Stock/History/" + item.PublicKey)'></Colosus.Client.Components.Button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <StockInputBox></StockInputBox>
+    }
+
+
+</div>
+@code {
+    List<Colosus.Entity.Concretes.DTO.Product> Products = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await DataRefresh();
+    }
+
+    public async Task DataRefresh()
+    {
+        var res = await productService.GetMyFirmProductDTOs(AppState.SelectedFirmPublicKey);
+        if (res == null)
+        {
+            AppState.AddMessage("Hata meydana geldi.");
+            return;
+        }
+        Products = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.Product>>(res.Data);
+    }
+
+    public async Task AddStock(string productPublicKey, string ProductName)
+    {
+        inputAmountDescriptionResult inputRes = await jSRuntime.InvokeAsync<inputAmountDescriptionResult>("stockModal", $"{ProductName} isimli ürüne");
+        int convertedValue = 0;
+        int.TryParse(inputRes.Amount, out convertedValue);
+        RequestResult requestResult = null;
+        if (convertedValue != 0 || convertedValue != null)
+        {
+            Colosus.Entity.Concretes.CreateModel.Stock stock = new();
+            stock.ProductPublicKey = productPublicKey;
+            stock.Description = inputRes.Description;
+            stock.Amount = convertedValue;
+            requestResult = await productService.AddStockForProduct(stock);
+        }
+
+        if (requestResult == null)
+        {
+            AppState.AddMessage("Bir sorun oluştu lütfen daha sonra tekrar deneyiniz.");
+            return;
+        }
+
+        await DataRefresh();
+    }
+
+
+    private sealed class inputAmountDescriptionResult()
+    {
+        public string Amount { get; set; }
+        public string Description { get; set; }
+    }
+
+}

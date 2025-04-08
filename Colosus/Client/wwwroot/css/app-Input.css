@@ -1,0 +1,25 @@
+﻿.special-input {
+    border: var(--panel-border);
+    background:#00000063;
+    min-height: var(--Min-Height);
+    text-align: center;
+    border-radius: var(--Border-Radius);
+    min-width: var(--Min-Width);
+    width: 100%;
+    padding: 0px;
+    font-size: var(--Font-Size);
+    margin: var(--Margin);
+    color:var(--font-color);
+}
+
+
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    min-width: var(--Min-Width);
+    gap: 7px;
+    width: 100%;
+    position: relative;
+    color: var(--font-color);
+}

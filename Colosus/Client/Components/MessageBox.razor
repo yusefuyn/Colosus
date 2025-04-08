@@ -1,0 +1,47 @@
+﻿<div class="modal fade" id="MessageBox" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="MessageBox-Title">Modal Başlık</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="MessageBox-Description">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary cancel" data-bs-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary ok">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.messageModal = function (message, title = 'Emin misiniz?', yesbtn = 'Evet', nobtn = 'Hayır') {
+        return new Promise((resolve, reject) => {
+            var modal = document.getElementById('MessageBox');
+            var modalHelpText = document.getElementById('MessageBox-Description');
+            var modalTitle = document.getElementById('MessageBox-Title');
+
+            modalHelpText.textContent = message;
+            modalTitle.textContent = title;
+
+            var bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+
+            var okButton = modal.querySelector('.ok');
+            okButton.textContent = yesbtn;
+            okButton.onclick = function () {
+                bootstrapModal.hide();
+                resolve(true);
+            };
+            var cancelButton = modal.querySelector('.cancel');
+            cancelButton.textContent = nobtn;
+            cancelButton.onclick = function () {
+                bootstrapModal.hide();
+                resolve(false);
+            };
+        });
+    };
+</script>

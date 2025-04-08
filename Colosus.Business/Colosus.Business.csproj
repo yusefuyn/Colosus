@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Colosus.MSSql\Colosus.Sql.MSSql.csproj" />
+    <ProjectReference Include="..\Colosus.Sql.Business\Colosus.Sql.Business.csproj" />
+    <ProjectReference Include="..\Colosus.Sql.SQLite\Colosus.Sql.SQLite.csproj" />
+  </ItemGroup>
+
+</Project>

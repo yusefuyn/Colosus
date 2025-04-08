@@ -1,0 +1,32 @@
+﻿@page "/Firm/Add"
+@using Colosus.Client.Services.Firm
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DatabaseModel
+@inject IFirmService firmService
+@inject NavigationManager navigationManager
+
+<div class="center-container">
+    <div class="container-header">
+        <h3>Firma Oluştur</h3>
+    </div>
+    <Colosus.Client.Components.Entry Placeholder="Firma Adı" @bind-Text="firm.Name"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Button Text="Oluştur" OnClick="async()=> await AddFirm()"></Colosus.Client.Components.Button>
+</div>
+
+@code {
+    Colosus.Entity.Concretes.DatabaseModel.Firm firm = new();
+
+    public async Task AddFirm()
+    {
+        RequestResult res = await firmService.AddFirm(firm);
+
+        if (res == null)
+        {
+            await AddFirm();
+            return;
+        }
+
+        AppState.AddMessage(res.Description);
+        navigationManager.NavigateTo("/Firm/Index");
+    }
+}

@@ -1,0 +1,85 @@
+﻿@page "/Product/Index"
+@using Colosus.Client.Services.Product
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Operations.Abstracts
+
+@inject NavigationManager navigationManager
+@inject IProductService productService
+@inject IDataConverter dataConverter
+@inject IJSRuntime jSRuntime
+<div class="container">
+    <div class="container-header">
+        <h3>Ürünler</h3>
+        <Colosus.Client.Components.Button Class="header-right-button" OnClick='()=> navigationManager.NavigateTo("/Product/Add")' Text="Yeni ekle"></Colosus.Client.Components.Button>
+    </div>
+    @if (Products != null && Products.Count > 0)
+    {
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Ürün Adı</th>
+                    <th>Alış Fiyat</th>
+                    <th>Satış Fiyat</th>
+                    <th>Kategori Adı</th>
+                    <th>Stokta</th>
+                    <th>Firma</th>
+                    <th>Operasyonlar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Products)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.PurchasePrice.ToString()</td>
+                        <td>@item.SalePrice.ToString()</td>
+                        <td>@item.CategoryName.ToString()</td>
+                        <td>@item.Stock.ToString() Adet</td>
+                        <td>@item.FirmName.ToString()</td>
+                        <td>
+                            <Colosus.Client.Components.Button Icon="fa fa-remove"
+                                                              Class="table-button"
+                                                              OnClick="async ()=> await DeleteProduct(item.PublicKey)"></Colosus.Client.Components.Button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+
+</div>
+@code {
+    List<Colosus.Entity.Concretes.DTO.Product> Products = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    public async Task RefreshData()
+    {
+        Products = new();
+        var res = await productService.GetMyFirmProductDTOs(AppState.SelectedFirmPublicKey);
+        if (res == null)
+        {
+            AppState.AddMessage("Bir hata meydana geldi");
+            return;
+        }
+        List<Colosus.Entity.Concretes.DTO.Product> resProducts = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.Product>>(res.Data);
+        Products.AddRange(resProducts);
+    }
+
+    public async Task DeleteProduct(string ProductPublicKey)
+    {
+        bool result = await jSRuntime.InvokeAsync<bool>("messageModal", "Bu ürünü silmek istediğinizden emin misiniz?", "Ürünü Sil");
+
+        if (!result)
+            return;
+
+        RequestResult res = await productService.DeleteProduct(ProductPublicKey);
+        if (res != null && res.Result == EnumRequestResult.Ok)
+            await RefreshData();
+    }
+}

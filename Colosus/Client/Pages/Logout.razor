@@ -1,0 +1,65 @@
+﻿@using Colosus.Client.Services
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject CookieService cookieservice
+@inject NavigationManager navManager
+@inject AuthenticationStateProvider authenticationStateProvider
+
+@page "/logout"
+
+<div class="center-container">
+    <h3>Çıkış yapılıyor</h3>
+    <h5>@Replace("{second} Saniye Sonra Çıkışınız Gerçekleşecektir", "{second}", countdown.ToString())</h5>
+</div>
+
+
+@code {
+    int countdown = 3;
+
+    public string Replace(string Origin, string Mark, string New) => Origin.Replace(Mark, New);
+
+    protected override async Task OnInitializedAsync()
+    {
+        // var res = await jsr.InvokeAsync<string>("localStorage.removetemp", "Token", "");
+        var user = await authenticationStateProvider.GetAuthenticationStateAsync();
+        if (user.User.Identity.IsAuthenticated)
+        {
+            await cookieservice.SetCookie("Token", "", 0);
+            navManager.Refresh(false);
+        }
+        else
+        {
+            StartCountdown();
+        }
+    }
+
+    System.Timers.Timer timer;
+
+    private void StartCountdown()
+    {
+        timer = new(1000);
+        timer.Enabled = true;
+        timer.Elapsed += OnTimerElapsed;
+    }
+
+    private void OnTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        if (countdown > 0)
+        {
+            countdown--;
+            InvokeAsync(StateHasChanged); // UI'yi güncelle
+        }
+        else
+        {
+            navManager.NavigateTo("/");
+            timer?.Stop();
+            timer?.Dispose();
+        }
+    }
+
+    public void Dispose()
+    {
+        timer?.Stop();
+        timer?.Dispose();
+    }
+}

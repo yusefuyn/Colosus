@@ -1,0 +1,54 @@
+﻿@page "/Register"
+@inject IHash hash
+@using Colosus.Client.Components
+@using Colosus.Client.Services.Login
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Operations.Abstracts
+@inject ILoginService loginService
+@inject NavigationManager navigationManager
+
+<div class="center-container">
+    <div class="container-header">
+        <h3>Kayıt Ol</h3>
+    </div>
+
+    <Colosus.Client.Components.Entry @bind-Text="user.EMail" Placeholder="E-Posta"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry @bind-Text="user.UserName" Placeholder="Kullanıcı Adı"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry @bind-Text="user.FirstName" Placeholder="Adınız"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry @bind-Text="user.LastName" Placeholder="Soyadınız"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry @bind-Text="Passwd" Placeholder="Şifre" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry @bind-Text="PasswdR" Placeholder="Şifre Tekrarı" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Label>Hesabınız var mı? <a href="/Login">Giriş yapın</a></Colosus.Client.Components.Label>
+    <Colosus.Client.Components.Button Text="Kayıt ol" OnClick="async ()=>await RegisterOp()"></Colosus.Client.Components.Button>
+
+</div>
+@code {
+    User user = new();
+    string Passwd = "";
+    string PasswdR = "";
+
+    public async Task RegisterOp()
+    {
+        if (string.IsNullOrEmpty(user.EMail) || string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName) || string.IsNullOrEmpty(Passwd))
+        {
+            AppState.AddMessage("Herhangi bir boş olan bırakılamaz.");
+            return;
+        }
+
+        if (Passwd != PasswdR)
+        {
+            AppState.AddMessage("Şifre tekrarı uyuşmuyor !");
+            return;
+        }
+
+        user.Password = hash.Calc(Passwd);
+        var res = await loginService.RegisterAsync(user);
+
+        AppState.AddMessage(res.Description);
+
+        if (res.Result == EnumRequestResult.Ok)
+            navigationManager.NavigateTo("/Login");
+
+    }
+}

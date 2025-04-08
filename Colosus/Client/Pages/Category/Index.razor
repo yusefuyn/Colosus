@@ -1,0 +1,78 @@
+﻿@page "/Category/Index"
+@using Colosus.Client.Services.Category
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Operations.Abstracts
+@inject NavigationManager navigationManager
+@inject ICategoryService categoryService
+@inject IDataConverter dataConverter
+@inject IJSRuntime jSRuntime
+<div class="container">
+    <div class="container-header">
+        <h3>Kategoriler</h3>
+        <Colosus.Client.Components.Button Text="Kategori Ekle" OnClick='()=>navigationManager.NavigateTo("/Category/Add")'></Colosus.Client.Components.Button>
+    </div>
+
+    @if (Source != null && Source.Count > 0)
+    {
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Adı </th>
+                    <th>Vergisi</th>
+                    <th>Operasyonlar</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Source)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Tax.ToString()</td>
+                        <td>
+                            <Colosus.Client.Components.Button Class="table-button"
+                                                              Icon="fa fa-remove"
+                                                              OnClick="async ()=> await DeleteCategory(item.PublicKey)"></Colosus.Client.Components.Button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    }
+</div>
+
+@code {
+    List<Category> Source = new();
+    int Supply = 1;
+
+    protected async override Task OnInitializedAsync()
+    {
+        await RefreshData(1);
+    }
+
+    public async Task DeleteCategory(string publicKey)
+    {
+        bool result = await jSRuntime.InvokeAsync<bool>("messageModal", "Bu kategoriyi silmek istediğinizden emin misiniz?");
+
+        if (!result)
+            return;
+
+        var res = await categoryService.DeleteCategory(publicKey);
+        if (res != null && res.Result == EnumRequestResult.Ok)
+        {
+            await RefreshData(Supply);
+            AppState.AddMessage(res.Description);
+        }
+    }
+
+    public async Task RefreshData(int supply)
+    {
+        Supply = supply;
+        Source = new();
+        var res = await categoryService.GetsCategory(AppState.SelectedFirmPublicKey, supply);
+        Source.AddRange(dataConverter.Deserialize<List<Category>>(res.Data));
+    }
+}

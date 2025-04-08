@@ -1,0 +1,22 @@
+﻿:root {
+    --Border: 1px solid #00000078;
+    --Border-Radius: 8px;
+    --Min-Width: 250px;
+    --Text-Color: Black;
+    --Font-Size: 18px;
+    --Margin: 5px;
+    --Min-Height: 40px;
+    --background-color: #040512;
+    --main-background-color: #090B19;
+    --font-color: #e0e0e0; /* Font rengi */
+    --panel-background: #FFFFFF07; /* Panel arka plan rengi */
+    --panel-border: 1px solid #1a1d21; /* Panel kenar rengi */
+    --button-color: #ffffff06; /* Özel buton rengi */
+    --button-border-color: #1a1d21;
+    --button-hover-color: #649A49; /* Buton hover rengi */
+    --circle-color: #649A4965;
+    --panel-complete: #3b8b3b;
+    --panel-inprogress: #0dcaf0;
+    --panel-planned: #343a40;
+    --box-shadow: 3px 3px 10px rgba(0, 0, 0, 1), -1px -1px 6px rgba(255, 255, 255, 0.4);
+}

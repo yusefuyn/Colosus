@@ -1,0 +1,34 @@
+﻿@page "/Category/Add"
+@using Colosus.Client.Services.Category
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DatabaseModel
+@inject ICategoryService categoryService
+@inject NavigationManager navigationManager
+<div class="center-container">
+    <div class="container-header">
+        <h3>Yeni Kategori Ekle</h3>
+    </div>
+    <Colosus.Client.Components.Entry @bind-Text="category.Name"
+    Placeholder="Kategori Adı"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry TextChanged="(e)=>{ category.Tax = Convert.ToDecimal(e); }"
+    Placeholder="Vergi Yüzdesi" Type="Components.Entry.EntryTypeEnum.Number"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Button Text="Ekle" OnClick="async()=>await AddCategory()"></Colosus.Client.Components.Button>
+</div>
+
+@code {
+
+    Colosus.Entity.Concretes.CreateModel.Category category = new();
+    public async Task AddCategory()
+    {
+        category.FirmPublicKey = AppState.SelectedFirmPublicKey;
+        RequestResult res = await categoryService.AddCategory(category);
+        if (res == null)
+        {
+            AppState.AddMessage("Bir hata oluştu lütfen daha sonra tekrar  deneyiniz.");
+            return;
+        }
+        AppState.AddMessage(res.Description);
+        navigationManager.NavigateTo("/Category/Index");
+
+    }
+}

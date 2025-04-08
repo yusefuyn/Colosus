@@ -1,0 +1,94 @@
+﻿@using Colosus.Client.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
+@inject NavigationManager navigationManager
+<Notification @ref="AppState.notificationComponent"></Notification>
+<div class="container">
+    <div class="header">
+        <AuthorizeView Roles="Administrator">
+            <Button Class="header-button"
+                    OnClick='()=> navigationManager.NavigateTo("/Management/Index")'
+                    Text="Yönetim"
+                    Icon="fa fa-gear"></Button>
+        </AuthorizeView>
+        <Button Class="header-button"
+                OnClick='()=>navigationManager.NavigateTo("/")'
+                Text="Ana Sayfa"
+                Icon="fa fa-home"></Button>
+        <AuthorizeView>
+            <NotAuthorized>
+                <Button Class="header-button"
+                        OnClick='()=>navigationManager.NavigateTo("/Pricing")'
+                        Text="Fiyatlandırma"
+                        Icon="fa fa-coins"></Button>
+                <Button OnClick='()=>navigationManager.NavigateTo("/Login")'
+                        Class="header-button header-right-button"
+                        Text="Giriş"
+                        Icon="fa fa-sign-in"></Button>
+            </NotAuthorized>
+            <Authorized>
+                @if (!string.IsNullOrEmpty(AppState.SelectedFirmPublicKey))
+                {
+                    <Button Class="header-button"
+                            OnClick='()=> navigationManager.NavigateTo("/Settings/Index")'
+                            Text="Ayarlar"
+                            Icon="fa fa-gear"></Button>
+                    <Button Class="header-button"
+                            Text="Ürün"
+                            OnClick='()=> navigationManager.NavigateTo("/Product/Index")'
+                            Icon="fa fa-box"></Button>
+
+                    <Button Class="header-button"
+                            Text="Stok"
+                            OnClick='()=> navigationManager.NavigateTo("/Stock/Index")'
+                            Icon="fa fa-boxes"></Button>
+                    <Button Class="header-button"
+                            Text="Müşteri"
+                            OnClick='()=> navigationManager.NavigateTo("/Customer/Index")'
+                            Icon="fa fa-users"></Button>
+                    <Button Class="header-button"
+                            Text="Satış"
+                            OnClick='()=> navigationManager.NavigateTo("/Sales/Index")'
+                            Icon="fa fa-cart-shopping"></Button>
+                    <Button Class="header-button"
+                            Text="Kategori"
+                            OnClick='()=> navigationManager.NavigateTo("/Category/Index")'
+                            Icon="	fa fa-certificate"></Button>
+                }
+                <Button Class="header-button"
+                        Text="Firma"
+                        OnClick='()=> navigationManager.NavigateTo("/Firm/Index")'
+                        Icon="fa fa-building"></Button>
+
+                <Label Class="header-right-button" Style="line-height: 3;">@AppState.SelectedFirmName</Label>
+
+                <Button OnClick='()=>navigationManager.NavigateTo("/Logout")'
+                        Class="header-button"
+                        Text="Çıkış"
+                        Icon="fa fa-sign-in"></Button>
+
+
+            </Authorized>
+        </AuthorizeView>
+    </div>
+    <MessageBox></MessageBox>
+    <main class="content">
+        @Body
+    </main>
+</div>
+@code {
+    protected override void OnInitialized()
+    {
+        AppState.OnSelectedFirmPublicKeyChanged += HandleSelectedFirmPublicKeyChanged;
+    }
+
+    private void HandleSelectedFirmPublicKeyChanged()
+    {
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        AppState.OnSelectedFirmPublicKeyChanged -= HandleSelectedFirmPublicKeyChanged;
+    }
+}

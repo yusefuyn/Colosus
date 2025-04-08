@@ -1,0 +1,58 @@
+﻿@page "/Stock/History/{ProductPublicKey}"
+@using Colosus.Client.Services.Product
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Operations.Abstracts
+@inject IProductService productService
+@inject IDataConverter dataConverter
+<div class="container">
+    <div class="container-header">
+        <h3>Stok Geçmişi</h3>
+    </div>
+
+    @if (Stocks != null && Stocks.Count > 0)
+    {
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Miktar</th>
+                    <th>Tarih</th>
+                    <th>Giren Kişi</th>
+                    <th>Açıklama</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Stocks)
+                {
+                    <tr>
+                        <td>@item.Amount</td>
+                        <td>@item.CreateDate.ToString()</td>
+                        <td>@item.UserFirstAndLastName.ToString()</td>
+                        <td>@item.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+
+</div>
+@code {
+
+    [Parameter] public string ProductPublicKey { get; set; }
+
+    List<Colosus.Entity.Concretes.DTO.ProductStock> Stocks = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await DataRefresh();
+    }
+
+    public async Task DataRefresh()
+    {
+        RequestResult res = await productService.GetStockHistoryDTO(ProductPublicKey);
+        Stocks = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.ProductStock>>(res.Data);
+        StateHasChanged();
+    }
+}

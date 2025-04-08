@@ -1,0 +1,42 @@
+﻿@page "/Login"
+@using Colosus.Client.Services
+@using Colosus.Client.Services.Login
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Operations.Abstracts
+@inject ILoginService loginService
+@inject IHash hash
+@inject CookieService cookieService
+@inject NavigationManager navigationManager
+
+
+<div class="center-container">
+    <div class="container-header">
+        <h3>Giriş yap</h3>
+    </div>
+    <Colosus.Client.Components.Entry @bind-Text="user.UserName"
+                                     Type="Components.Entry.EntryTypeEnum.Text"
+                                     Placeholder="Kullanıcı Adı"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry @bind-Text="user.Password"
+                                     Type="Components.Entry.EntryTypeEnum.Password"
+                                     Placeholder="Şifre"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Label>Hesabınız mı yok?<a href="/Register">Hemen Oluşturun</a></Colosus.Client.Components.Label>
+    <Colosus.Client.Components.Button Text="Giriş yap" OnClick="async()=>await LoginOpAsync()"></Colosus.Client.Components.Button>
+</div>
+@code {
+    User user = new();
+
+    public async Task LoginOpAsync()
+    {
+        string PassHash = hash.Calc(user.Password);
+        RequestResult result = await loginService.LoginAsync(user.UserName, PassHash);
+        if (result.Result == EnumRequestResult.Ok)
+        {
+            await cookieService.SetCookie("Token", result.Data, 120);
+            navigationManager.NavigateTo("/");
+            navigationManager.Refresh(false);
+            StateHasChanged();
+        }
+        AppState.AddMessage(result.Description);
+    }
+}

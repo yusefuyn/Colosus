@@ -1,0 +1,23 @@
+﻿<div class="input-container">
+    <label class="label" style="height:5px;">@Placeholder</label>
+    <input class="special-input input" name="text" value="@Text" @oninput="OnInputChanged" type="@Type.ToString().ToLower()">
+</div>
+@code {
+    [Parameter] public string Placeholder { get; set; } = "";
+    [Parameter] public string Text { get; set; } = "";
+    [Parameter] public EntryTypeEnum Type { get; set; } = EntryTypeEnum.Text;
+    [Parameter] public EventCallback<string> TextChanged { get; set; }
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        Text = e.Value.ToString();
+        await TextChanged.InvokeAsync(Text);
+    }
+
+    public enum EntryTypeEnum
+    {
+        Text,
+        Password,
+        Number,
+        Date
+    }
+}

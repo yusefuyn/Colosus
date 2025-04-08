@@ -1,0 +1,33 @@
+﻿@code {
+    private List<string> messages = new List<string>();
+    private bool showNotification = false;
+    public void AddMessage(string message)
+    {
+        messages.Add(message);
+        showNotification = true;
+        StateHasChanged();
+        Task.Delay(10000).ContinueWith(_ =>
+        {
+            messages.RemoveAt(0);
+            if (messages.Count == 0)
+            {
+                showNotification = false;
+            }
+            InvokeAsync(StateHasChanged);
+        });
+    }
+}
+
+@if (showNotification && messages.Any())
+{
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+        @foreach (var message in messages)
+        {
+            <div class="toast show">
+                <div class="toast-body">
+                    @message
+                </div>
+            </div>
+        }
+    </div>
+}
