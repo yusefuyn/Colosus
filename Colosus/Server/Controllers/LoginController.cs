@@ -4,6 +4,7 @@ using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Operations.Abstracts;
 using Colosus.Operations.Concretes;
 using Colosus.Server.Facades.Login;
+using Colosus.Server.Facades.Setting;
 using Colosus.Server.Services.Token;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,8 @@ namespace Colosus.Server.Controllers
             this.loginFacades = loginFacades;
         }
 
+        private string GenKey(string keyType, string entityType)
+            => loginFacades.guid.Generate(keyType, entityType);
 
         [HttpPost]
         public string Register([FromBody] RequestParameter parameter)
@@ -28,8 +31,8 @@ namespace Colosus.Server.Controllers
             loginFacades.operationRunner.ActionRunner(() =>
             {
                 User usera = loginFacades.dataConverter.Deserialize<User>(parameter.Data);
-                usera.PublicKey = loginFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.User);
-                usera.PrivateKey = loginFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.User);
+                usera.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.User);
+                usera.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.User);
                 loginFacades.operations.SaveEntity(usera);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "Successfuly Registered";
@@ -53,7 +56,7 @@ namespace Colosus.Server.Controllers
                 List<Role> userRoles = loginFacades.operations.GetUserRole(usera.PrivateKey);
                 if (usera != null)
                 {
-                    result.Data = loginFacades.tokenService.GenerateJwtToken(usera.PrivateKey,usera.UserName, userRoles.Select(xd=> xd.Name).ToList());
+                    result.Data = loginFacades.tokenService.GenerateJwtToken(usera.PrivateKey, usera.UserName, userRoles.Select(xd => xd.Name).ToList());
                     result.Result = EnumRequestResult.Ok;
                     result.Description = "Successfuly Login";
                 }

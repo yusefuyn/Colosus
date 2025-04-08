@@ -91,12 +91,6 @@ namespace Colosus.Business
                                                                                            select c).Skip(skip).Take(take).ToList();
 
 
-        public void DeleteCategory(string publicKey)
-        {
-            Context.Categories.Remove(Context.Categories.SingleOrDefault(xd => xd.PublicKey == publicKey));
-            SaveChanges();
-        }
-
         public Category GetCategory(string categoryPublicKey) => Context.Categories.FirstOrDefault(xd => xd.PublicKey == categoryPublicKey);
 
         public List<Category> GetAllCategories() => Context.Categories.ToList();
@@ -230,7 +224,7 @@ namespace Colosus.Business
             return customer;
         }
 
-        public Debt GetDebt(string debtPublicKey) => Context.Debts.FirstOrDefault(xd=> xd.PublicKey == debtPublicKey);
+        public Debt GetDebt(string debtPublicKey) => Context.Debts.FirstOrDefault(xd => xd.PublicKey == debtPublicKey);
 
         public void UpdateEntity(object entity)
         {
@@ -250,5 +244,22 @@ namespace Colosus.Business
                 throw new InvalidOperationException("Entity türü, geçerli bir DbSet ile eşleşmedi.");
             }
         }
+
+        public PaymentTypeFirmRelation? GetPaymentTypeFirmRelation(string paymentTypePublicKey, string firmPublicKey)
+        => (from ptfr in Context.PaymentTypeFirmRelations
+            join f in Context.Firms on ptfr.FirmPrivateKey equals f.PrivateKey
+            join pt in Context.PaymentTypes on ptfr.PaymentTypePrivateKey equals pt.PrivateKey
+            where (f.PublicKey == firmPublicKey && pt.PublicKey == paymentTypePublicKey)
+            select ptfr).FirstOrDefault();
+
+        public PaymentType GetPaymentType(object paymentTypePublicKey)
+            => Context.PaymentTypes.FirstOrDefault(xd => xd.PublicKey == paymentTypePublicKey);
+
+        public List<PaymentType> GetAllPaymentTypeForFirmPublicKey(string firmPublicKey)
+            => (from ptfr in Context.PaymentTypeFirmRelations
+                join f in Context.Firms on ptfr.FirmPrivateKey equals f.PrivateKey
+                join pt in Context.PaymentTypes on ptfr.PaymentTypePrivateKey equals pt.PrivateKey
+                where f.PublicKey == firmPublicKey
+                select pt).ToList();
     }
 }

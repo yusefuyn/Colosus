@@ -4,6 +4,7 @@ using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Operations.Abstracts;
 using Colosus.Server.Attributes;
 using Colosus.Server.Facades.Firm;
+using Colosus.Server.Facades.Setting;
 using Colosus.Server.Services.Token;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,8 @@ namespace Colosus.Server.Controllers
             this.firmFacades = firmFacades;
         }
 
-
+        private string GenKey(string keyType, string entityType)
+    => firmFacades.guid.Generate(keyType, entityType);
         [HttpPost]
         [GetAuthorizeToken]
         public string GetMyFirm([FromBody] RequestParameter parameter)
@@ -62,8 +64,8 @@ namespace Colosus.Server.Controllers
                     result.Result = EnumRequestResult.Ok;
                     result.Description = "Successfly";
                     Firm firm = firmFacades.dataConverter.Deserialize<Firm>(parameter.Data);
-                    firm.PublicKey = firmFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.Firm);
-                    firm.PrivateKey = firmFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.Firm);
+                    firm.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Firm);
+                    firm.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Firm);
                     firm.PublicID = "F" + new Random().Next(100000, 999999).ToString();
                     firmFacades.operations.SaveEntity(firm);
 
@@ -71,8 +73,8 @@ namespace Colosus.Server.Controllers
                     {
                         Name = "Manager",
                         FirmPrivateKey = firm.PrivateKey,
-                        PrivateKey = firmFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.FirmRole),
-                        PublicKey = firmFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.FirmRole),
+                        PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.FirmRole),
+                        PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.FirmRole),
                     };
 
                     firmFacades.operations.SaveEntity(role);
@@ -82,8 +84,8 @@ namespace Colosus.Server.Controllers
                         FirmPrivateKey = firm.PrivateKey,
                         PositionPrivateKey = role.PrivateKey,
                         UserPrivateKey = parameter.Token,
-                        PrivateKey = firmFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.FirmUserRelation),
-                        PublicKey = firmFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.FirmUserRelation),
+                        PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.FirmUserRelation),
+                        PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.FirmUserRelation),
                     };
 
                     firmFacades.operations.SaveEntity(relation);

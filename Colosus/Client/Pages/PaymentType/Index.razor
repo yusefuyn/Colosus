@@ -1,0 +1,68 @@
+﻿@page "/PaymentType/Index"
+@using Colosus.Client.Services.Settings
+@using Colosus.Entity.Concretes
+@using Colosus.Operations.Abstracts
+@inject ISettingsService settingsService
+@inject NavigationManager navigationManager
+@inject IDataConverter dataConverter
+<div class="container">
+    <div class="row">
+        <Colosus.Client.Components.Button Class="col-12"
+                                          Text="Yeni Ekle"
+                                          Style="height:40px;"
+                                          OnClick='()=> navigationManager.NavigateTo("/PaymentType/Add")'></Colosus.Client.Components.Button>
+    </div>
+    <div class="row">
+        <div class="container-header">
+            <h3>Ödeme Tipleri</h3>
+        </div>
+
+        @if (PaymentTypes != null && PaymentTypes.Count > 0)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Adı </th>
+                        <th>Resim Url'si</th>
+                        <th>Sil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in PaymentTypes)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.PictureUri</td>
+                            <td><Colosus.Client.Components.Button Icon="fa fa-remove" OnClick="async ()=> await Delete(item.PublicKey)"></Colosus.Client.Components.Button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    List<Colosus.Entity.Concretes.DTO.PaymentType> PaymentTypes = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    public async Task Delete(string payTypePublicKey)
+    {
+        await settingsService.DeletePaymentType(new() { FirmPublicKey = AppState.SelectedFirmPublicKey, PaymentTypePublicKey = payTypePublicKey });
+        await RefreshData();
+    }
+
+    public async Task RefreshData()
+    {
+        RequestResult res = await settingsService.GetAllPaymentTypeForFirmPublicKey(AppState.SelectedFirmPublicKey);
+        if (res != null && res.Ok())
+            PaymentTypes = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.PaymentType>>(res.Data);
+        else
+            AppState.AddMessage("Bir hata meydana geldi.");
+
+    }
+}

@@ -4,6 +4,7 @@ using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Entity.Concretes.DTO;
 using Colosus.Server.Attributes;
 using Colosus.Server.Facades.Product;
+using Colosus.Server.Facades.Setting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Colosus.Server.Controllers
@@ -17,6 +18,9 @@ namespace Colosus.Server.Controllers
         {
             this.productFacades = productFacades;
         }
+
+        private string GenKey(string keyType, string entityType)
+            => productFacades.guid.Generate(keyType, entityType);
 
         [HttpPost]
         [GetAuthorizeToken]
@@ -34,8 +38,8 @@ namespace Colosus.Server.Controllers
                     Name = parameterObj.Name,
                     SalePrice = parameterObj.SalePrice,
                     PurchasePrice = parameterObj.PurchasePrice,
-                    PrivateKey = productFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.Product),
-                    PublicKey = productFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.Product)
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Product),
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Product)
                 };
 
                 productFacades.operations.SaveEntity(newProduct);
@@ -44,8 +48,8 @@ namespace Colosus.Server.Controllers
                 {
                     ProductPrivateKey = newProduct.PrivateKey,
                     CategoryPrivateKey = category.PrivateKey,
-                    PrivateKey = productFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.ProductCategoryRelation),
-                    PublicKey = productFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.ProductCategoryRelation)
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.ProductCategoryRelation),
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.ProductCategoryRelation)
                 };
 
                 productFacades.operations.SaveEntity(relation);
@@ -55,8 +59,8 @@ namespace Colosus.Server.Controllers
                 {
                     FirmPrivateKey = firm.PrivateKey,
                     ProductPrivateKey = newProduct.PrivateKey,
-                    PrivateKey = productFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.ProductFirmRelation),
-                    PublicKey = productFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.ProductFirmRelation),
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.ProductFirmRelation),
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.ProductFirmRelation),
                 };
                 productFacades.operations.SaveEntity(productFirmRelation);
 
@@ -141,8 +145,8 @@ namespace Colosus.Server.Controllers
                 productStock.ProductPrivateKey = prod.PrivateKey;
                 productStock.FirmPrivateKey = myFirms.PrivateKey;
                 productStock.UserPrivateKey = parameter.Token.ToString();
-                productStock.PrivateKey = productFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.ProductStock);
-                productStock.PublicKey = productFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.ProductStock);
+                productStock.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.ProductStock);
+                productStock.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.ProductStock);
                 productStock.Amount = parameterStock.Amount;
                 productStock.Description = parameterStock.Description;
 

@@ -21,10 +21,12 @@ namespace Colosus.Entity.Concretes
         public string? RequestToken { get; set; }
         public EnumRequestResult Result { get; set; }
         public string Description { get; set; }
+
+        public bool Ok() => Result == EnumRequestResult.Ok ? true : false;
     }
 
     public enum EnumRequestResult
-    { 
+    {
         Ok,
         Not,
         Stoped,

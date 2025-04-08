@@ -15,7 +15,6 @@ namespace Colosus.Operations.Concretes
 			try
 			{
                 firstAct.Invoke();
-
             }
             catch (Exception ex)
             {

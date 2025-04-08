@@ -1,0 +1,27 @@
+﻿@page "/PaymentType/Add"
+@using Colosus.Client.Services.Settings
+@using Colosus.Entity.Concretes
+@inject ISettingsService settingsService
+@inject NavigationManager navigationManager
+<div class="container">
+    <div class="container-header">
+        <h3>Ödeme Tipi Ekle</h3>
+    </div>
+    <Colosus.Client.Components.Entry Placeholder="Adı" @bind-Text="paytmentType.Name"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Entry Placeholder="Resim Url'si" @bind-Text="paytmentType.PictureUri"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Button Text="Ekle" OnClick="async()=> await Ekle()"></Colosus.Client.Components.Button>
+</div>
+
+@code {
+    Colosus.Entity.Concretes.CreateModel.PaymentType paytmentType = new();
+
+    public async Task Ekle()
+    {
+        paytmentType.FirmPublicKey = AppState.SelectedFirmPublicKey;
+        RequestResult requestResult = await settingsService.AddPaymentType(paytmentType);
+        if (requestResult != null && requestResult.Ok())
+            navigationManager.NavigateTo("/PaymentType/Index");
+        AppState.AddMessage(requestResult.Description);
+    }
+}
+

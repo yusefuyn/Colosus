@@ -9,6 +9,7 @@ using Colosus.Server.Facades.Customer;
 using Colosus.Server.Facades.Firm;
 using Colosus.Server.Facades.Login;
 using Colosus.Server.Facades.Product;
+using Colosus.Server.Facades.Setting;
 using Colosus.Server.Services.Token;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,6 +50,7 @@ builder.Services.AddScoped<ICategoryFacades, CategoryFacades>();
 builder.Services.AddScoped<ILoginFacades, LoginFacades>();
 builder.Services.AddScoped<IProductFacades, ProductFacades>();
 builder.Services.AddScoped<ICustomerFacades, CustomerFacades>();
+builder.Services.AddScoped<ISettingFacades, SettingFacades>();
 #endregion
 
 var app = builder.Build();

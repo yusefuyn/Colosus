@@ -13,7 +13,6 @@ namespace Colosus.Business.Abstracts
     {
 
         public bool DatabaseUpdate();
-        void DeleteCategory(string publicKey);
         List<Category> GetAllCategories();
         List<Category> GetCategories(string FirmPrivateKey,int skip, int take);
         Category GetCategory(string categoryPublicKey);
@@ -36,5 +35,8 @@ namespace Colosus.Business.Abstracts
         List<Debt> GetsDebitForCustomerKey(string customerKey);
         Debt GetDebt(string debtPublicKey);
         void UpdateEntity(object entity);
+        PaymentTypeFirmRelation GetPaymentTypeFirmRelation(string paymentTypePublicKey, string firmPublicKey);
+        PaymentType GetPaymentType(object paymentTypePublicKey);
+        List<PaymentType> GetAllPaymentTypeForFirmPublicKey(string firmPublicKey);
     }
 }

@@ -3,6 +3,7 @@ using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Operations.Abstracts;
 using Colosus.Server.Facades.Administrator;
+using Colosus.Server.Facades.Setting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Colosus.Server.Controllers
@@ -36,7 +37,8 @@ namespace Colosus.Server.Controllers
 
             return administratorFacades.dataConverter.Serialize(result);
         }
-
+        private string GenKey(string keyType, string entityType)
+            => administratorFacades.guid.Generate(keyType, entityType);
 
         [HttpPost]
         public string Setup([FromBody] RequestParameter parameter)
@@ -59,8 +61,8 @@ namespace Colosus.Server.Controllers
 
                 User administratorUser = new()
                 {
-                    PrivateKey = administratorFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.User),
-                    PublicKey = administratorFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.User),
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.User),
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.User),
                     ReferancePrivateKey = "System",
                     UserName = "Yussefuynstein",
                     Password = administratorFacades.hash.Calc("219619yusuf_"),
@@ -75,16 +77,16 @@ namespace Colosus.Server.Controllers
                 Role administratorRole = new()
                 {
                     Name = "Administrator",
-                    PrivateKey = administratorFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.Role),
-                    PublicKey = administratorFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.Role),
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Role),
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Role),
                 };
 
                 administratorFacades.operations.SaveEntity(administratorRole);
 
                 UserRoleRelations administratorRoleRelation = new()
                 {
-                    PrivateKey = administratorFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.RoleRelation),
-                    PublicKey = administratorFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.RoleRelation),
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.RoleRelation),
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.RoleRelation),
                     RolePrivateKey = administratorRole.PrivateKey,
                     UserPrivateKey = administratorUser.PrivateKey,
                     IssuerPrivateKey = "System",

@@ -28,5 +28,7 @@
         public const string Payment = "Payment";
         public const string CorporateCustomer = "CorporateCustomer";
         public const string Debt = "Debt";
+        public const string PaymentType = "PaymentType";
+        public const string PaymentTypeFirmRelation = "PaymentTypeFirmRelation";
     }
 }

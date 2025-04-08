@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using iCustomer = Colosus.Entity.Concretes.CreateModel.IndividualCustomer;
 using cCustomer = Colosus.Entity.Concretes.CreateModel.CorporateCustomer;
 using Colosus.Entity.Abstracts;
+using Colosus.Server.Facades.Setting;
 namespace Colosus.Server.Controllers
 {
     [ApiController]
@@ -18,6 +19,9 @@ namespace Colosus.Server.Controllers
         {
             customerFacades = facades;
         }
+
+        private string GenKey(string keyType, string entityType)
+    => customerFacades.guid.Generate(keyType, entityType);
 
         [HttpPost]
         [GetAuthorizeToken]
@@ -31,8 +35,8 @@ namespace Colosus.Server.Controllers
                 Debt res = customerFacades.mapping.Convert<Debt>(debt);
                 res.CustomerKey = customer.CustomerKey;
                 res.UserPrivateKey = parameter.Token.ToString();
-                res.PrivateKey = customerFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.Debt);
-                res.PublicKey = customerFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.Debt);
+                res.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Debt);
+                res.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Debt);
                 customerFacades.operations.SaveEntity(res);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "AddCustomerDebts Operations Success";
@@ -181,16 +185,16 @@ namespace Colosus.Server.Controllers
                 Firm firm = customerFacades.operations.GetMyFirmForFirmPublicKey(icustomer.FirmPublicKey);
                 IndividualCustomer customer = customerFacades.mapping.Convert<IndividualCustomer>(icustomer);
                 List<ContactAddress> contactAddresses = customerFacades.mapping.ConvertToList<ContactAddress>(icustomer.ContactAddresses);
-                customer.PrivateKey = customerFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.IndividualCustomer);
-                customer.PublicKey = customerFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.IndividualCustomer);
-                customer.CustomerKey = customerFacades.guid.Generate(KeyTypes.Key, KeyTypes.Customer);
-                customer.ContactGroupKey = customerFacades.guid.Generate(KeyTypes.GroupKey, KeyTypes.Contact);
-                customer.PaymentGroupKey = customerFacades.guid.Generate(KeyTypes.GroupKey, KeyTypes.Payment);
+                customer.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.IndividualCustomer);
+                customer.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.IndividualCustomer);
+                customer.CustomerKey = GenKey(KeyTypes.Key, KeyTypes.Customer);
+                customer.ContactGroupKey = GenKey(KeyTypes.GroupKey, KeyTypes.Contact);
+                customer.PaymentGroupKey = GenKey(KeyTypes.GroupKey, KeyTypes.Payment);
                 customerFacades.operations.SaveEntity(customer);
                 contactAddresses.ForEach(xd =>
                 {
-                    xd.PublicKey = customerFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.Contact);
-                    xd.PrivateKey = customerFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.Contact);
+                    xd.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Contact);
+                    xd.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Contact);
                     xd.ContactGroupKey = customer.ContactGroupKey;
                     customerFacades.operations.SaveEntity(xd);
                 });
@@ -199,8 +203,8 @@ namespace Colosus.Server.Controllers
                 {
                     CustomerPrivateKey = customer.PrivateKey,
                     FirmPrivateKey = firm.PrivateKey,
-                    PublicKey = customerFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.CustomerFirmRelation),
-                    PrivateKey = customerFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.CustomerFirmRelation),
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.CustomerFirmRelation),
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.CustomerFirmRelation),
                 };
                 customerFacades.operations.SaveEntity(customerFirmRelation);
                 result.Result = EnumRequestResult.Ok;
@@ -229,24 +233,24 @@ namespace Colosus.Server.Controllers
 
                 List<ContactAddress> contactAddresses = customerFacades.mapping.ConvertToList<ContactAddress>(ccustomer.ContactAddresses);
                 List<PaymentAddress> paymentAddresses = customerFacades.mapping.ConvertToList<PaymentAddress>(ccustomer.PaymentAddresses);
-                customer.PrivateKey = customerFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.CorporateCustomer);
-                customer.PublicKey = customerFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.CorporateCustomer);
-                customer.CustomerKey = customerFacades.guid.Generate(KeyTypes.Key, KeyTypes.Customer);
-                customer.ContactGroupKey = customerFacades.guid.Generate(KeyTypes.GroupKey, KeyTypes.Contact);
-                customer.PaymentGroupKey = customerFacades.guid.Generate(KeyTypes.GroupKey, KeyTypes.Payment);
+                customer.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.CorporateCustomer);
+                customer.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.CorporateCustomer);
+                customer.CustomerKey = GenKey(KeyTypes.Key, KeyTypes.Customer);
+                customer.ContactGroupKey = GenKey(KeyTypes.GroupKey, KeyTypes.Contact);
+                customer.PaymentGroupKey = GenKey(KeyTypes.GroupKey, KeyTypes.Payment);
                 customerFacades.operations.SaveEntity(customer);
                 contactAddresses.ForEach(xd =>
                 {
-                    xd.PublicKey = customerFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.Contact);
-                    xd.PrivateKey = customerFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.Contact);
+                    xd.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Contact);
+                    xd.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Contact);
                     xd.ContactGroupKey = customer.ContactGroupKey;
                     customerFacades.operations.SaveEntity(xd);
                 });
 
                 paymentAddresses.ForEach(xd =>
                 {
-                    xd.PublicKey = customerFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.Contact);
-                    xd.PrivateKey = customerFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.Contact);
+                    xd.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Contact);
+                    xd.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Contact);
                     xd.PaymentGroupKey = customer.PaymentGroupKey;
                     customerFacades.operations.SaveEntity(xd);
                 });
@@ -255,8 +259,8 @@ namespace Colosus.Server.Controllers
                 {
                     CustomerPrivateKey = customer.PrivateKey,
                     FirmPrivateKey = firm.PrivateKey,
-                    PublicKey = customerFacades.guid.Generate(KeyTypes.PublicKey, KeyTypes.CustomerFirmRelation),
-                    PrivateKey = customerFacades.guid.Generate(KeyTypes.PrivateKey, KeyTypes.CustomerFirmRelation),
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.CustomerFirmRelation),
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.CustomerFirmRelation),
                 };
                 customerFacades.operations.SaveEntity(customerFirmRelation);
                 result.Result = EnumRequestResult.Ok;
