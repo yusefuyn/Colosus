@@ -1,6 +1,6 @@
 ﻿@page "/Customer/Debt/{CustomerPublicKey}"
 @using Colosus.Client.Components
-@using Colosus.Client.Pages.Debit
+@using Colosus.Client.Pages.Debt
 @using Colosus.Client.Services.Customer
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
@@ -87,18 +87,18 @@
 
 
 <Colosus.Client.Components.CustomBox @ref="addTakeBox">
-    <AddDebit @ref="addTake"
+    <AddDebt @ref="addTake"
               CustomerPublicKey="@CustomerPublicKey.ToString()"
               Type="Entity.Concretes.DatabaseModel.DebitType.Take"
-              CloseAction="new Task( async ()=>{ await CloseAndRefreshData(); })"></AddDebit>
+              CloseAction="new Task( async ()=>{ await CloseAndRefreshData(); })"></AddDebt>
 </Colosus.Client.Components.CustomBox>
 
 
 <Colosus.Client.Components.CustomBox @ref="addGiveBox">
-    <AddDebit @ref="addGive"
+    <AddDebt @ref="addGive"
               CustomerPublicKey="@CustomerPublicKey.ToString()"
               Type="Entity.Concretes.DatabaseModel.DebitType.Give"
-              CloseAction="new Task( async ()=>{ await CloseAndRefreshData(); })"></AddDebit>
+              CloseAction="new Task( async ()=>{ await CloseAndRefreshData(); })"></AddDebt>
 </Colosus.Client.Components.CustomBox>
 @code {
     [Parameter] public string CustomerPublicKey { get; set; } = "";
@@ -126,11 +126,11 @@
 
 
     private CustomBox addTakeBox = new();
-    private AddDebit addTake = new();
+    private AddDebt addTake = new();
 
 
     private CustomBox addGiveBox = new();
-    private AddDebit addGive = new();
+    private AddDebt addGive = new();
 
     protected override async Task OnInitializedAsync()
     {

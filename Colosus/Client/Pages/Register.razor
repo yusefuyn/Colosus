@@ -12,16 +12,16 @@
     <div class="container-header">
         <h3>Kayıt Ol</h3>
     </div>
-
-    <Colosus.Client.Components.Entry @bind-Text="user.EMail" Placeholder="E-Posta"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Entry @bind-Text="user.UserName" Placeholder="Kullanıcı Adı"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Entry @bind-Text="user.FirstName" Placeholder="Adınız"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Entry @bind-Text="user.LastName" Placeholder="Soyadınız"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Entry @bind-Text="Passwd" Placeholder="Şifre" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Entry @bind-Text="PasswdR" Placeholder="Şifre Tekrarı" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Label>Hesabınız var mı? <a href="/Login">Giriş yapın</a></Colosus.Client.Components.Label>
-    <Colosus.Client.Components.Button Text="Kayıt ol" OnClick="async ()=>await RegisterOp()"></Colosus.Client.Components.Button>
-
+    <div style="max-width:400px">
+        <Colosus.Client.Components.Entry @bind-Text="user.EMail" Placeholder="E-Posta"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.Entry @bind-Text="user.UserName" Placeholder="Kullanıcı Adı"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.Entry @bind-Text="user.FirstName" Placeholder="Adınız"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.Entry @bind-Text="user.LastName" Placeholder="Soyadınız"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.Entry @bind-Text="Passwd" Placeholder="Şifre" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.Entry @bind-Text="PasswdR" Placeholder="Şifre Tekrarı" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.Label>Hesabınız var mı? <a href="/Login">Giriş yapın</a></Colosus.Client.Components.Label>
+        <Colosus.Client.Components.Button Text="Kayıt ol" OnClick="async ()=>await RegisterOp()"></Colosus.Client.Components.Button>
+    </div>
 </div>
 @code {
     User user = new();

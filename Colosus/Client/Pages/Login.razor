@@ -14,14 +14,16 @@
     <div class="container-header">
         <h3>Giriş yap</h3>
     </div>
-    <Colosus.Client.Components.Entry @bind-Text="user.UserName"
-                                     Type="Components.Entry.EntryTypeEnum.Text"
-                                     Placeholder="Kullanıcı Adı"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Entry @bind-Text="user.Password"
-                                     Type="Components.Entry.EntryTypeEnum.Password"
-                                     Placeholder="Şifre"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Label>Hesabınız mı yok?<a href="/Register">Hemen Oluşturun</a></Colosus.Client.Components.Label>
-    <Colosus.Client.Components.Button Text="Giriş yap" OnClick="async()=>await LoginOpAsync()"></Colosus.Client.Components.Button>
+    <div style="max-width:400px">
+        <Colosus.Client.Components.Entry @bind-Text="user.UserName"
+                                         Type="Components.Entry.EntryTypeEnum.Text"
+                                         Placeholder="Kullanıcı Adı"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.Entry @bind-Text="user.Password"
+                                         Type="Components.Entry.EntryTypeEnum.Password"
+                                         Placeholder="Şifre"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.Label>Hesabınız mı yok?<a href="/Register">Hemen Oluşturun</a></Colosus.Client.Components.Label>
+        <Colosus.Client.Components.Button Text="Giriş yap" OnClick="async()=>await LoginOpAsync()"></Colosus.Client.Components.Button>
+    </div>
 </div>
 @code {
     User user = new();
