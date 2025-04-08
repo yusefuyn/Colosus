@@ -12,9 +12,48 @@
                                           Style="height:40px;"
                                           OnClick='()=> navigationManager.NavigateTo("/PaymentType/Add")'></Colosus.Client.Components.Button>
     </div>
+
     <div class="row">
         <div class="container-header">
-            <h3>Ödeme Tipleri</h3>
+            <h3>Önerilen Ödeme Tipleri</h3>
+        </div>
+
+        @if (RecommendedPaymentType != null && RecommendedPaymentType.Count > 0)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Adı </th>
+                        <th>Resim Url'si</th>
+                        <th>Ekle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in RecommendedPaymentType)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.PictureUri</td>
+                            @if (item.Added != true)
+                            {
+                                <td><Colosus.Client.Components.Button Icon="fa fa-add" OnClick="async ()=> await AddRecommendedType(item.PublicKey)"></Colosus.Client.Components.Button></td>
+                            }
+                            else
+                            {
+                                <td><Colosus.Client.Components.Label>Eklenmiş.</Colosus.Client.Components.Label></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+
+
+    <div class="row">
+        <div class="container-header">
+            <h3>Ödeme Tipleriniz</h3>
         </div>
 
         @if (PaymentTypes != null && PaymentTypes.Count > 0)
@@ -33,17 +72,20 @@
                         <tr>
                             <td>@item.Name</td>
                             <td>@item.PictureUri</td>
-                            <td><Colosus.Client.Components.Button Icon="fa fa-remove" OnClick="async ()=> await Delete(item.PublicKey)"></Colosus.Client.Components.Button></td>
+                            <td><Colosus.Client.Components.Button Style="color:red;" Icon="fa fa-remove" OnClick="async ()=> await Delete(item.PublicKey)"></Colosus.Client.Components.Button></td>
                         </tr>
                     }
                 </tbody>
             </table>
         }
     </div>
+
+
 </div>
 
 @code {
     List<Colosus.Entity.Concretes.DTO.PaymentType> PaymentTypes = new();
+    List<Colosus.Entity.Concretes.DTO.PaymentType> RecommendedPaymentType = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,5 +106,24 @@
         else
             AppState.AddMessage("Bir hata meydana geldi.");
 
+        RequestResult result = await settingsService.RecommendedPaymentType(AppState.SelectedFirmPublicKey);
+        if (result != null && result.Ok())
+            RecommendedPaymentType = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.PaymentType>>(result.Data);
+        else
+            AppState.AddMessage("Bir hata meydana geldi.");
+
+
+        PaymentTypes.ForEach(xd =>
+        {
+            var obj = RecommendedPaymentType.FirstOrDefault(dx => dx.PublicKey == xd.PublicKey);
+            if (obj != null)
+                obj.Added = true;
+        });
+    }
+
+    public async Task AddRecommendedType(string PaymentType)
+    {
+        await settingsService.AddPaymentTypeRelation(new() { FirmPublicKey = AppState.SelectedFirmPublicKey, PaymentTypePublicKey = PaymentType });
+        await RefreshData();
     }
 }

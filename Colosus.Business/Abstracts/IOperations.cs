@@ -38,5 +38,7 @@ namespace Colosus.Business.Abstracts
         PaymentTypeFirmRelation GetPaymentTypeFirmRelation(string paymentTypePublicKey, string firmPublicKey);
         PaymentType GetPaymentType(object paymentTypePublicKey);
         List<PaymentType> GetAllPaymentTypeForFirmPublicKey(string firmPublicKey);
+        List<Product> GetMyProductForCategoryPrivateKey(string privateKey);
+        List<PaymentType> RecommendedPaymentType();
     }
 }

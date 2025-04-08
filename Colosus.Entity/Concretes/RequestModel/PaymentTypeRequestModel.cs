@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.RequestModel
 {
-    public class DeletePaymentType
+    public class PaymentTypeRequestModel
     {
         public string FirmPublicKey { get; set; }
         public string PaymentTypePublicKey { get; set; }

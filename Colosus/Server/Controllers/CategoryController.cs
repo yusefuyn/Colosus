@@ -84,6 +84,9 @@ namespace Colosus.Server.Controllers
             {
                 string categoryPublicKey = categoryFacades.dataConverter.Deserialize<string>(parameter.Data);
                 var cat = categoryFacades.operations.GetCategory(categoryPublicKey);
+
+                List<Product> prod = categoryFacades.operations.GetMyProductForCategoryPrivateKey(cat.PrivateKey);
+
                 categoryFacades.operations.RemoveEntity(cat);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "DeleteCategory Operations Success";

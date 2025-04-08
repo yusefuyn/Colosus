@@ -261,5 +261,15 @@ namespace Colosus.Business
                 join pt in Context.PaymentTypes on ptfr.PaymentTypePrivateKey equals pt.PrivateKey
                 where f.PublicKey == firmPublicKey
                 select pt).ToList();
+
+        public List<Product> GetMyProductForCategoryPrivateKey(string CategoryPrivateKey)
+       => (from p in Context.Products
+           join pcr in Context.ProductCategoryRelations on p.PrivateKey equals pcr.ProductPrivateKey
+           join c in Context.Categories on pcr.CategoryPrivateKey equals c.PrivateKey
+           where c.PrivateKey == CategoryPrivateKey
+           select p).ToList();
+
+        public List<PaymentType> RecommendedPaymentType()
+        => Context.PaymentTypes.Where(xd => xd.PrivateKey.Contains("All")).ToList();
     }
 }

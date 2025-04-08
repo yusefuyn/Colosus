@@ -11,5 +11,6 @@ namespace Colosus.Entity.Concretes.DTO
         public string Name { get; set; }
         public string PictureUri { get; set; }
         public string PublicKey { get; set; }
+        public bool? Added { get; set; }
     }
 }

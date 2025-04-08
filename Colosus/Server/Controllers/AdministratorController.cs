@@ -93,6 +93,44 @@ namespace Colosus.Server.Controllers
                 };
 
                 administratorFacades.operations.SaveEntity(administratorRoleRelation);
+
+                PaymentType nakitOdeme = new()
+                {
+                    Name = "Nakit",
+                    PictureUri = "",
+                    PrivateKey = "All-Nakit",
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.PaymentType)
+                };
+                administratorFacades.operations.SaveEntity(nakitOdeme);
+
+                PaymentType kartOdeme = new()
+                {
+                    Name = "Kart",
+                    PictureUri = "",
+                    PrivateKey = "All-Kart",
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.PaymentType)
+                };
+                administratorFacades.operations.SaveEntity(kartOdeme);
+
+                PaymentType cariOdeme = new()
+                {
+                    Name = "Cari",
+                    PictureUri = "",
+                    PrivateKey = "All-Cari",
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.PaymentType)
+                };
+                administratorFacades.operations.SaveEntity(cariOdeme);
+
+                PaymentType sodexoOdeme = new()
+                {
+                    Name = "Sodexo",
+                    PictureUri = "",
+                    PrivateKey = "All-Sodexo",
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.PaymentType)
+                };
+                administratorFacades.operations.SaveEntity(sodexoOdeme);
+
+
             }, () =>
             {
                 result.Result = EnumRequestResult.Not;
