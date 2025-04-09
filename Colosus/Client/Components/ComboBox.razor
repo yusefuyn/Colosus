@@ -1,30 +1,57 @@
 ﻿@typeparam Ttemp
+
 <div class="combobox-div">
-    <select class="combobox" @onchange="SelectedValueChanged">
-        @if (!Empty)
+    <select class="combobox" value="@SelectedValue" @onchange="SelectedValueChanged">
+        @if (Empty)
         {
-            <option value="-1">Lütfen birini seçiniz</option>
+            <option value="">Lütfen birini seçiniz</option>
         }
-        @if (Source != null && Source.Count() != 0)
+        @if (Source != null && Source.Any())
+        {
             @foreach (var temp in Source)
             {
                 <option class="combobox-option" value="@DataBinding(temp)">@ValueBinding(temp)</option>
             }
+        }
     </select>
 </div>
+
 @code {
-    [Parameter]
-    public IEnumerable<Ttemp> Source { get; set; }
+    [Parameter] public IEnumerable<Ttemp> Source { get; set; }
 
-    [Parameter]
-    public Func<Ttemp, object> ValueBinding { get; set; }
+    [Parameter] public Func<Ttemp, object> ValueBinding { get; set; }
 
-    [Parameter]
-    public Func<Ttemp, object> DataBinding { get; set; }
+    [Parameter] public Func<Ttemp, object> DataBinding { get; set; }
 
-    [Parameter]
-    public EventCallback<ChangeEventArgs> SelectedValueChanged { get; set; }
+    [Parameter] public EventCallback<ChangeEventArgs> SelectedValueChanged { get; set; }
 
+    [Parameter] public bool Empty { get; set; } = true;
+
+    private object _selectedValue;
+
+    // Seçilen değeri bağlamak için property
     [Parameter]
-    public bool Empty { get; set; } = true;
+    public object SelectedValue
+    {
+        get => _selectedValue;
+        set
+        {
+            if (!EqualityComparer<object>.Default.Equals(_selectedValue, value))
+            {
+                _selectedValue = value;
+                // Değer değiştiğinde, callback fonksiyonunu çağır
+                SelectedValueChanged.InvokeAsync(new ChangeEventArgs { Value = value });
+            }
+        }
+    }
+
+    // Component ilk başlatıldığında ilk öğeyi seçili yap
+    protected override void OnInitialized()
+    {
+        if (Source != null && Source.Any())
+        {
+            // İlk öğeyi seçili yapıyoruz
+            _selectedValue = DataBinding(Source.First());
+        }
+    }
 }

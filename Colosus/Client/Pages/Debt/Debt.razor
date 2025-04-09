@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    @if (debts != null && debts.Count > 0)
+    @if (debts.Debts != null && debts.Debts.Count > 0)
     {
         <table>
             <thead>
@@ -38,11 +38,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var debt in debts)
+                @foreach (var debt in debts.Debts)
                 {
                     <tr>
                         <td>@ConverTypeToString(debt.Type)</td>
-                        <td><i class="@ConvertPayedToString(debt.Payed())"></i></td>
+                        <td><i class="@AppState.ConvertBoolToIcon(debt.Payed())"></i></td>
                         <td>@debt.CreateDate</td>
                         <td>@debt.PayDate</td>
                         <td style="width:80px;min-width:80px;">@debt.Price</td>
@@ -55,7 +55,8 @@
                         <tr>
                             <td colspan="3">@pay.Price</td>
                             <td colspan="2">@pay.CurrencyName</td>
-                            <td colspan="3">@pay.PaymentTypeName</td>
+                            <td colspan="2">@pay.PaymentTypeName</td>
+                            <td><Button Style="min-width:30px;width:30px;" Icon="fa fa-remove" OnClick="async ()=> await DeleteDebtPay(pay.PublicKey)"></Button></td>
                         </tr>
                     }
                 }
@@ -65,29 +66,29 @@
         <div class="row">
             <div class="col-6">
                 <Label>
-                    Ödenmemiş Alacak : @debts.Where(xd => xd.Type == DebitType.Take && !xd.Payed()).Select(xd => xd.Price).Sum()
+                    Ödenmemiş Alacak : @debts.Debts.Where(xd => xd.Type == DebitType.Take && !xd.Payed()).Select(xd => xd.Price).Sum()
                 </Label>
             </div>
             <div class="col-6">
                 <Label>
-                    Ödenmiş Alacak : @debts.Where(xd => xd.Type == DebitType.Take && xd.Payed()).Select(xd => xd.Price).Sum()
+                    Ödenmiş Alacak : @debts.Debts.Where(xd => xd.Type == DebitType.Take && xd.Payed()).Select(xd => xd.Price).Sum()
                 </Label>
             </div>
         </div>
         <div class="row">
             <div class="col-6">
                 <Label>
-                    Ödenmemiş Verecek : @debts.Where(xd => xd.Type == DebitType.Give && !xd.Payed()).Select(xd => xd.Price).Sum()
+                    Ödenmemiş Verecek : @debts.Debts.Where(xd => xd.Type == DebitType.Give && !xd.Payed()).Select(xd => xd.Price).Sum()
                 </Label>
             </div>
             <div class="col-6">
                 <Label>
-                    Ödenmiş Verecek : @debts.Where(xd => xd.Type == DebitType.Give && xd.Payed()).Select(xd => xd.Price).Sum()
+                    Ödenmiş Verecek : @debts.Debts.Where(xd => xd.Type == DebitType.Give && xd.Payed()).Select(xd => xd.Price).Sum()
                 </Label>
             </div>
         </div>
     }
-    else if (debts != null && debts.Count == 0)
+    else if (debts != null && debts.Debts.Count == 0)
     {
 
         <p>Bu müşteriye hiç cari girilmemiş</p>
@@ -119,7 +120,7 @@
 </Colosus.Client.Components.CustomBox>
 @code {
     [Parameter] public string CustomerPublicKey { get; set; } = "";
-    List<Colosus.Entity.Concretes.DTO.DebtDTO> debts = new();
+    DebtPageDTO debts = new();
     public string CustomerName { get; set; } = "";
     private string SelectedDebtPublicKey = "";
     public string ConverTypeToString(DebitType type)
@@ -135,13 +136,6 @@
         }
     }
 
-    public string ConvertPayedToString(bool payed)
-
-    {
-        if (payed) return "fa fa-check";
-        else return "fa fa-close";
-    }
-
     public async Task AddDebtPay()
     {
         DebtPayCreateModel debtPayCreateModel = new()
@@ -151,7 +145,7 @@
                 PaymentTypePublicKey = addDebtPay.PaymentTypePublicKey,
                 Price = addDebtPay.Price
             };
-        decimal maxPrice = debts.FirstOrDefault(xd => xd.PublicKey == debtPayCreateModel.DebtPublicKey).Price;
+        decimal maxPrice = debts.Debts.FirstOrDefault(xd => xd.PublicKey == debtPayCreateModel.DebtPublicKey).Price;
         if (debtPayCreateModel.Price > maxPrice)
         {
             AppState.AddMessage("Ödenme miktari ödenecekten büyük olamaz.");
@@ -187,8 +181,8 @@
         RequestResult result = await customerService.GetCustomerDebtsForCustomerPublicKey(CustomerPublicKey);
         if (result.Result == EnumRequestResult.Ok)
         {
-            debts = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.DebtDTO>>(result.Data);
-            CustomerName = debts[0].CustomerName;
+            debts = dataConverter.Deserialize<DebtPageDTO>(result.Data);
+            CustomerName = debts.CustomerName;
             StateHasChanged();
         }
         else
@@ -228,6 +222,13 @@
             await RefreshData();
     }
 
+    private async Task DeleteDebtPay(string DebtPayPublicKey)
+    {
+        RequestResult res = await customerService.DeleteDebtPay(DebtPayPublicKey);
+        if (res.Result == EnumRequestResult.Ok)
+            await RefreshData();
+        
+    }
 
     private async Task DeleteDebt(string DebtItemPublicKey)
     {

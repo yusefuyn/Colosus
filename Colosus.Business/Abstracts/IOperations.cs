@@ -44,5 +44,7 @@ namespace Colosus.Business.Abstracts
         Currency GetCurrency(string currencyPublicKey);
         List<Currency> GetAllCurrencyForFirmPublicKey(string firmPublicKey);
         List<Colosus.Entity.Concretes.DTO.DebtPayDTO> GetDebtPayForDebtPrivateKey(string privateKey);
+        ProductStock GetProductStockForPublicKey(string stockPublicKey);
+        DebtPay GetDebtPayForPublicKey(string debtPayPublicKey);
     }
 }

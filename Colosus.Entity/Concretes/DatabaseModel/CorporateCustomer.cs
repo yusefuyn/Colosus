@@ -13,6 +13,7 @@ namespace Colosus.Entity.Concretes.DatabaseModel
         public CorporateCustomer()
         {
             CreateDate = DateTime.Now;
+            VisibleFastOperation = false;
         }
         public string CustomerKey { get;set; }
         public string ContactGroupKey { get;set; }
@@ -26,6 +27,7 @@ namespace Colosus.Entity.Concretes.DatabaseModel
         public string TaxNo { get;set; }
         public string Address { get;set; }
         public DateTime CreateDate { get; set; }
+        public bool VisibleFastOperation { get; set; }
 
         public string GetName() => $"{Name}";
     }

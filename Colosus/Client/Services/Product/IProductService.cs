@@ -10,6 +10,7 @@ namespace Colosus.Client.Services.Product
         public Task<RequestResult> AddStockForProduct(Entity.Concretes.CreateModel.StockCreateModel product);
         public Task<RequestResult> GetStockHistoryDTO(string ProductPublicKey);
         public Task<RequestResult> DeleteProduct(string ProductPublicKey);
+        public Task<RequestResult> DeleteStock(string StockPublicKey);
 
     }
 }

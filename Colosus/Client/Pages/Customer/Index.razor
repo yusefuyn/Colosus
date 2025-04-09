@@ -29,7 +29,7 @@
                         @foreach (var item in Customers.individualCustomers)
                         {
                             <tr>
-                                <td>@item.FirstName @item.MiddleName @item.LastName</td>
+                                <td>@item.Name @item.MiddleName @item.LastName</td>
                                 <td>@item.Note</td>
                                 <td>
                                     <Colosus.Client.Components.Button Class="table-button" Icon="fa fa-info"
@@ -103,6 +103,45 @@
             }
 
         </div>
+
+
+        <div class="Container">
+            <div class="container-header">
+                <h3>Hızlı Müşteriler</h3>
+            </div>
+            @if (Customers.fastCustomers.Count > 0)
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Adı</th>
+                            <th style="width:120px;">Operasyonlar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Customers.fastCustomers)
+                        {
+                            <tr>
+                                <td>@item.Name </td>
+                                <td>
+                                <Colosus.Client.Components.Button Class="table-button"
+                                                                      Icon="fa fa-remove"
+                                                                      OnClick="async ()=> await DeleteCustomer(item.PublicKey)"></Colosus.Client.Components.Button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+
+                <p>Hiç Hızlı müşteri eklenmemiş.</p>
+
+            }
+
+        </div>
+
 
     }
     else

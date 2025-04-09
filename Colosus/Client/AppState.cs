@@ -27,5 +27,10 @@ namespace Colosus.Client
         }
 
         public static string SelectedFirmName { get; set; } = "";
+        public static string ConvertBoolToIcon(bool val)
+        {
+            if (val) return "fa fa-check";
+            else return "fa fa-close";
+        }
     }
 }

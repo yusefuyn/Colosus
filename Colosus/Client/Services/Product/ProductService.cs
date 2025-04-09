@@ -28,5 +28,9 @@ namespace Colosus.Client.Services.Product
 
         public async Task<RequestResult> DeleteProduct(string ProductPublicKey) =>
             await httpClientService.GetPostAsync<RequestResult>(ProductPublicKey, GetAddress("DeleteProduct"));
+
+        public async Task<RequestResult> DeleteStock(string StockPublicKey)
+           => await httpClientService.GetPostAsync<RequestResult>(StockPublicKey, GetAddress("DeleteStock"));
+
     }
 }

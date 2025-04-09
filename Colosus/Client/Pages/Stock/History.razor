@@ -20,6 +20,7 @@
                     <th>Tarih</th>
                     <th>Giren Kişi</th>
                     <th>Açıklama</th>
+                    <th>Operasyon</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,6 +31,7 @@
                         <td>@item.CreateDate.ToString()</td>
                         <td>@item.UserFirstAndLastName.ToString()</td>
                         <td>@item.Description</td>
+                        <td><Colosus.Client.Components.Button Icon="fa fa-remove" OnClick="async ()=> await Delete(item.PublicKey)"></Colosus.Client.Components.Button></td>
                     </tr>
                 }
             </tbody>
@@ -54,5 +56,12 @@
         RequestResult res = await productService.GetStockHistoryDTO(ProductPublicKey);
         Stocks = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.ProductStockDTO>>(res.Data);
         StateHasChanged();
+    }
+
+    public async Task Delete(string StockPublicKey)
+    {
+        RequestResult requestResult = await productService.DeleteStock(StockPublicKey);
+        if (requestResult != null && requestResult.Ok())
+            await DataRefresh();
     }
 }

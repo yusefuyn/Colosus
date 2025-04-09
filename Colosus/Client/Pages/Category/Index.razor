@@ -23,6 +23,7 @@
                     <tr>
                         <th>Adı </th>
                         <th>Vergisi</th>
+                        <th>Web Görünürlük</th>
                         <th>Operasyonlar</th>
                     </tr>
                 </thead>
@@ -32,6 +33,7 @@
                         <tr>
                             <td>@item.Name</td>
                             <td>@item.Tax.ToString()</td>
+                            <td><i class="@AppState.ConvertBoolToIcon(item.VisibleWeb)"></i></td>
                             <td>
                                 <Colosus.Client.Components.Button Class="table-button"
                                                                   Icon="fa fa-remove"

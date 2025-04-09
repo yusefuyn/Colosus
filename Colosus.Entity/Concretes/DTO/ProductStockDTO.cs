@@ -8,7 +8,7 @@ namespace Colosus.Entity.Concretes.DTO
 {
     public class ProductStockDTO
     {
-
+        public string PublicKey { get; set; }
         public int Amount { get; set; }
         public DateTime CreateDate { get; set; }
         public string UserPublicKey { get; set; }

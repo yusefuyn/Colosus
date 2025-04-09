@@ -10,6 +10,7 @@ using Colosus.Entity.Abstracts;
 using Colosus.Server.Facades.Setting;
 using Colosus.Entity.Concretes.CreateModel;
 using System.Security.Cryptography.X509Certificates;
+using Colosus.Entity.Concretes.DTO;
 namespace Colosus.Server.Controllers
 {
     [ApiController]
@@ -23,9 +24,28 @@ namespace Colosus.Server.Controllers
         }
 
         private string GenKey(string keyType, string entityType)
-    => customerFacades.guid.Generate(keyType, entityType);
+            => customerFacades.guid.Generate(keyType, entityType);
 
 
+        [HttpPost]
+        [GetAuthorizeToken]
+        public string DeleteDebtPay([FromBody] RequestParameter parameter)
+        {
+            RequestResult result = new("DeleteDebtPay");
+            customerFacades.operationRunner.ActionRunner(() =>
+            {
+                string debtPayPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data);
+                DebtPay debtPay = customerFacades.operations.GetDebtPayForPublicKey(debtPayPublicKey);
+                customerFacades.operations.RemoveEntity(debtPay);
+                result.Result = EnumRequestResult.Ok;
+                result.Description = "DeleteDebtPay Operations Success";
+            }, () =>
+            {
+                result.Result = EnumRequestResult.Error;
+                result.Description = "DeleteDebtPay Operations Not Success";
+            });
+            return customerFacades.dataConverter.Serialize(result);
+        }
 
         [HttpPost]
         [GetAuthorizeToken]
@@ -114,8 +134,8 @@ namespace Colosus.Server.Controllers
                     Price = model.Price,
                     CreateDate = DateTime.Now,
                     DebtPrivateKey = debt.PrivateKey,
-                    PrivateKey = GenKey(KeyTypes.PrivateKey,KeyTypes.DebtPay),
-                    PublicKey = GenKey(KeyTypes.PublicKey,KeyTypes.DebtPay),
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.DebtPay),
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.DebtPay),
                     CurrencyPrivateKey = currency.PrivateKey,
                     PaymentTypePrivateKey = paymentType.PrivateKey,
                 };
@@ -177,7 +197,11 @@ namespace Colosus.Server.Controllers
                     debsts.CustomerKey = customer.CustomerKey;
                     debsts.Pays = customerFacades.operations.GetDebtPayForDebtPrivateKey(xd.PrivateKey);
                 });
-                result.Data = customerFacades.dataConverter.Serialize(returnedObj);
+                DebtPageDTO returned = new();
+                returned.CustomerName = customer.GetName();
+                returned.Debts = returnedObj;
+
+                result.Data = customerFacades.dataConverter.Serialize(returned);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetCustomerDebtsForCustomerPublicKey Operations Success";
             }, () =>
@@ -189,6 +213,44 @@ namespace Colosus.Server.Controllers
             return customerFacades.dataConverter.Serialize(result);
         }
 
+
+        [HttpPost]
+        [GetAuthorizeToken]
+        public string AddFastCustomer([FromBody] RequestParameter parameter)
+        {
+            RequestResult result = new("AddFastCustomer");
+            customerFacades.operationRunner.ActionRunner(() =>
+            {
+                FastCustomerCreateModel fcustomer = customerFacades.dataConverter.Deserialize<FastCustomerCreateModel>(parameter.Data);
+                Firm firm = customerFacades.operations.GetMyFirmForFirmPublicKey(fcustomer.FirmPublicKey);
+                FastCustomer customer = customerFacades.mapping.Convert<FastCustomer>(fcustomer);
+                customer.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.FastCustomer);
+                customer.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.FastCustomer);
+                customer.CustomerKey = GenKey(KeyTypes.Key, KeyTypes.Customer);
+                customer.ContactGroupKey = GenKey(KeyTypes.GroupKey, KeyTypes.Contact);
+                customer.PaymentGroupKey = GenKey(KeyTypes.GroupKey, KeyTypes.Payment);
+                customerFacades.operations.SaveEntity(customer);
+
+                CustomerFirmRelation customerFirmRelation = new()
+                {
+                    CustomerPrivateKey = customer.PrivateKey,
+                    FirmPrivateKey = firm.PrivateKey,
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.CustomerFirmRelation),
+                    PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.CustomerFirmRelation),
+                };
+
+                customerFacades.operations.SaveEntity(customerFirmRelation);
+                result.Result = EnumRequestResult.Ok;
+                result.Description = "AddFastCustomer Operations Success";
+
+            }, () =>
+            {
+                result.Result = EnumRequestResult.Error;
+                result.Description = "AddFastCustomer Operations Not Success";
+            });
+
+            return customerFacades.dataConverter.Serialize(result);
+        }
 
         [HttpPost]
         [GetAuthorizeToken]

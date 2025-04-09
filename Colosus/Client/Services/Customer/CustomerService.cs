@@ -47,5 +47,11 @@ namespace Colosus.Client.Services.Customer
         public async Task<RequestResult> AddDebtPay(DebtPayCreateModel debtPayCreateModel)
             => await httpClientService.GetPostAsync<RequestResult>(debtPayCreateModel, GetAddress("PayedDebt"));
 
+        public async Task<RequestResult> DeleteDebtPay(string DebtPayPublicKey)
+            => await httpClientService.GetPostAsync<RequestResult>(DebtPayPublicKey, GetAddress("DeleteDebtPay"));
+
+        public async Task<RequestResult> AddFastCustomer(FastCustomerCreateModel customer)
+            => await httpClientService.GetPostAsync<RequestResult>(customer, GetAddress("AddFastCustomer"));
+
     }
 }

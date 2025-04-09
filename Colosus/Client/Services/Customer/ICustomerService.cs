@@ -7,7 +7,8 @@ namespace Colosus.Client.Services.Customer
     public interface ICustomerService
     {
         public Task<RequestResult> AddIndividualCustomer(IndividualCustomerCreateModel customer);
-        public Task<RequestResult> AddCorporateCustomer(CorporateCustomerCreateModel customer);
+        public Task<RequestResult> AddCorporateCustomer(CorporateCustomerCreateModel customer); 
+        public Task<RequestResult> AddFastCustomer(FastCustomerCreateModel customer); 
         public Task<RequestResult> GetMyCustomers(string FirmPublicKey);
         public Task<RequestResult> GetCustomerDebtsForCustomerPublicKey(string CustomerPublicKey);
         public Task<RequestResult> AddDebt(DebtCreateModel debt);
@@ -17,5 +18,6 @@ namespace Colosus.Client.Services.Customer
         public Task<RequestResult> DeleteCustomer(string CustomerPublicKey);
         public Task<RequestResult> GetMyUpCommingDebt(string FirmPublicKey);
         public Task<RequestResult> AddDebtPay(DebtPayCreateModel debtPayCreateModel);
+        public Task<RequestResult> DeleteDebtPay(string DebtPayPublicKey);
     }
 }

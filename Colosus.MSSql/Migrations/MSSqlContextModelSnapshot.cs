@@ -48,6 +48,9 @@ namespace Colosus.Sql.MSSql.Migrations
                     b.Property<decimal>("Tax")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<bool>("VisibleWeb")
+                        .HasColumnType("bit");
+
                     b.HasKey("Key");
 
                     b.ToTable("Categories");
@@ -168,6 +171,9 @@ namespace Colosus.Sql.MSSql.Migrations
                     b.Property<string>("TaxOffice")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("VisibleFastOperation")
+                        .HasColumnType("bit");
 
                     b.HasKey("Key");
 
@@ -350,6 +356,46 @@ namespace Colosus.Sql.MSSql.Migrations
                     b.ToTable("DebtPays");
                 });
 
+            modelBuilder.Entity("Colosus.Entity.Concretes.DatabaseModel.FastCustomer", b =>
+                {
+                    b.Property<int>("Key")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Key"));
+
+                    b.Property<string>("ContactGroupKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentGroupKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrivateKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublicKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("VisibleFastOperation")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("FastCustomers");
+                });
+
             modelBuilder.Entity("Colosus.Entity.Concretes.DatabaseModel.Firm", b =>
                 {
                     b.Property<int>("Key")
@@ -466,10 +512,6 @@ namespace Colosus.Sql.MSSql.Migrations
                     b.Property<int>("CustomerTypeEnum")
                         .HasColumnType("int");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("IDCardNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -478,6 +520,10 @@ namespace Colosus.Sql.MSSql.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MiddleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Note")
@@ -493,6 +539,9 @@ namespace Colosus.Sql.MSSql.Migrations
                     b.Property<string>("PublicKey")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("VisibleFastOperation")
+                        .HasColumnType("bit");
 
                     b.HasKey("Key");
 

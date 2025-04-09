@@ -96,81 +96,82 @@ namespace Colosus.Business
         public List<Category> GetAllCategories() => Context.Categories.ToList();
 
         public List<Colosus.Entity.Concretes.DTO.ProductDTO> GetMyFirmProductDTOs(string firmPrivateKey) => (from pfr in Context.ProductFirmRelations
-                                                                                                          join p in Context.Products on pfr.ProductPrivateKey equals p.PrivateKey
-                                                                                                          join pcr in Context.ProductCategoryRelations on p.PrivateKey equals pcr.ProductPrivateKey
-                                                                                                          join c in Context.Categories on pcr.CategoryPrivateKey equals c.PrivateKey
-                                                                                                          join f in Context.Firms on pfr.FirmPrivateKey equals f.PrivateKey
-                                                                                                          join s in Context.Stocks on p.PrivateKey equals s.ProductPrivateKey into stockGroup
-                                                                                                          from s in stockGroup.DefaultIfEmpty()
-                                                                                                          where pfr.FirmPrivateKey == firmPrivateKey
-                                                                                                          group s by new
-                                                                                                          {
-                                                                                                              p.PublicKey,
-                                                                                                              p.Name,
-                                                                                                              SalePrice = p.SalePrice,
-                                                                                                              PurchasePrice = p.PurchasePrice,
-                                                                                                              CategoryName = c.Name,
-                                                                                                              CategoryPublicKey = c.PublicKey,
-                                                                                                              FirmName = f.Name
-                                                                                                          } into g
-                                                                                                          select new Colosus.Entity.Concretes.DTO.ProductDTO()
-                                                                                                          {
-                                                                                                              CategoryName = g.Key.CategoryName,
-                                                                                                              CategoryPublicKey = g.Key.CategoryPublicKey,
-                                                                                                              FirmName = g.Key.Name,
-                                                                                                              ProductCategoryRelationPublicKey = g.Key.PublicKey,
-                                                                                                              PublicKey = g.Key.PublicKey,
-                                                                                                              SalePrice = g.Key.SalePrice,
-                                                                                                              PurchasePrice = g.Key.PurchasePrice,
-                                                                                                              Stock = g.Sum(x => x.Amount),
-                                                                                                              Name = g.Key.Name,
-                                                                                                          }).ToList();
+                                                                                                             join p in Context.Products on pfr.ProductPrivateKey equals p.PrivateKey
+                                                                                                             join pcr in Context.ProductCategoryRelations on p.PrivateKey equals pcr.ProductPrivateKey
+                                                                                                             join c in Context.Categories on pcr.CategoryPrivateKey equals c.PrivateKey
+                                                                                                             join f in Context.Firms on pfr.FirmPrivateKey equals f.PrivateKey
+                                                                                                             join s in Context.Stocks on p.PrivateKey equals s.ProductPrivateKey into stockGroup
+                                                                                                             from s in stockGroup.DefaultIfEmpty()
+                                                                                                             where pfr.FirmPrivateKey == firmPrivateKey
+                                                                                                             group s by new
+                                                                                                             {
+                                                                                                                 p.PublicKey,
+                                                                                                                 p.Name,
+                                                                                                                 SalePrice = p.SalePrice,
+                                                                                                                 PurchasePrice = p.PurchasePrice,
+                                                                                                                 CategoryName = c.Name,
+                                                                                                                 CategoryPublicKey = c.PublicKey,
+                                                                                                                 FirmName = f.Name
+                                                                                                             } into g
+                                                                                                             select new Colosus.Entity.Concretes.DTO.ProductDTO()
+                                                                                                             {
+                                                                                                                 CategoryName = g.Key.CategoryName,
+                                                                                                                 CategoryPublicKey = g.Key.CategoryPublicKey,
+                                                                                                                 FirmName = g.Key.Name,
+                                                                                                                 ProductCategoryRelationPublicKey = g.Key.PublicKey,
+                                                                                                                 PublicKey = g.Key.PublicKey,
+                                                                                                                 SalePrice = g.Key.SalePrice,
+                                                                                                                 PurchasePrice = g.Key.PurchasePrice,
+                                                                                                                 Stock = g.Sum(x => x.Amount),
+                                                                                                                 Name = g.Key.Name,
+                                                                                                             }).ToList();
 
         public Product GetMyProduct(string productPublicKey) => Context.Products.FirstOrDefault(xd => xd.PublicKey == productPublicKey);
 
         public Entity.Concretes.DTO.ProductDTO? GetMyProductDTOs(string productPrivateKey) => (from p in Context.Products
-                                                                                            join pcr in Context.ProductCategoryRelations on p.PrivateKey equals pcr.ProductPrivateKey
-                                                                                            join pfr in Context.ProductFirmRelations on p.PrivateKey equals pfr.ProductPrivateKey
-                                                                                            join f in Context.Firms on pfr.FirmPrivateKey equals f.PrivateKey
-                                                                                            join c in Context.Categories on pcr.CategoryPrivateKey equals c.PrivateKey
-                                                                                            join s in Context.Stocks on p.PrivateKey equals s.ProductPrivateKey into stockGroup
-                                                                                            from s in stockGroup.DefaultIfEmpty()
-                                                                                            where p.PrivateKey == productPrivateKey
-                                                                                            group s by new
-                                                                                            {
-                                                                                                p.PublicKey,
-                                                                                                p.Name,
-                                                                                                SalePrice = p.SalePrice,
-                                                                                                PurchasePrice = p.PurchasePrice,
-                                                                                                CategoryName = c.Name,
-                                                                                                CategoryPublicKey = c.PublicKey,
-                                                                                                FirmName = f.Name
-                                                                                            } into g
-                                                                                            select new Colosus.Entity.Concretes.DTO.ProductDTO()
-                                                                                            {
-                                                                                                CategoryName = g.Key.CategoryName,
-                                                                                                CategoryPublicKey = g.Key.CategoryPublicKey,
-                                                                                                FirmName = g.Key.Name,
-                                                                                                ProductCategoryRelationPublicKey = g.Key.PublicKey,
-                                                                                                PublicKey = g.Key.PublicKey,
-                                                                                                SalePrice = g.Key.SalePrice,
-                                                                                                PurchasePrice = g.Key.PurchasePrice,
-                                                                                                Stock = g.Sum(x => x.Amount),
-                                                                                                Name = g.Key.Name,
-                                                                                            }).SingleOrDefault();
+                                                                                               join pcr in Context.ProductCategoryRelations on p.PrivateKey equals pcr.ProductPrivateKey
+                                                                                               join pfr in Context.ProductFirmRelations on p.PrivateKey equals pfr.ProductPrivateKey
+                                                                                               join f in Context.Firms on pfr.FirmPrivateKey equals f.PrivateKey
+                                                                                               join c in Context.Categories on pcr.CategoryPrivateKey equals c.PrivateKey
+                                                                                               join s in Context.Stocks on p.PrivateKey equals s.ProductPrivateKey into stockGroup
+                                                                                               from s in stockGroup.DefaultIfEmpty()
+                                                                                               where p.PrivateKey == productPrivateKey
+                                                                                               group s by new
+                                                                                               {
+                                                                                                   p.PublicKey,
+                                                                                                   p.Name,
+                                                                                                   SalePrice = p.SalePrice,
+                                                                                                   PurchasePrice = p.PurchasePrice,
+                                                                                                   CategoryName = c.Name,
+                                                                                                   CategoryPublicKey = c.PublicKey,
+                                                                                                   FirmName = f.Name
+                                                                                               } into g
+                                                                                               select new Colosus.Entity.Concretes.DTO.ProductDTO()
+                                                                                               {
+                                                                                                   CategoryName = g.Key.CategoryName,
+                                                                                                   CategoryPublicKey = g.Key.CategoryPublicKey,
+                                                                                                   FirmName = g.Key.Name,
+                                                                                                   ProductCategoryRelationPublicKey = g.Key.PublicKey,
+                                                                                                   PublicKey = g.Key.PublicKey,
+                                                                                                   SalePrice = g.Key.SalePrice,
+                                                                                                   PurchasePrice = g.Key.PurchasePrice,
+                                                                                                   Stock = g.Sum(x => x.Amount),
+                                                                                                   Name = g.Key.Name,
+                                                                                               }).SingleOrDefault();
 
         public List<Entity.Concretes.DTO.ProductStockDTO> GetProductStockHistoryDTOs(string productPublicKey) => (from p in Context.Products
-                                                                                                               join s in Context.Stocks on p.PrivateKey equals s.ProductPrivateKey
-                                                                                                               join u in Context.Users on s.UserPrivateKey equals u.PrivateKey
-                                                                                                               where p.PublicKey == productPublicKey
-                                                                                                               select new Colosus.Entity.Concretes.DTO.ProductStockDTO()
-                                                                                                               {
-                                                                                                                   Amount = s.Amount,
-                                                                                                                   CreateDate = s.CreateDate,
-                                                                                                                   Description = s.Description,
-                                                                                                                   UserFirstAndLastName = $"{u.FirstName} {u.LastName}",
-                                                                                                                   UserPublicKey = u.PublicKey
-                                                                                                               }).ToList();
+                                                                                                                  join s in Context.Stocks on p.PrivateKey equals s.ProductPrivateKey
+                                                                                                                  join u in Context.Users on s.UserPrivateKey equals u.PrivateKey
+                                                                                                                  where p.PublicKey == productPublicKey
+                                                                                                                  select new Colosus.Entity.Concretes.DTO.ProductStockDTO()
+                                                                                                                  {
+                                                                                                                      PublicKey = s.PublicKey,
+                                                                                                                      Amount = s.Amount,
+                                                                                                                      CreateDate = s.CreateDate,
+                                                                                                                      Description = s.Description,
+                                                                                                                      UserFirstAndLastName = $"{u.FirstName} {u.LastName}",
+                                                                                                                      UserPublicKey = u.PublicKey
+                                                                                                                  }).ToList();
 
         public List<ProductStock> GetProductStocks(string ProductPrivateKey) => Context.Stocks.Where(xd => xd.ProductPrivateKey == ProductPrivateKey).ToList();
         public void RemoveEntity(object entity)
@@ -205,13 +206,20 @@ namespace Colosus.Business
                                                                                              join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
                                                                                              join c in Context.CorporateCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
                                                                                              where f.PublicKey == firmPublicKey
-                                                                                             select c).ToList();
+                                                                                             select c).ToList(); 
+
+              public List<FastCustomer> GetMyFirmFastCustomers(string firmPublicKey) => (from cfr in Context.CustomerFirmRelations
+                                                                                                   join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
+                                                                                                   join c in Context.FastCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
+                                                                                                   where f.PublicKey == firmPublicKey
+                                                                                                   select c).ToList();
 
         public Colosus.Entity.Concretes.DTO.CustomersDTO GetMyFirmCustomers(string firmPublicKey) =>
             new Entity.Concretes.DTO.CustomersDTO()
             {
                 corporateCustomers = GetMyFirmCorporateCustomers(firmPublicKey),
-                individualCustomers = GetMyFirmIndividualCustomers(firmPublicKey)
+                individualCustomers = GetMyFirmIndividualCustomers(firmPublicKey),
+                fastCustomers = GetMyFirmFastCustomers(firmPublicKey)
             };
 
         public List<Debt> GetsDebitForCustomerKey(string customerKey) => Context.Debts.Where(xd => xd.CustomerKey == customerKey).ToList();
@@ -300,7 +308,11 @@ namespace Colosus.Business
                 PaymentTypeName = p.Name
             }).ToList();
 
+        public ProductStock GetProductStockForPublicKey(string stockPublicKey)
+            => Context.Stocks.FirstOrDefault(xd => xd.PublicKey == stockPublicKey);
 
+        public DebtPay GetDebtPayForPublicKey(string debtPayPublicKey)
+            => Context.DebtPays.FirstOrDefault(xd => xd.PublicKey == debtPayPublicKey);
         //Context.DebtPays.Where(xd=> xd.DebtPrivateKey == privateKey).ToList();
     }
 }

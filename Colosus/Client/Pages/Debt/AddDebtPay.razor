@@ -8,19 +8,20 @@
 @inject IDataConverter dataConverter
 @inject ICustomerService customerService
 
-<Colosus.Client.Components.ComboBox Empty="false"
-                                    Source="payType"
-                                    Ttemp="PaymentType"
-                                    ValueBinding="xd=> xd.Name"
-                                    DataBinding="xd=> xd.PublicKey"
-                                    SelectedValueChanged="(e)=> PaymentTypePublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
+<Colosus.Client.Components.ComboBox Empty="true"
+Source="payType"
+Ttemp="PaymentType"
+ValueBinding="xd=> xd.Name"
+DataBinding="xd=> xd.PublicKey"
+SelectedValueChanged="(e)=> PaymentTypePublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
 
-<Colosus.Client.Components.ComboBox Empty="false"
-                                    Source="currency"
-                                    Ttemp="Currency"
-                                    ValueBinding="xd=> xd.Name"
-                                    DataBinding="xd=> xd.PublicKey"
-                                    SelectedValueChanged="(e)=> CurrencyPublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
+<Colosus.Client.Components.ComboBox Empty="true"
+Source="currency"
+Ttemp="Currency"
+ValueBinding="xd=> xd.Name"
+
+DataBinding="xd=> xd.PublicKey"
+SelectedValueChanged="(e)=> CurrencyPublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
 
 <Colosus.Client.Components.Entry Placeholder="Miktar" Type="Components.Entry.EntryTypeEnum.Number" TextChanged="(e)=> Price = decimal.Parse(e)"></Colosus.Client.Components.Entry>
 
@@ -51,6 +52,12 @@
 
     public async Task Ekle()
     {
+        if (string.IsNullOrEmpty(CurrencyPublicKey) || string.IsNullOrEmpty(PaymentTypePublicKey))
+        {
+            AppState.AddMessage("Ödeme tipi yada para birimi boş bırakılamaz.");
+            return;
+        }
+
         if (CloseAction != null)
             CloseAction.Start();
     }

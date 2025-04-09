@@ -5,15 +5,20 @@
 @inject NavigationManager navigationManager
 <div class="container">
     <div class="row">
-        <div class="col-6">
-            <Colosus.Client.Components.Button Text="Bireysel"
-            Style="width:100%; min-width:100%;"
-            OnClick="()=>VisibleIndividualCustomer()"></Colosus.Client.Components.Button>
+        <div class="col-4">
+            <Colosus.Client.Components.Button Text="Hızlı"
+                                              Style="width:100%; min-width:100%;"
+                                              OnClick="()=>VisibleFastCustomer()"></Colosus.Client.Components.Button>
         </div>
-        <div class="col-6">
+        <div class="col-4">
+            <Colosus.Client.Components.Button Text="Bireysel"
+                                              Style="width:100%; min-width:100%;"
+                                              OnClick="()=>VisibleIndividualCustomer()"></Colosus.Client.Components.Button>
+        </div>
+        <div class="col-4">
             <Colosus.Client.Components.Button Text="Kurumsal"
-            Style="width:100%; min-width:100%;"
-            OnClick="()=>VisibleCorporateCustomer()"></Colosus.Client.Components.Button>
+                                              Style="width:100%; min-width:100%;"
+                                              OnClick="()=>VisibleCorporateCustomer()"></Colosus.Client.Components.Button>
         </div>
     </div>
     <div class="center-container" style="display:@iCustomer.ToString()">
@@ -22,7 +27,7 @@
         </div>
 
         <Colosus.Client.Components.Entry Placeholder="Adı"
-                                         @bind-Text="individualCustomer.FirstName"></Colosus.Client.Components.Entry>
+                                         @bind-Text="individualCustomer.Name"></Colosus.Client.Components.Entry>
         <Colosus.Client.Components.Entry Placeholder="Ortanca Adı"
                                          @bind-Text="individualCustomer.MiddleName"></Colosus.Client.Components.Entry>
         <Colosus.Client.Components.Entry Placeholder="Soy adı" @bind-Text="individualCustomer.LastName"></Colosus.Client.Components.Entry>
@@ -31,6 +36,7 @@
         <Colosus.Client.Components.Entry Placeholder="Doğum Tarihi"
                                          Type="Components.Entry.EntryTypeEnum.Date"
                                          TextChanged="(e)=> individualCustomer.BirthDate = DateTime.Parse(e)"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.CheckBox Text="Hızlı Satış" @bind-IsChecked="individualCustomer.VisibleFastOperation"></Colosus.Client.Components.CheckBox>
 
         <br />
         <br />
@@ -64,16 +70,17 @@
         </div>
 
         <Colosus.Client.Components.Entry Placeholder="Adı"
-        @bind-Text="corporateCustomer.Name"></Colosus.Client.Components.Entry>
+                                         @bind-Text="corporateCustomer.Name"></Colosus.Client.Components.Entry>
 
         <Colosus.Client.Components.Entry Placeholder="Adresi"
-        @bind-Text="corporateCustomer.Address"></Colosus.Client.Components.Entry>
+                                         @bind-Text="corporateCustomer.Address"></Colosus.Client.Components.Entry>
 
         <Colosus.Client.Components.Entry Placeholder="Vergi Dairesi"
-        @bind-Text="corporateCustomer.TaxOffice"></Colosus.Client.Components.Entry>
+                                         @bind-Text="corporateCustomer.TaxOffice"></Colosus.Client.Components.Entry>
 
         <Colosus.Client.Components.Entry Placeholder="Vergi No"
-        @bind-Text="corporateCustomer.TaxNo"></Colosus.Client.Components.Entry>
+                                         @bind-Text="corporateCustomer.TaxNo"></Colosus.Client.Components.Entry>
+        <Colosus.Client.Components.CheckBox Text="Hızlı Satış" @bind-IsChecked="corporateCustomer.VisibleFastOperation"></Colosus.Client.Components.CheckBox>
 
 
         <br />
@@ -81,16 +88,16 @@
 
         <Colosus.Client.Components.Entry Placeholder="İletişim Tipi" @bind-Text="ccContactAddress.Type"></Colosus.Client.Components.Entry>
         <Colosus.Client.Components.Entry Placeholder="Değer"
-        @bind-Text="ccContactAddress.Value"></Colosus.Client.Components.Entry>
+                                         @bind-Text="ccContactAddress.Value"></Colosus.Client.Components.Entry>
         <Colosus.Client.Components.Entry Placeholder="Not"
-        @bind-Text="ccContactAddress.Note"></Colosus.Client.Components.Entry>
+                                         @bind-Text="ccContactAddress.Note"></Colosus.Client.Components.Entry>
         <Colosus.Client.Components.Button Text="İletişim yolu ekle" OnClick="()=>{ corporateCustomer.ContactAddresses.Add(ccContactAddress); ccContactAddress = new();StateHasChanged(); }"></Colosus.Client.Components.Button>
         @foreach (var item in corporateCustomer.ContactAddresses)
         {
             <div>
                 @item.Type @item.Value @item.Note
                 <Colosus.Client.Components.Button Icon="fa fa-remove"
-                OnClick="()=> { corporateCustomer.ContactAddresses.Remove(item);StateHasChanged(); }"></Colosus.Client.Components.Button>
+                                                  OnClick="()=> { corporateCustomer.ContactAddresses.Remove(item);StateHasChanged(); }"></Colosus.Client.Components.Button>
             </div>
         }
 
@@ -99,36 +106,49 @@
 
         <Colosus.Client.Components.Entry Placeholder="Ödeme Adresi" @bind-Text="paymentAddress.Address"></Colosus.Client.Components.Entry>
         <Colosus.Client.Components.Entry Placeholder="Ödeme Bankası"
-        @bind-Text="paymentAddress.Bank"></Colosus.Client.Components.Entry>
+                                         @bind-Text="paymentAddress.Bank"></Colosus.Client.Components.Entry>
         <Colosus.Client.Components.Entry Placeholder="Not"
-        @bind-Text="paymentAddress.Note"></Colosus.Client.Components.Entry>
+                                         @bind-Text="paymentAddress.Note"></Colosus.Client.Components.Entry>
         <Colosus.Client.Components.Button Text="Ödeme yolu ekle" OnClick="()=>{ corporateCustomer.PaymentAddresses.Add(paymentAddress); paymentAddress = new();StateHasChanged(); }"></Colosus.Client.Components.Button>
         @foreach (var item in corporateCustomer.PaymentAddresses)
         {
             <div>
                 @item.Address @item.Bank @item.Note
                 <Colosus.Client.Components.Button Icon="fa fa-remove"
-                OnClick="()=> { corporateCustomer.PaymentAddresses.Remove(item);StateHasChanged(); }"></Colosus.Client.Components.Button>
+                                                  OnClick="()=> { corporateCustomer.PaymentAddresses.Remove(item);StateHasChanged(); }"></Colosus.Client.Components.Button>
             </div>
         }
 
         <br />
         <br />
         <Colosus.Client.Components.Button Text="Ekle"
-        OnClick="async()=>await AddCCustomer()"></Colosus.Client.Components.Button>
+                                          OnClick="async()=>await AddCCustomer()"></Colosus.Client.Components.Button>
 
     </div>
 
+
+    <div class="center-container" style="display:@fCustomer.ToString()">
+        <div class="container-header">
+            <h3>Hızlı Müşteri Ekle</h3>
+        </div>
+        <Colosus.Client.Components.Entry Placeholder="Adı" @bind-Text="fastCustomerCreateModel.Name"></Colosus.Client.Components.Entry>
+        <br />
+        <br />
+        <Colosus.Client.Components.Button Text="Ekle"
+                                          OnClick="async()=>await AddFCustomer()"></Colosus.Client.Components.Button>
+    </div>
 </div>
 @code {
     string cCustomer = "none";
     string iCustomer = "";
+    string fCustomer = "none";
 
 
     Colosus.Entity.Concretes.CreateModel.IndividualCustomerCreateModel individualCustomer = new();
     ContactAddress icContactAddress = new();
     Colosus.Entity.Concretes.CreateModel.CorporateCustomerCreateModel corporateCustomer = new();
     ContactAddress ccContactAddress = new();
+    Colosus.Entity.Concretes.CreateModel.FastCustomerCreateModel fastCustomerCreateModel = new();
     PaymentAddress paymentAddress = new();
 
 
@@ -150,17 +170,35 @@
         AppState.AddMessage(res.Description);
     }
 
+    public async Task AddFCustomer()
+    {
+        fastCustomerCreateModel.FirmPublicKey = AppState.SelectedFirmPublicKey;
+        var res = await customerService.AddFastCustomer(fastCustomerCreateModel);
+        if (res != null && res.Result == Entity.Concretes.EnumRequestResult.Ok)
+            navigationManager.NavigateTo("/Customer/Index");
+        AppState.AddMessage(res.Description);
+    }
     public void VisibleIndividualCustomer()
     {
         iCustomer = "";
         cCustomer = "None";
+        fCustomer = "none";
         StateHasChanged();
     }
 
     public void VisibleCorporateCustomer()
     {
         iCustomer = "None";
+        fCustomer = "none";
         cCustomer = "";
+        StateHasChanged();
+    }
+
+    public void VisibleFastCustomer()
+    {
+        iCustomer = "None";
+        fCustomer = "";
+        cCustomer = "None";
         StateHasChanged();
     }
 }

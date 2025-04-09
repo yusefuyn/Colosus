@@ -13,8 +13,10 @@ namespace Colosus.Entity.Concretes.DTO
         {
             individualCustomers = new();
             corporateCustomers = new();
+            fastCustomers = new();
         }
         public List<IndividualCustomer> individualCustomers { get; set; }
         public List<CorporateCustomer> corporateCustomers { get; set; }
+        public List<FastCustomer> fastCustomers { get; set; }
     }
 }

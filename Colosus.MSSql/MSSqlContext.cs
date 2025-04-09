@@ -19,6 +19,7 @@ namespace Colosus.Sql.MSSql
         public DbSet<CorporateCustomer> CorporateCustomers { get; set; }
         public DbSet<IndividualCustomer> IndividualCustomers { get; set; }
         public DbSet<DebtPay> DebtPays { get; set; }
+        public DbSet<FastCustomer> FastCustomers { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<PaymentTypeFirmRelation> PaymentTypeFirmRelations { get; set; }
         public DbSet<CustomerFirmRelation> CustomerFirmRelations { get; set; }

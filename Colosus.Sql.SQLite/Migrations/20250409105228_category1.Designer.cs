@@ -3,6 +3,7 @@ using System;
 using Colosus.Sql.SQLite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Colosus.Sql.SQLite.Migrations
 {
     [DbContext(typeof(SQLiteContext))]
-    partial class SQLiteContextModelSnapshot : ModelSnapshot
+    [Migration("20250409105228_category1")]
+    partial class category1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -158,9 +161,6 @@ namespace Colosus.Sql.SQLite.Migrations
                     b.Property<string>("TaxOffice")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("VisibleFastOperation")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Key");
 
@@ -333,44 +333,6 @@ namespace Colosus.Sql.SQLite.Migrations
                     b.ToTable("DebtPays");
                 });
 
-            modelBuilder.Entity("Colosus.Entity.Concretes.DatabaseModel.FastCustomer", b =>
-                {
-                    b.Property<int>("Key")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ContactGroupKey")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CustomerKey")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PaymentGroupKey")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PrivateKey")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PublicKey")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("VisibleFastOperation")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Key");
-
-                    b.ToTable("FastCustomers");
-                });
-
             modelBuilder.Entity("Colosus.Entity.Concretes.DatabaseModel.Firm", b =>
                 {
                     b.Property<int>("Key")
@@ -479,6 +441,10 @@ namespace Colosus.Sql.SQLite.Migrations
                     b.Property<int>("CustomerTypeEnum")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("IDCardNumber")
                         .HasColumnType("TEXT");
 
@@ -487,10 +453,6 @@ namespace Colosus.Sql.SQLite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MiddleName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Note")
@@ -506,9 +468,6 @@ namespace Colosus.Sql.SQLite.Migrations
                     b.Property<string>("PublicKey")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("VisibleFastOperation")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Key");
 

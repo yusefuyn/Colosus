@@ -32,5 +32,6 @@
         public const string PaymentTypeFirmRelation = "PaymentTypeFirmRelation";
         public const string Currency = "Currency"; 
         public const string DebtPay = "DebtPay"; 
+        public const string FastCustomer = "FastCustomer"; 
     }
 }

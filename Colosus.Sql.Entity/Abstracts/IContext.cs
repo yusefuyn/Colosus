@@ -17,6 +17,7 @@ namespace Colosus.Sql.Entity.Abstracts
         public DbSet<User> Users { get; set; }
         public DbSet<IndividualCustomer> IndividualCustomers { get; set; }
         public DbSet<CorporateCustomer> CorporateCustomers { get; set; }
+        public DbSet<FastCustomer> FastCustomers { get; set; }
         public DbSet<PaymentAddress> PaymentAddresseses { get; set; }
         public DbSet<CurrencyFirmRelation> CurrencyFirmRelations { get; set; }
         public DbSet<DebtPay> DebtPays { get; set; }

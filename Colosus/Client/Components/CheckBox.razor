@@ -1,0 +1,18 @@
+﻿<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="@IsChecked" @onchange="async (e)=> await OnCheckedChanged(e)" id="checkbox1" />
+    <label class="form-check-label" for="checkbox1">
+        @Text
+    </label>
+</div>
+
+@code {
+    [Parameter] public string Text { get; set; } = "";
+    [Parameter] public bool IsChecked { get; set; } = false;
+    [Parameter] public EventCallback<bool> IsCheckedChanged { get; set; }
+
+    private async Task OnCheckedChanged(ChangeEventArgs e)
+    {
+        IsChecked = bool.Parse(e.Value.ToString());
+        await IsCheckedChanged.InvokeAsync(IsChecked);
+    }
+}

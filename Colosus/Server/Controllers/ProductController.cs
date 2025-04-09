@@ -23,7 +23,6 @@ namespace Colosus.Server.Controllers
             => productFacades.guid.Generate(keyType, entityType);
 
         [HttpPost]
-        [GetAuthorizeToken]
         public string AddProduct([FromBody] RequestParameter parameter)
         {
             RequestResult requestResult = new("AddProduct");
@@ -76,9 +75,30 @@ namespace Colosus.Server.Controllers
         }
 
 
+        [HttpPost]
+        public string DeleteStock([FromBody] RequestParameter parameter)
+        {
+            RequestResult requestResult = new("DeleteStock");
+
+            productFacades.operationRunner.ActionRunner(() =>
+            {
+
+                string StockPublicKey = productFacades.dataConverter.Deserialize<string>(parameter.Data);
+                ProductStock stock = productFacades.operations.GetProductStockForPublicKey(StockPublicKey);
+                productFacades.operations.RemoveEntity(stock);
+                requestResult.Result = EnumRequestResult.Ok;
+                requestResult.Description = "DeleteStock operations Success";
+
+            }, () =>
+            {
+                requestResult.Result = EnumRequestResult.Error;
+                requestResult.Description = "DeleteStock operations not success";
+            });
+
+            return productFacades.dataConverter.Serialize(requestResult);
+        }
 
         [HttpPost]
-        [GetAuthorizeToken]
         public string GetMyFirmProducts([FromBody] RequestParameter parameter)
         {
             RequestResult requestResult = new("GetMyFirmProducts");
@@ -105,7 +125,6 @@ namespace Colosus.Server.Controllers
 
 
         [HttpPost]
-        [GetAuthorizeToken]
         public string GetStockHistoryDTO([FromBody] RequestParameter parameter)
         {
             RequestResult requestResult = new("GetStockHistoryDTO");
@@ -171,7 +190,6 @@ namespace Colosus.Server.Controllers
 
 
         [HttpPost]
-        [GetAuthorizeToken]
         public string DeleteProduct([FromBody] RequestParameter parameter)
         {
             RequestResult requestResult = new("DeleteProduct");

@@ -20,6 +20,7 @@ namespace Colosus.Sql.SQLite
         public DatabaseFacade Database { get; set; }
         public DbSet<PaymentTypeFirmRelation> PaymentTypeFirmRelations { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
+        public DbSet<FastCustomer> FastCustomers { get; set; }
         public DbSet<CorporateCustomer> CorporateCustomers { get; set; }
         public DbSet<CurrencyFirmRelation> CurrencyFirmRelations { get; set; }
         public DbSet<DebtPay> DebtPays { get; set; }

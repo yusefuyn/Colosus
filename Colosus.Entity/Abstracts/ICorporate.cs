@@ -8,7 +8,6 @@ namespace Colosus.Entity.Abstracts
 {
     public interface ICorporate
     {
-        public string Name { get; set; }
         public string TaxOffice { get; set; }
         public string TaxNo { get; set; }
         public string Address { get; set; }

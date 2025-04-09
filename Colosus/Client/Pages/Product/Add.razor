@@ -16,14 +16,15 @@
 
     <Colosus.Client.Components.Entry Placeholder="Ürün Adı" @bind-Text="product.Name"></Colosus.Client.Components.Entry>
     <Colosus.Client.Components.Entry Placeholder="Alış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
-                                     TextChanged="(e)=> product.PurchasePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Components.Entry>
+    TextChanged="(e)=> product.PurchasePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Components.Entry>
     <Colosus.Client.Components.Entry Placeholder="Satış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
-                                     TextChanged="(e)=> product.SalePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Components.Entry>
+    TextChanged="(e)=> product.SalePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Components.Entry>
     <Colosus.Client.Components.ComboBox Ttemp="Colosus.Entity.Concretes.DatabaseModel.Category"
-                                        DataBinding="xd=> xd.PublicKey"
-                                        ValueBinding="xd=> xd.Name"
-                                        Source="Categories"
-                                        SelectedValueChanged="(e)=>  product.CategoryPublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
+    DataBinding="xd=> xd.PublicKey"
+    Source="Categories"
+    ValueBinding="xd=> xd.Name"
+    Empty="true"
+    SelectedValueChanged="(e)=>  product.CategoryPublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
     <Colosus.Client.Components.Button Text="Ekle" OnClick=" async ()=>await AddProduct()"></Colosus.Client.Components.Button>
 </div>
 
@@ -44,6 +45,12 @@
 
     public async Task AddProduct()
     {
+        if (string.IsNullOrEmpty(product.CategoryPublicKey))
+        {
+            AppState.AddMessage("Kategori boş bırakılamaz!.");
+            return;
+        }
+
         product.FirmPublicKey = AppState.SelectedFirmPublicKey;
         var res = await productService.AddProduct(product);
         if (res == null)

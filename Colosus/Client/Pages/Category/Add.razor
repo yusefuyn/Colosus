@@ -9,9 +9,12 @@
         <h3>Yeni Kategori Ekle</h3>
     </div>
     <Colosus.Client.Components.Entry @bind-Text="category.Name"
-    Placeholder="Kategori Adı"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Entry TextChanged="(e)=>{ category.Tax = Convert.ToDecimal(e); }"
-    Placeholder="Vergi Yüzdesi" Type="Components.Entry.EntryTypeEnum.Number"></Colosus.Client.Components.Entry>
+                                     Placeholder="Kategori Adı"></Colosus.Client.Components.Entry>
+    <Colosus.Client.Components.Number @bind-Value="category.Tax"
+                                      MinValue="0"
+                                      MaxValue="100"
+                                      Placeholder="Vergi Yüzdesi"></Colosus.Client.Components.Number>
+    <Colosus.Client.Components.CheckBox Text="Web'de gözüksün" @bind-IsChecked="category.VisibleWeb"></Colosus.Client.Components.CheckBox>
     <Colosus.Client.Components.Button Text="Ekle" OnClick="async()=>await AddCategory()"></Colosus.Client.Components.Button>
 </div>
 

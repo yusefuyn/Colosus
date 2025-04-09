@@ -31,7 +31,7 @@
                 {
                     <tr>
                         <td>@ConverTypeToString(item.Type)</td>
-                        <td><Button Style="min-width:30px;width:30px;" OnClick="async ()=> await PayedOrNotPayed(item.PublicKey,item.Payed)" Icon="@ConvertPayedToString(item.Payed)"></Button></td>
+                        <td><Button Style="min-width:30px;width:30px;" OnClick="async ()=> await PayedOrNotPayed(item.PublicKey,item.Payed)" Icon="@AppState.ConvertBoolToIcon(item.Payed)"></Button></td>
                         <td>@item.PayDate</td>
                         <td style="width:80px;min-width:80px;">@item.Price</td>
                         <td>@item.Note</td>
@@ -82,13 +82,6 @@
             default:
                 return null;
         }
-    }
-
-    public string ConvertPayedToString(bool payed)
-
-    {
-        if (payed) return "fa fa-check";
-        else return "fa fa-close";
     }
 
     private async Task PayedOrNotPayed(string DebtItemPublicKey, bool payed)

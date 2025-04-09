@@ -1,0 +1,52 @@
+﻿<div class="input-container">
+    <label class="label" style="height:5px;">@Placeholder</label>
+    <input class="special-input input"
+    name="text"
+    value="@_value"
+    min="@MinValue"
+    max="@MaxValue"
+    @oninput="OnInputChanged"
+    type="number"
+    aria-describedby="errorMessage" />
+    @if (errorMessage != null)
+    {
+        <div id="errorMessage" class="text-danger">@errorMessage</div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Placeholder { get; set; } = "";
+    private decimal _value = 0;
+    [Parameter] public decimal Value { get { return _value; } set { _value = value; } }
+    [Parameter] public decimal MaxValue { get; set; }
+    [Parameter] public decimal MinValue { get; set; }
+    [Parameter] public EventCallback<decimal> ValueChanged { get; set; }
+    [Parameter] public bool Nullable { get; set; } = true;
+    private string errorMessage = null;
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        if (decimal.TryParse(e.Value.ToString(), out decimal newValue))
+        {
+            errorMessage = null;
+            if (newValue > MaxValue)
+            {
+                newValue = MaxValue;
+                errorMessage = $"Değer {MaxValue} ile sınırlıdır.";
+            }
+            else if (newValue < MinValue)
+            {
+                newValue = MinValue;
+                errorMessage = $"Değer {MinValue} ile sınırlıdır.";
+            }
+            if (Nullable && string.IsNullOrEmpty(newValue.ToString()))
+            {
+                newValue = 0;
+                errorMessage = $"Değer boş bırakılamaz.";
+            }
+
+            _value = newValue;
+            await ValueChanged.InvokeAsync(_value);
+        }
+    }
+}
