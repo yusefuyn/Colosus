@@ -87,8 +87,8 @@
 
 
 @code {
-    List<Colosus.Entity.Concretes.DTO.Currency> Currencies = new();
-    List<Colosus.Entity.Concretes.DTO.Currency> RecommendedCurrencies = new();
+    List<Colosus.Entity.Concretes.DTO.CurrencyDTO> Currencies = new();
+    List<Colosus.Entity.Concretes.DTO.CurrencyDTO> RecommendedCurrencies = new();
 
 
     protected override async Task OnInitializedAsync()
@@ -106,13 +106,13 @@
     {
         RequestResult res = await settingsService.GetAllCurrencyForFirmPublicKey(AppState.SelectedFirmPublicKey);
         if (res != null && res.Ok())
-            Currencies = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.Currency>>(res.Data);
+            Currencies = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.CurrencyDTO>>(res.Data);
         else
             AppState.AddMessage("Bir hata meydana geldi.");
 
         RequestResult result = await settingsService.RecommendedCurrency(AppState.SelectedFirmPublicKey);
         if (result != null && result.Ok())
-            RecommendedCurrencies = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.Currency>>(result.Data);
+            RecommendedCurrencies = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.CurrencyDTO>>(result.Data);
         else
             AppState.AddMessage("Bir hata meydana geldi.");
 

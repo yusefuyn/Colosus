@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.DTO
 {
-    public class Debt
+    public class DebtDTO
     {
-        public Debt()
+        public DebtDTO()
         {
             CustomerName = "";
             CustomerPublicKey = "";

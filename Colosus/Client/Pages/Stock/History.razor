@@ -42,7 +42,7 @@
 
     [Parameter] public string ProductPublicKey { get; set; }
 
-    List<Colosus.Entity.Concretes.DTO.ProductStock> Stocks = new();
+    List<Colosus.Entity.Concretes.DTO.ProductStockDTO> Stocks = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -52,7 +52,7 @@
     public async Task DataRefresh()
     {
         RequestResult res = await productService.GetStockHistoryDTO(ProductPublicKey);
-        Stocks = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.ProductStock>>(res.Data);
+        Stocks = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.ProductStockDTO>>(res.Data);
         StateHasChanged();
     }
 }

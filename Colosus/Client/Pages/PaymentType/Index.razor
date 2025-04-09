@@ -84,8 +84,8 @@
 </div>
 
 @code {
-    List<Colosus.Entity.Concretes.DTO.PaymentType> PaymentTypes = new();
-    List<Colosus.Entity.Concretes.DTO.PaymentType> RecommendedPaymentType = new();
+    List<Colosus.Entity.Concretes.DTO.PaymentTypeDTO> PaymentTypes = new();
+    List<Colosus.Entity.Concretes.DTO.PaymentTypeDTO> RecommendedPaymentType = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -102,13 +102,13 @@
     {
         RequestResult res = await settingsService.GetAllPaymentTypeForFirmPublicKey(AppState.SelectedFirmPublicKey);
         if (res != null && res.Ok())
-            PaymentTypes = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.PaymentType>>(res.Data);
+            PaymentTypes = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.PaymentTypeDTO>>(res.Data);
         else
             AppState.AddMessage("Bir hata meydana geldi.");
 
         RequestResult result = await settingsService.RecommendedPaymentType(AppState.SelectedFirmPublicKey);
         if (result != null && result.Ok())
-            RecommendedPaymentType = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.PaymentType>>(result.Data);
+            RecommendedPaymentType = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.PaymentTypeDTO>>(result.Data);
         else
             AppState.AddMessage("Bir hata meydana geldi.");
 

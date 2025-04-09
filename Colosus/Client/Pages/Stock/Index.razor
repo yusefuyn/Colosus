@@ -55,7 +55,7 @@
 
 </div>
 @code {
-    List<Colosus.Entity.Concretes.DTO.Product> Products = new();
+    List<Colosus.Entity.Concretes.DTO.ProductDTO> Products = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -70,7 +70,7 @@
             AppState.AddMessage("Hata meydana geldi.");
             return;
         }
-        Products = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.Product>>(res.Data);
+        Products = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.ProductDTO>>(res.Data);
     }
 
     public async Task AddStock(string productPublicKey, string ProductName)

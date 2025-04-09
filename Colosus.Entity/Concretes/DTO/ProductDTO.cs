@@ -9,9 +9,9 @@ namespace Colosus.Entity.Concretes.DTO
     /// <summary>
     /// Ürünleri listelerken kullanılacak obje
     /// </summary>
-    public class Product
+    public class ProductDTO
     {
-        public Product()
+        public ProductDTO()
         {
             Stock = 0;
         }

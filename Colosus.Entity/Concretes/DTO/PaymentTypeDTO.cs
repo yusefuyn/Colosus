@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.DTO
 {
-    public class PaymentType
+    public class PaymentTypeDTO
     {
         public string Name { get; set; }
         public string PictureUri { get; set; }

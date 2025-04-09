@@ -19,10 +19,10 @@ namespace Colosus.Business.Abstracts
         Firm GetMyFirm(string UserPrivateKey);
         List<IndividualCustomer> GetMyFirmIndividualCustomers(string firmPublicKey);
         Firm GetMyFirmForFirmPublicKey(string firmpublicKey);
-        List<Colosus.Entity.Concretes.DTO.Product> GetMyFirmProductDTOs(string firmPrivateKey);
+        List<Colosus.Entity.Concretes.DTO.ProductDTO> GetMyFirmProductDTOs(string firmPrivateKey);
         Product GetMyProduct(string productPublicKey);
-        Entity.Concretes.DTO.Product GetMyProductDTOs(string privateKey);
-        List<Entity.Concretes.DTO.ProductStock> GetProductStockHistoryDTOs(string productPublicKey);
+        Entity.Concretes.DTO.ProductDTO GetMyProductDTOs(string privateKey);
+        List<Entity.Concretes.DTO.ProductStockDTO> GetProductStockHistoryDTOs(string productPublicKey);
         List<ProductStock> GetProductStocks(string privateKey);
         List<Firm> GetsMyFirms(string UserPrivateKey);
         public User GetUser(string userName, string password);
@@ -30,7 +30,7 @@ namespace Colosus.Business.Abstracts
         void RemoveEntity(object entity);
         public void SaveEntity(object entity);
         List<CorporateCustomer> GetMyFirmCorporateCustomers(string firmPublicKey);
-        Entity.Concretes.DTO.Customers GetMyFirmCustomers(string firmPublicKey);
+        Entity.Concretes.DTO.CustomersDTO GetMyFirmCustomers(string firmPublicKey);
         public ICustomer GetICustomerFromCustomerPublicKey(string customerPublicKey);
         List<Debt> GetsDebitForCustomerKey(string customerKey);
         Debt GetDebt(string debtPublicKey);

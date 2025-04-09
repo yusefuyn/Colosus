@@ -88,7 +88,7 @@ namespace Colosus.Server.Controllers
 
                 string FirmPublicKey = productFacades.dataConverter.Deserialize<string>(parameter.Data);
                 Firm myFirm = productFacades.operations.GetMyFirmForFirmPublicKey(FirmPublicKey);
-                List<Entity.Concretes.DTO.Product> prods = productFacades.operations.GetMyFirmProductDTOs(myFirm.PrivateKey);
+                List<Entity.Concretes.DTO.ProductDTO> prods = productFacades.operations.GetMyFirmProductDTOs(myFirm.PrivateKey);
                 requestResult.Data = productFacades.dataConverter.Serialize(prods);
                 requestResult.Result = EnumRequestResult.Ok;
                 requestResult.Description = "Success";
@@ -113,7 +113,7 @@ namespace Colosus.Server.Controllers
             productFacades.operationRunner.ActionRunner(() =>
             {
                 string ProductPublicKey = productFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
-                List<Colosus.Entity.Concretes.DTO.ProductStock> returnedList = new();
+                List<Colosus.Entity.Concretes.DTO.ProductStockDTO> returnedList = new();
                 returnedList = productFacades.operations.GetProductStockHistoryDTOs(ProductPublicKey);
                 requestResult.Result = EnumRequestResult.Ok;
                 requestResult.Data = productFacades.dataConverter.Serialize(returnedList);
@@ -152,7 +152,7 @@ namespace Colosus.Server.Controllers
 
                 productFacades.operations.SaveEntity(productStock);
 
-                Entity.Concretes.DTO.Product newProd = productFacades.operations.GetMyProductDTOs(prod.PrivateKey);
+                Entity.Concretes.DTO.ProductDTO newProd = productFacades.operations.GetMyProductDTOs(prod.PrivateKey);
                 requestResult.Data = productFacades.dataConverter.Serialize(newProd);
 
                 requestResult.Result = EnumRequestResult.Ok;

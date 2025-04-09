@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.DTO
 {
-    public class UpCommingDebt
+    public class UpCommingDebtDTO
     {
 
         public DateTime PayDate { get; set; }

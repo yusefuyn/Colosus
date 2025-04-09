@@ -52,7 +52,7 @@
 
 </div>
 @code {
-    List<Colosus.Entity.Concretes.DTO.Product> Products = new();
+    List<Colosus.Entity.Concretes.DTO.ProductDTO> Products = new();
     protected override async Task OnInitializedAsync()
     {
         await RefreshData();
@@ -67,7 +67,7 @@
             AppState.AddMessage("Bir hata meydana geldi");
             return;
         }
-        List<Colosus.Entity.Concretes.DTO.Product> resProducts = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.Product>>(res.Data);
+        List<Colosus.Entity.Concretes.DTO.ProductDTO> resProducts = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.ProductDTO>>(res.Data);
         Products.AddRange(resProducts);
     }
 

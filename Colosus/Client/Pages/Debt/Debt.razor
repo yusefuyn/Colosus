@@ -119,7 +119,7 @@
 </Colosus.Client.Components.CustomBox>
 @code {
     [Parameter] public string CustomerPublicKey { get; set; } = "";
-    List<Colosus.Entity.Concretes.DTO.Debt> debts = new();
+    List<Colosus.Entity.Concretes.DTO.DebtDTO> debts = new();
     public string CustomerName { get; set; } = "";
     private string SelectedDebtPublicKey = "";
     public string ConverTypeToString(DebitType type)
@@ -187,7 +187,7 @@
         RequestResult result = await customerService.GetCustomerDebtsForCustomerPublicKey(CustomerPublicKey);
         if (result.Result == EnumRequestResult.Ok)
         {
-            debts = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.Debt>>(result.Data);
+            debts = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.DebtDTO>>(result.Data);
             CustomerName = debts[0].CustomerName;
             StateHasChanged();
         }

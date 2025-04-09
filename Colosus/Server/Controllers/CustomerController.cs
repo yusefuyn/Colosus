@@ -168,7 +168,7 @@ namespace Colosus.Server.Controllers
                 string CustomerPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
                 ICustomer customer = customerFacades.operations.GetICustomerFromCustomerPublicKey(CustomerPublicKey);
                 List<Debt> debts = customerFacades.operations.GetsDebitForCustomerKey(customer.CustomerKey);
-                List<Colosus.Entity.Concretes.DTO.Debt> returnedObj = customerFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.Debt>(debts);
+                List<Colosus.Entity.Concretes.DTO.DebtDTO> returnedObj = customerFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.DebtDTO>(debts);
                 debts.ForEach(xd =>
                 {
                     var debsts = returnedObj.FirstOrDefault(dx => dx.PublicKey == xd.PublicKey);
@@ -303,7 +303,7 @@ namespace Colosus.Server.Controllers
                 string firmPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data);
 
 
-                Colosus.Entity.Concretes.DTO.Customers resultCustomer = customerFacades.operations.GetMyFirmCustomers(firmPublicKey);
+                Colosus.Entity.Concretes.DTO.CustomersDTO resultCustomer = customerFacades.operations.GetMyFirmCustomers(firmPublicKey);
 
                 result.Data = customerFacades.dataConverter.Serialize(resultCustomer);
                 result.Result = EnumRequestResult.Ok;

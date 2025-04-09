@@ -13,7 +13,7 @@ namespace Colosus.Server.Controllers
 {
     [ApiController]
     [Route("/Api/[controller]/[action]")]
-    [EnableCors("AllowAll")]
+    //[EnableCors("AllowAll")]
     public class FirmController : Controller
     {
         IFirmFacades firmFacades;

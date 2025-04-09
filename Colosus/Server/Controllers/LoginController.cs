@@ -15,7 +15,7 @@ namespace Colosus.Server.Controllers
 
     [ApiController]
     [Route("/api/[controller]/[action]")]
-    [EnableCors("AllowAll")]
+    //[EnableCors("AllowAll")]
     public class LoginController : Controller
     {
         ILoginFacades loginFacades;

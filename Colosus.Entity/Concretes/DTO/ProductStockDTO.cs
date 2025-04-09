@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.DTO
 {
-    public class ProductStock
+    public class ProductStockDTO
     {
 
         public int Amount { get; set; }

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.DTO
 {
-    public class Customers
+    public class CustomersDTO
     {
-        public Customers()
+        public CustomersDTO()
         {
             individualCustomers = new();
             corporateCustomers = new();

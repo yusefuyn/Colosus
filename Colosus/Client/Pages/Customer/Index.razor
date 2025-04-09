@@ -122,7 +122,7 @@
             await RefreshData();
     }
 
-    Colosus.Entity.Concretes.DTO.Customers Customers = new();
+    Colosus.Entity.Concretes.DTO.CustomersDTO Customers = new();
     protected override async Task OnInitializedAsync()
     {
         await RefreshData();
@@ -133,7 +133,7 @@
         RequestResult res = await customerService.GetMyCustomers(AppState.SelectedFirmPublicKey);
         if (res != null && res.Result == EnumRequestResult.Ok)
         {
-            Customers = dataConverter.Deserialize<Colosus.Entity.Concretes.DTO.Customers>(res.Data);
+            Customers = dataConverter.Deserialize<Colosus.Entity.Concretes.DTO.CustomersDTO>(res.Data);
             StateHasChanged();
         }
         else

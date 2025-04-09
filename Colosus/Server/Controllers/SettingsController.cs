@@ -138,7 +138,7 @@ namespace Colosus.Server.Controllers
             {
                 string FirmPublicKey = settingFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
                 List<PaymentType> paymentTypes = settingFacades.operations.GetAllPaymentTypeForFirmPublicKey(FirmPublicKey);
-                List<Colosus.Entity.Concretes.DTO.PaymentType> payTypeDtos= settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.PaymentType>(paymentTypes);
+                List<Colosus.Entity.Concretes.DTO.PaymentTypeDTO> payTypeDtos= settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.PaymentTypeDTO>(paymentTypes);
                 result.Data = settingFacades.dataConverter.Serialize(payTypeDtos);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetAllPaymentTypeForFirmPublicKey operation success";
@@ -273,7 +273,7 @@ namespace Colosus.Server.Controllers
             {
                 string FirmPublicKey = settingFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
                 List<Currency> paymentTypes = settingFacades.operations.GetAllCurrencyForFirmPublicKey(FirmPublicKey);
-                List<Colosus.Entity.Concretes.DTO.Currency> currencies = settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.Currency>(paymentTypes);
+                List<Colosus.Entity.Concretes.DTO.CurrencyDTO> currencies = settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.CurrencyDTO>(paymentTypes);
                 result.Data = settingFacades.dataConverter.Serialize(currencies);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetAllCurrencyForFirmPublicKey operation success";

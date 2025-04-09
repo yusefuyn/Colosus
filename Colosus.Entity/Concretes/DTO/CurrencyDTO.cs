@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.DTO
 {
-    public class Currency
+    public class CurrencyDTO
     {
         public string PublicKey { get; set; }
         public string Name { get; set; }
