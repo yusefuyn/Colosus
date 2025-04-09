@@ -4,6 +4,7 @@ using Colosus.Sql.MSSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Colosus.Sql.MSSql.Migrations
 {
     [DbContext(typeof(MSSqlContext))]
-    partial class MSSqlContextModelSnapshot : ModelSnapshot
+    [Migration("20250409013432_debt7")]
+    partial class debt7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

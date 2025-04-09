@@ -4,10 +4,12 @@ using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Server.Attributes;
 using Colosus.Server.Facades.Customer;
 using Microsoft.AspNetCore.Mvc;
-using iCustomer = Colosus.Entity.Concretes.CreateModel.IndividualCustomer;
-using cCustomer = Colosus.Entity.Concretes.CreateModel.CorporateCustomer;
+using iCustomer = Colosus.Entity.Concretes.CreateModel.IndividualCustomerCreateModel;
+using cCustomer = Colosus.Entity.Concretes.CreateModel.CorporateCustomerCreateModel;
 using Colosus.Entity.Abstracts;
 using Colosus.Server.Facades.Setting;
+using Colosus.Entity.Concretes.CreateModel;
+using System.Security.Cryptography.X509Certificates;
 namespace Colosus.Server.Controllers
 {
     [ApiController]
@@ -23,6 +25,8 @@ namespace Colosus.Server.Controllers
         private string GenKey(string keyType, string entityType)
     => customerFacades.guid.Generate(keyType, entityType);
 
+
+
         [HttpPost]
         [GetAuthorizeToken]
         public string AddCustomerDebt([FromBody] RequestParameter parameter)
@@ -30,7 +34,7 @@ namespace Colosus.Server.Controllers
             RequestResult result = new("AddCustomerDebts");
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                Colosus.Entity.Concretes.CreateModel.Debt debt = customerFacades.dataConverter.Deserialize<Colosus.Entity.Concretes.CreateModel.Debt>(parameter.Data);
+                DebtCreateModel debt = customerFacades.dataConverter.Deserialize<DebtCreateModel>(parameter.Data);
                 ICustomer customer = customerFacades.operations.GetICustomerFromCustomerPublicKey(debt.CustomerPublicKey);
                 Debt res = customerFacades.mapping.Convert<Debt>(debt);
                 res.CustomerKey = customer.CustomerKey;
@@ -81,7 +85,6 @@ namespace Colosus.Server.Controllers
                 string DebtPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
 
                 Debt debt = customerFacades.operations.GetDebt(DebtPublicKey);
-                debt.Payed = true;
                 customerFacades.operations.RemoveEntity(debt);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "DeleteDebt Operations Success";
@@ -102,11 +105,21 @@ namespace Colosus.Server.Controllers
 
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                string DebtPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
-
-                Debt debt = customerFacades.operations.GetDebt(DebtPublicKey);
-                debt.Payed = true;
-                customerFacades.operations.UpdateEntity(debt);
+                DebtPayCreateModel model = customerFacades.dataConverter.Deserialize<DebtPayCreateModel>(parameter.Data.ToString());
+                Debt debt = customerFacades.operations.GetDebt(model.DebtPublicKey);
+                Currency currency = customerFacades.operations.GetCurrency(model.CurrencyPublicKey);
+                PaymentType paymentType = customerFacades.operations.GetPaymentType(model.PaymentTypePublicKey);
+                DebtPay pay = new()
+                {
+                    Price = model.Price,
+                    CreateDate = DateTime.Now,
+                    DebtPrivateKey = debt.PrivateKey,
+                    PrivateKey = GenKey(KeyTypes.PrivateKey,KeyTypes.DebtPay),
+                    PublicKey = GenKey(KeyTypes.PublicKey,KeyTypes.DebtPay),
+                    CurrencyPrivateKey = currency.PrivateKey,
+                    PaymentTypePrivateKey = paymentType.PrivateKey,
+                };
+                customerFacades.operations.SaveEntity(pay);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "PayedDebt Operations Success";
             }, () =>
@@ -131,7 +144,6 @@ namespace Colosus.Server.Controllers
                 string DebtPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
 
                 Debt debt = customerFacades.operations.GetDebt(DebtPublicKey);
-                debt.Payed = false;
                 customerFacades.operations.UpdateEntity(debt);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "UnPaidDebt Operations Success";
@@ -155,13 +167,17 @@ namespace Colosus.Server.Controllers
             {
                 string CustomerPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
                 ICustomer customer = customerFacades.operations.GetICustomerFromCustomerPublicKey(CustomerPublicKey);
-                Colosus.Entity.Concretes.DTO.Debt debts = new();
-
-                debts.Debts = customerFacades.operations.GetsDebitForCustomerKey(customer.CustomerKey);
-                debts.CustomerName = customer.GetName();
-                debts.CustomerPublicKey = CustomerPublicKey;
-
-                result.Data = customerFacades.dataConverter.Serialize(debts);
+                List<Debt> debts = customerFacades.operations.GetsDebitForCustomerKey(customer.CustomerKey);
+                List<Colosus.Entity.Concretes.DTO.Debt> returnedObj = customerFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.Debt>(debts);
+                debts.ForEach(xd =>
+                {
+                    var debsts = returnedObj.FirstOrDefault(dx => dx.PublicKey == xd.PublicKey);
+                    debsts.CustomerName = customer.GetName();
+                    debsts.CustomerPublicKey = CustomerPublicKey;
+                    debsts.CustomerKey = customer.CustomerKey;
+                    debsts.Pays = customerFacades.operations.GetDebtPayForDebtPrivateKey(xd.PrivateKey);
+                });
+                result.Data = customerFacades.dataConverter.Serialize(returnedObj);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetCustomerDebtsForCustomerPublicKey Operations Success";
             }, () =>

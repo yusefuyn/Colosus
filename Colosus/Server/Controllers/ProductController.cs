@@ -29,7 +29,7 @@ namespace Colosus.Server.Controllers
             RequestResult requestResult = new("AddProduct");
             productFacades.operationRunner.ActionRunner(() =>
             {
-                Entity.Concretes.CreateModel.Product parameterObj = productFacades.dataConverter.Deserialize<Entity.Concretes.CreateModel.Product>(parameter.Data);
+                Entity.Concretes.CreateModel.ProductCreateModel parameterObj = productFacades.dataConverter.Deserialize<Entity.Concretes.CreateModel.ProductCreateModel>(parameter.Data);
                 Firm firm = productFacades.operations.GetMyFirmForFirmPublicKey(parameterObj.FirmPublicKey);
                 var category = productFacades.operations.GetCategory(parameterObj.CategoryPublicKey);
 
@@ -138,7 +138,7 @@ namespace Colosus.Server.Controllers
             {
 
                 Firm myFirms = productFacades.operations.GetMyFirm(parameter.Token.ToString());
-                Entity.Concretes.CreateModel.Stock parameterStock = productFacades.dataConverter.Deserialize<Entity.Concretes.CreateModel.Stock>(parameter.Data);
+                Entity.Concretes.CreateModel.StockCreateModel parameterStock = productFacades.dataConverter.Deserialize<Entity.Concretes.CreateModel.StockCreateModel>(parameter.Data);
                 Entity.Concretes.DatabaseModel.Product prod = productFacades.operations.GetMyProduct(parameterStock.ProductPublicKey);
 
                 Entity.Concretes.DatabaseModel.ProductStock productStock = new();

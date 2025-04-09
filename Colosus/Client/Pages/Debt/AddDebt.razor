@@ -1,4 +1,5 @@
 ﻿@using Colosus.Client.Services.Customer
+@using Colosus.Entity.Concretes.CreateModel
 @using Colosus.Entity.Concretes.DatabaseModel
 @inject ICustomerService customerService
 
@@ -18,7 +19,7 @@
     [Parameter] public DebitType Type { get; set; }
     [Parameter] public string CustomerPublicKey { get; set; }
 
-    private Colosus.Entity.Concretes.CreateModel.Debt debt = new();
+    private DebtCreateModel debt = new();
 
     [Parameter] public Task CloseAction { get; set; }
     public async Task AddDeb()

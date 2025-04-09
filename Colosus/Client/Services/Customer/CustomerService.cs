@@ -14,13 +14,13 @@ namespace Colosus.Client.Services.Customer
 
         public string GetAddress(string Action) => AppState.GetAddress("Customer", Action);
 
-        public async Task<RequestResult> AddIndividualCustomer(Entity.Concretes.CreateModel.IndividualCustomer customer)
+        public async Task<RequestResult> AddIndividualCustomer(Entity.Concretes.CreateModel.IndividualCustomerCreateModel customer)
             => await httpClientService.GetPostAsync<RequestResult>(customer, GetAddress("AddIndividualCustomer"));
 
         public async Task<RequestResult> GetMyCustomers(string FirmPublicKey)
             => await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("GetMyCustomers"));
 
-        public async Task<RequestResult> AddCorporateCustomer(CorporateCustomer customer)
+        public async Task<RequestResult> AddCorporateCustomer(CorporateCustomerCreateModel customer)
             => await httpClientService.GetPostAsync<RequestResult>(customer, GetAddress("AddCorporateCustomer"));
 
         public async Task<RequestResult> GetCustomerDebtsForCustomerPublicKey(string CustomerPublicKey)
@@ -29,7 +29,7 @@ namespace Colosus.Client.Services.Customer
         public async Task<RequestResult> PayedDebt(string DebtPublicKey)
             => await httpClientService.GetPostAsync<RequestResult>(DebtPublicKey, GetAddress("PayedDebt"));
 
-        public async Task<RequestResult> AddDebt(Debt debt)
+        public async Task<RequestResult> AddDebt(DebtCreateModel debt)
             => await httpClientService.GetPostAsync<RequestResult>(debt, GetAddress("AddCustomerDebt"));
 
         public async Task<RequestResult> DeleteDebt(string DebtPublicKey)
@@ -43,6 +43,9 @@ namespace Colosus.Client.Services.Customer
 
         public async Task<RequestResult> GetMyUpCommingDebt(string FirmPublicKey)
             => await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("GetMyUpCommingDebt"));
+
+        public async Task<RequestResult> AddDebtPay(DebtPayCreateModel debtPayCreateModel)
+            => await httpClientService.GetPostAsync<RequestResult>(debtPayCreateModel, GetAddress("PayedDebt"));
 
     }
 }

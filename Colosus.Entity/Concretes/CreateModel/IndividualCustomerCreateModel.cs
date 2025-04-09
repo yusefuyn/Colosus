@@ -7,20 +7,13 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.CreateModel
 {
-    public class CorporateCustomer : Colosus.Entity.Concretes.DatabaseModel.CorporateCustomer
+    public class IndividualCustomerCreateModel : Colosus.Entity.Concretes.DatabaseModel.IndividualCustomer
     {
-        public CorporateCustomer()
+        public IndividualCustomerCreateModel()
         {
-            Address = "";
-            Name = "";
-            TaxNo = "";
-            TaxOffice = "";
             ContactAddresses = new();
-            PaymentAddresses = new();
-            FirmPublicKey = "";
         }
         public List<ContactAddress> ContactAddresses { get; set; }
-        public List<PaymentAddress> PaymentAddresses { get; set; }
         public string FirmPublicKey { get; set; }
     }
 }

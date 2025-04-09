@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Colosus.Entity.Concretes.DatabaseModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,14 +11,21 @@ namespace Colosus.Entity.Concretes.DTO
     {
         public Debt()
         {
-            Debts = new();
-            CustomerPublicKey = "";
             CustomerName = "";
+            CustomerPublicKey = "";
+            Pays = new();
         }
+        public string PublicKey { get; set; }
+        public DateTime CreateDate { get; set; }
+        public string CustomerKey { get; set; }
         public string CustomerPublicKey { get; set; }
         public string CustomerName { get; set; }
-        public List<Colosus.Entity.Concretes.DatabaseModel.Debt> Debts { get; set; }
-
+        public string? Note { get; set; }
+        public decimal Price { get; set; }
+        public DateTime PayDate { get; set; }
+        public bool Payed() => Pays.Select(xd => xd.Price).Sum() == this.Price ? true : false;
+        public DebitType Type { get; set; }
+        public List<DebtPayDTO> Pays { get; set; }
 
     }
 }

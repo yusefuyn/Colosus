@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.CreateModel
 {
-    public class PaymentType
+    /// <summary>
+    /// Yeni ürün eklerken kullanılacak obje
+    /// </summary>
+    public class ProductCreateModel
     {
-        public PaymentType()
-        {
-            Name = "";
-            PictureUri = "";
-        }
-
         public string Name { get; set; }
+        public decimal SalePrice { get; set; }
+        public decimal PurchasePrice { get; set; }
+        public string CategoryPublicKey { get; set; }
         public string FirmPublicKey { get; set; }
-        public string? PictureUri { get; set; }
     }
 }

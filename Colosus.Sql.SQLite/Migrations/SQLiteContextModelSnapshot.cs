@@ -267,9 +267,6 @@ namespace Colosus.Sql.SQLite.Migrations
                     b.Property<DateTime>("PayDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Payed")
-                        .HasColumnType("INTEGER");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
@@ -291,6 +288,43 @@ namespace Colosus.Sql.SQLite.Migrations
                     b.HasKey("Key");
 
                     b.ToTable("Debts");
+                });
+
+            modelBuilder.Entity("Colosus.Entity.Concretes.DatabaseModel.DebtPay", b =>
+                {
+                    b.Property<int>("Key")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CurrencyPrivateKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DebtPrivateKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PaymentTypePrivateKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PrivateKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PublicKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("DebtPays");
                 });
 
             modelBuilder.Entity("Colosus.Entity.Concretes.DatabaseModel.Firm", b =>

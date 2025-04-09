@@ -252,7 +252,7 @@ namespace Colosus.Business
             where (f.PublicKey == firmPublicKey && pt.PublicKey == paymentTypePublicKey)
             select ptfr).FirstOrDefault();
 
-        public PaymentType GetPaymentType(object paymentTypePublicKey)
+        public PaymentType GetPaymentType(string paymentTypePublicKey)
             => Context.PaymentTypes.FirstOrDefault(xd => xd.PublicKey == paymentTypePublicKey);
 
         public List<PaymentType> GetAllPaymentTypeForFirmPublicKey(string firmPublicKey)
@@ -285,5 +285,22 @@ namespace Colosus.Business
                 join c in Context.Currencies on cfr.CurrencyPrivateKey equals c.PrivateKey
                 where f.PublicKey == firmPublicKey
                 select c).ToList();
+
+        public List<Colosus.Entity.Concretes.DTO.DebtPayDTO> GetDebtPayForDebtPrivateKey(string privateKey)
+        => (from dp in Context.DebtPays
+            join c in Context.Currencies on dp.CurrencyPrivateKey equals c.PrivateKey
+            join p in Context.PaymentTypes on dp.PaymentTypePrivateKey equals p.PrivateKey
+            where dp.DebtPrivateKey == privateKey
+            select new Colosus.Entity.Concretes.DTO.DebtPayDTO()
+            {
+                CreateDate = dp.CreateDate,
+                Price = dp.Price,
+                PublicKey = dp.PublicKey,
+                CurrencyName = c.Name,
+                PaymentTypeName = p.Name
+            }).ToList();
+
+
+        //Context.DebtPays.Where(xd=> xd.DebtPrivateKey == privateKey).ToList();
     }
 }

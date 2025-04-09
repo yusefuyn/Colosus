@@ -81,7 +81,7 @@
         RequestResult requestResult = null;
         if (convertedValue != 0 || convertedValue != null)
         {
-            Colosus.Entity.Concretes.CreateModel.Stock stock = new();
+            Colosus.Entity.Concretes.CreateModel.StockCreateModel stock = new();
             stock.ProductPublicKey = productPublicKey;
             stock.Description = inputRes.Description;
             stock.Amount = convertedValue;

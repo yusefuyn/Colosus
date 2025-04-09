@@ -1,0 +1,57 @@
+﻿@using Colosus.Client.Services.Customer
+@using Colosus.Client.Services.Settings
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.CreateModel
+@using Colosus.Operations.Abstracts
+@using Colosus.Entity.Concretes.DatabaseModel
+@inject ISettingsService settingsService
+@inject IDataConverter dataConverter
+@inject ICustomerService customerService
+
+<Colosus.Client.Components.ComboBox Empty="false"
+                                    Source="payType"
+                                    Ttemp="PaymentType"
+                                    ValueBinding="xd=> xd.Name"
+                                    DataBinding="xd=> xd.PublicKey"
+                                    SelectedValueChanged="(e)=> PaymentTypePublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
+
+<Colosus.Client.Components.ComboBox Empty="false"
+                                    Source="currency"
+                                    Ttemp="Currency"
+                                    ValueBinding="xd=> xd.Name"
+                                    DataBinding="xd=> xd.PublicKey"
+                                    SelectedValueChanged="(e)=> CurrencyPublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
+
+<Colosus.Client.Components.Entry Placeholder="Miktar" Type="Components.Entry.EntryTypeEnum.Number" TextChanged="(e)=> Price = decimal.Parse(e)"></Colosus.Client.Components.Entry>
+
+<Colosus.Client.Components.Button Text="Tamam" OnClick="async()=> await Ekle()"></Colosus.Client.Components.Button>
+@code {
+    public string CurrencyPublicKey { get; set; }
+    public string PaymentTypePublicKey { get; set; }
+    public decimal Price { get; set; }
+    [Parameter] public string DebtPublicKey { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var payRes = await settingsService.GetAllPaymentTypeForFirmPublicKey(AppState.SelectedFirmPublicKey);
+        var curRes = await settingsService.GetAllCurrencyForFirmPublicKey(AppState.SelectedFirmPublicKey);
+
+        if (payRes != null && payRes.Ok())
+            payType = dataConverter.Deserialize<List<PaymentType>>(payRes.Data);
+
+        if (curRes != null && curRes.Ok())
+            currency = dataConverter.Deserialize<List<Currency>>(curRes.Data);
+
+        StateHasChanged();
+    }
+
+    List<PaymentType> payType { get; set; }
+    List<Currency> currency { get; set; }
+
+    [Parameter] public Task CloseAction { get; set; }
+
+    public async Task Ekle()
+    {
+        if (CloseAction != null)
+            CloseAction.Start();
+    }
+}

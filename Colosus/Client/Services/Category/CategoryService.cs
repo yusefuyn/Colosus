@@ -11,7 +11,7 @@ namespace Colosus.Client.Services.Category
         }
 
         public string GetAddress(string Action) => AppState.GetAddress("Category", Action);
-        public async Task<RequestResult> AddCategory(Entity.Concretes.CreateModel.Category category) =>
+        public async Task<RequestResult> AddCategory(Entity.Concretes.CreateModel.CategoryCreateModel category) =>
             await httpClientService.GetPostAsync<RequestResult>(category, GetAddress("AddCategory"));
 
         public async Task<RequestResult> GetsCategory(string firmPublicKey, int Supply) =>

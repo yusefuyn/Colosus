@@ -14,7 +14,7 @@ namespace Colosus.Client.Services.Settings
 
         public string GetAddress(string Action) => AppState.GetAddress("Settings", Action);
 
-        public async Task<RequestResult> AddPaymentType(Colosus.Entity.Concretes.CreateModel.PaymentType paymentType)
+        public async Task<RequestResult> AddPaymentType(Colosus.Entity.Concretes.CreateModel.PaymentTypeCreateModel paymentType)
          => await httpClientService.GetPostAsync<RequestResult>(paymentType, GetAddress("AddPaymentType"));
 
         public async Task<RequestResult> DeletePaymentType(PaymentTypeRequestModel paymentType)

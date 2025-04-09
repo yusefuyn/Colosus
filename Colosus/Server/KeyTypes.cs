@@ -30,6 +30,7 @@
         public const string Debt = "Debt";
         public const string PaymentType = "PaymentType";
         public const string PaymentTypeFirmRelation = "PaymentTypeFirmRelation";
-        public const string Currency = "Currency";
+        public const string Currency = "Currency"; 
+        public const string DebtPay = "DebtPay"; 
     }
 }

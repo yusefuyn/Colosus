@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Colosus.Entity.Concretes.CreateModel
 {
-    public class Debt
+    public class DebtCreateModel
     {
-        public Debt()
+        public DebtCreateModel()
         {
             Note = "";
             Price = 0;

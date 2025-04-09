@@ -1,7 +1,7 @@
 ﻿using Colosus.Entity.Concretes;
 using Colosus.Server.Facades.Setting;
 using Microsoft.AspNetCore.Mvc;
-using PaymentTypeCreateModel = Colosus.Entity.Concretes.CreateModel.PaymentType;
+using PaymentTypeCreateModel = Colosus.Entity.Concretes.CreateModel.PaymentTypeCreateModel;
 using PaymentType = Colosus.Entity.Concretes.DatabaseModel.PaymentType;
 using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Entity.Concretes.RequestModel;

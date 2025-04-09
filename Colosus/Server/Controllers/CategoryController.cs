@@ -29,7 +29,7 @@ namespace Colosus.Server.Controllers
             RequestResult result = new("Add Category");
             categoryFacades.operationRunner.ActionRunner(() =>
             {
-                Colosus.Entity.Concretes.CreateModel.Category paramCat = categoryFacades.dataConverter.Deserialize<Colosus.Entity.Concretes.CreateModel.Category>(parameter.Data);
+                Colosus.Entity.Concretes.CreateModel.CategoryCreateModel paramCat = categoryFacades.dataConverter.Deserialize<Colosus.Entity.Concretes.CreateModel.CategoryCreateModel>(parameter.Data);
                 Firm firm = categoryFacades.operations.GetMyFirmForFirmPublicKey(paramCat.FirmPublicKey);
                 Category cat = categoryFacades.mapping.Convert<Category>(paramCat);
                 cat.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Category);
