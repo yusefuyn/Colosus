@@ -1,0 +1,133 @@
+﻿@page "/Currency/Index"
+@using Colosus.Client.Services.Settings
+@using Colosus.Entity.Concretes
+@using Colosus.Operations.Abstracts
+@inject NavigationManager navigationManager
+@inject ISettingsService settingsService
+@inject IDataConverter dataConverter
+<div class="container">
+
+
+    <div class="row">
+        <Colosus.Client.Components.Button Class="col-12"
+                                          Text="Yeni Ekle"
+                                          Style="height:40px;"
+                                          OnClick='()=> navigationManager.NavigateTo("/Currency/Add")'></Colosus.Client.Components.Button>
+    </div>
+
+    <div class="row">
+        <div class="container-header">
+            <h3>Önerilen Para Birimleri</h3>
+        </div>
+
+
+        @if (RecommendedCurrencies != null && RecommendedCurrencies.Count > 0)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Adı </th>
+                        <th>Sembol</th>
+                        <th>Ekle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in RecommendedCurrencies)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Symbol</td>
+                            @if (item.Added != true)
+                            {
+                                <td><Colosus.Client.Components.Button Icon="fa fa-add" OnClick="async ()=> await AddRecommendedType(item.PublicKey)"></Colosus.Client.Components.Button></td>
+                            }
+                            else
+                            {
+                                <td><Colosus.Client.Components.Label>Eklenmiş.</Colosus.Client.Components.Label></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+
+
+    <div class="row">
+        <div class="container-header">
+            <h3>Ödeme Tipleriniz</h3>
+        </div>
+
+        @if (Currencies != null && Currencies.Count > 0)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Adı </th>
+                        <td>Sembol</td>
+                        <th>Sil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Currencies)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Symbol</td>
+                            <td><Colosus.Client.Components.Button Style="color:red;" Icon="fa fa-remove" OnClick="async ()=> await Delete(item.PublicKey)"></Colosus.Client.Components.Button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+</div>
+
+
+@code {
+    List<Colosus.Entity.Concretes.DTO.Currency> Currencies = new();
+    List<Colosus.Entity.Concretes.DTO.Currency> RecommendedCurrencies = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshData();
+    }
+
+    public async Task Delete(string currencyPublicKey)
+    {
+        await settingsService.DeleteCurrency(new() { FirmPublicKey = AppState.SelectedFirmPublicKey, CurrencyPublicKey = currencyPublicKey });
+        await RefreshData();
+    }
+
+    public async Task RefreshData()
+    {
+        RequestResult res = await settingsService.GetAllCurrencyForFirmPublicKey(AppState.SelectedFirmPublicKey);
+        if (res != null && res.Ok())
+            Currencies = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.Currency>>(res.Data);
+        else
+            AppState.AddMessage("Bir hata meydana geldi.");
+
+        RequestResult result = await settingsService.RecommendedCurrency(AppState.SelectedFirmPublicKey);
+        if (result != null && result.Ok())
+            RecommendedCurrencies = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.Currency>>(result.Data);
+        else
+            AppState.AddMessage("Bir hata meydana geldi.");
+
+
+        Currencies.ForEach(xd =>
+        {
+            var obj = RecommendedCurrencies.FirstOrDefault(dx => dx.PublicKey == xd.PublicKey);
+            if (obj != null)
+                obj.Added = true;
+        });
+    }
+
+    public async Task AddRecommendedType(string PaymentType)
+    {
+        await settingsService.AddCurrencyRelation(new() { FirmPublicKey = AppState.SelectedFirmPublicKey, CurrencyPublicKey = PaymentType });
+        await RefreshData();
+    }
+}

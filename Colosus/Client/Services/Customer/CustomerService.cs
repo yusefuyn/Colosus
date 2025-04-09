@@ -40,5 +40,9 @@ namespace Colosus.Client.Services.Customer
 
         public async Task<RequestResult> DeleteCustomer(string CustomerPublicKey)
             => await httpClientService.GetPostAsync<RequestResult>(CustomerPublicKey, GetAddress("DeleteCustomer"));
+
+        public async Task<RequestResult> GetMyUpCommingDebt(string FirmPublicKey)
+            => await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("GetMyUpCommingDebt"));
+
     }
 }

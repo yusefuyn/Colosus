@@ -11,5 +11,6 @@ namespace Colosus.Server.Facades.Login
         public IOperationRunner operationRunner { get; set; }
         public ITokenService tokenService { get; set; }
         public IGuid guid { get; set; }
+        public IHash hash { get; set; }
     }
 }

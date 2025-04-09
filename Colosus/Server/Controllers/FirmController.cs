@@ -6,12 +6,14 @@ using Colosus.Server.Attributes;
 using Colosus.Server.Facades.Firm;
 using Colosus.Server.Facades.Setting;
 using Colosus.Server.Services.Token;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Colosus.Server.Controllers
 {
     [ApiController]
     [Route("/Api/[controller]/[action]")]
+    [EnableCors("AllowAll")]
     public class FirmController : Controller
     {
         IFirmFacades firmFacades;
@@ -20,8 +22,7 @@ namespace Colosus.Server.Controllers
             this.firmFacades = firmFacades;
         }
 
-        private string GenKey(string keyType, string entityType)
-    => firmFacades.guid.Generate(keyType, entityType);
+        private string GenKey(string keyType, string entityType) => firmFacades.guid.Generate(keyType, entityType);
         [HttpPost]
         [GetAuthorizeToken]
         public string GetMyFirm([FromBody] RequestParameter parameter)

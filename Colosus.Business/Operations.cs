@@ -245,7 +245,7 @@ namespace Colosus.Business
             }
         }
 
-        public PaymentTypeFirmRelation? GetPaymentTypeFirmRelation(string paymentTypePublicKey, string firmPublicKey)
+        public PaymentTypeFirmRelation? GetCurrencyFirmRelation(string paymentTypePublicKey, string firmPublicKey)
         => (from ptfr in Context.PaymentTypeFirmRelations
             join f in Context.Firms on ptfr.FirmPrivateKey equals f.PrivateKey
             join pt in Context.PaymentTypes on ptfr.PaymentTypePrivateKey equals pt.PrivateKey
@@ -271,5 +271,19 @@ namespace Colosus.Business
 
         public List<PaymentType> RecommendedPaymentType()
         => Context.PaymentTypes.Where(xd => xd.PrivateKey.Contains("All")).ToList();
+
+        public List<Currency> RecommendedCurrency()
+        => Context.Currencies.Where(xd => xd.PrivateKey.Contains("All")).ToList();
+
+        public Currency GetCurrency(string currencyPublicKey)
+            => Context.Currencies.FirstOrDefault(xd => xd.PublicKey == currencyPublicKey);
+
+
+        public List<Currency> GetAllCurrencyForFirmPublicKey(string firmPublicKey)
+            => (from cfr in Context.CurrencyFirmRelations
+                join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
+                join c in Context.Currencies on cfr.CurrencyPrivateKey equals c.PrivateKey
+                where f.PublicKey == firmPublicKey
+                select c).ToList();
     }
 }

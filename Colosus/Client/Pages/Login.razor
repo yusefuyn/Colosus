@@ -3,6 +3,7 @@
 @using Colosus.Client.Services.Login
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 @inject ILoginService loginService
 @inject IHash hash
@@ -26,7 +27,7 @@
     </div>
 </div>
 @code {
-    User user = new();
+    LoginUserRequestModel user = new();
 
     public async Task LoginOpAsync()
     {

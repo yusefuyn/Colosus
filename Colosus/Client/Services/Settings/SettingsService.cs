@@ -1,6 +1,7 @@
 ﻿using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.CreateModel;
 using Colosus.Entity.Concretes.DatabaseModel;
+using Colosus.Entity.Concretes.DTO;
 using Colosus.Entity.Concretes.RequestModel;
 
 namespace Colosus.Client.Services.Settings
@@ -28,6 +29,24 @@ namespace Colosus.Client.Services.Settings
         public async Task<RequestResult> AddPaymentTypeRelation(PaymentTypeRequestModel deletePaymentType)
          => await httpClientService.GetPostAsync<RequestResult>(deletePaymentType, GetAddress("AddPaymentTypeRelation"));
 
+        public async Task<RequestResult> GetAllCurrencyForFirmPublicKey(string FirmPublicKey)
+         => await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("GetAllCurrencyForFirmPublicKey"));
+
+
+        public async Task<RequestResult> RecommendedCurrency(string FirmPublicKey)
+         => await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("RecommendedCurrency"));
+
+
+        public async Task<RequestResult> AddCurrency(CurrencyCreateModel Currency)
+         => await httpClientService.GetPostAsync<RequestResult>(Currency, GetAddress("AddCurrency"));
+
+
+        public async Task<RequestResult> DeleteCurrency(CurrencyRequestModel deleteCurrency)
+         => await httpClientService.GetPostAsync<RequestResult>(deleteCurrency, GetAddress("DeleteCurrency"));
+
+
+        public async Task<RequestResult> AddCurrencyRelation(CurrencyRequestModel addCurrency)
+         => await httpClientService.GetPostAsync<RequestResult>(addCurrency, GetAddress("AddCurrencyRelation"));
 
     }
 }

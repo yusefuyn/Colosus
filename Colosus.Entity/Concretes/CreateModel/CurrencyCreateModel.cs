@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Colosus.Entity.Concretes.CreateModel
+{
+    public class CurrencyCreateModel
+    {
+        public CurrencyCreateModel()
+        {
+            Name = "";
+        }
+
+        public string Name { get; set; }
+        public string FirmPublicKey { get; set; }
+        public string Symbol { get; set; }
+    }
+}

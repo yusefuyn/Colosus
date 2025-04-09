@@ -17,5 +17,7 @@ namespace Colosus.Entity.Concretes.DTO
         public string CustomerPublicKey { get; set; }
         public string CustomerName { get; set; }
         public List<Colosus.Entity.Concretes.DatabaseModel.Debt> Debts { get; set; }
+
+
     }
 }

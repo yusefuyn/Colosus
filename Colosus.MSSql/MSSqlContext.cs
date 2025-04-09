@@ -21,7 +21,9 @@ namespace Colosus.Sql.MSSql
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<PaymentTypeFirmRelation> PaymentTypeFirmRelations { get; set; }
         public DbSet<CustomerFirmRelation> CustomerFirmRelations { get; set; }
+        public DbSet<CurrencyFirmRelation> CurrencyFirmRelations { get; set; }
         public DbSet<Debt> Debts { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
         public DbSet<ContactAddress> ContactAddresses { get; set; }
         public DbSet<Firm> Firms { get; set; }
         public DbSet<CategoryFirmRelation> CategoryFirmRelations { get; set; }

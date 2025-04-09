@@ -35,10 +35,13 @@ namespace Colosus.Business.Abstracts
         List<Debt> GetsDebitForCustomerKey(string customerKey);
         Debt GetDebt(string debtPublicKey);
         void UpdateEntity(object entity);
-        PaymentTypeFirmRelation GetPaymentTypeFirmRelation(string paymentTypePublicKey, string firmPublicKey);
+        PaymentTypeFirmRelation GetCurrencyFirmRelation(string paymentTypePublicKey, string firmPublicKey);
         PaymentType GetPaymentType(object paymentTypePublicKey);
         List<PaymentType> GetAllPaymentTypeForFirmPublicKey(string firmPublicKey);
         List<Product> GetMyProductForCategoryPrivateKey(string privateKey);
         List<PaymentType> RecommendedPaymentType();
+        List<Currency> RecommendedCurrency();
+        Currency GetCurrency(string currencyPublicKey);
+        List<Currency> GetAllCurrencyForFirmPublicKey(string firmPublicKey);
     }
 }

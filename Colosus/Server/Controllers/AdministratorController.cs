@@ -121,6 +121,24 @@ namespace Colosus.Server.Controllers
                 };
                 administratorFacades.operations.SaveEntity(cariOdeme);
 
+                PaymentType cekOdeme = new()
+                {
+                    Name = "Cek",
+                    PictureUri = "",
+                    PrivateKey = "All-Cek",
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.PaymentType)
+                };
+                administratorFacades.operations.SaveEntity(cekOdeme);
+
+                PaymentType senetOdeme = new()
+                {
+                    Name = "Senet",
+                    PictureUri = "",
+                    PrivateKey = "All-Senet",
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.PaymentType)
+                };
+                administratorFacades.operations.SaveEntity(senetOdeme);
+
                 PaymentType sodexoOdeme = new()
                 {
                     Name = "Sodexo",
@@ -130,6 +148,33 @@ namespace Colosus.Server.Controllers
                 };
                 administratorFacades.operations.SaveEntity(sodexoOdeme);
 
+
+                Currency tl = new()
+                {
+                    Name = "Turkish Lira",
+                    Symbol = "₺",
+                    PrivateKey = "All-TL",
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Currency)
+                };
+                administratorFacades.operations.SaveEntity(tl);
+
+                Currency euro = new()
+                {
+                    Name = "Euroa",
+                    Symbol = "€",
+                    PrivateKey = "All-EU",
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Currency)
+                };
+                administratorFacades.operations.SaveEntity(euro);
+
+                Currency usd = new()
+                {
+                    Name = "USD",
+                    Symbol = "$",
+                    PrivateKey = "All-US",
+                    PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Currency)
+                };
+                administratorFacades.operations.SaveEntity(usd);
 
             }, () =>
             {

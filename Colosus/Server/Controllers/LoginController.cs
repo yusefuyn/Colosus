@@ -1,11 +1,13 @@
 ﻿using Colosus.Business.Abstracts;
 using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.DatabaseModel;
+using Colosus.Entity.Concretes.RequestModel;
 using Colosus.Operations.Abstracts;
 using Colosus.Operations.Concretes;
 using Colosus.Server.Facades.Login;
 using Colosus.Server.Facades.Setting;
 using Colosus.Server.Services.Token;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Colosus.Server.Controllers
@@ -13,6 +15,7 @@ namespace Colosus.Server.Controllers
 
     [ApiController]
     [Route("/api/[controller]/[action]")]
+    [EnableCors("AllowAll")]
     public class LoginController : Controller
     {
         ILoginFacades loginFacades;
@@ -51,8 +54,9 @@ namespace Colosus.Server.Controllers
             RequestResult result = new(KeyTypes.LoginUser);
             loginFacades.operationRunner.ActionRunner(() =>
             {
-                User paramUser = loginFacades.dataConverter.Deserialize<User>(parameter.Data);
-                User usera = loginFacades.operations.GetUser(paramUser.UserName, paramUser.Password);
+                LoginUserRequestModel paramUser = loginFacades.dataConverter.Deserialize<LoginUserRequestModel>(parameter.Data);
+                string pas = paramUser.HashedToPass == true ? paramUser.Password : loginFacades.hash.Calc(paramUser.Password);
+                User usera = loginFacades.operations.GetUser(paramUser.UserName, pas);
                 List<Role> userRoles = loginFacades.operations.GetUserRole(usera.PrivateKey);
                 if (usera != null)
                 {

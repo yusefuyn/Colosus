@@ -8,40 +8,43 @@
 @inject IDataConverter dataConverter
 @inject IJSRuntime jSRuntime
 <div class="container">
-    <div class="container-header">
-        <h3>Kategoriler</h3>
-        <Colosus.Client.Components.Button Text="Kategori Ekle" OnClick='()=>navigationManager.NavigateTo("/Category/Add")'></Colosus.Client.Components.Button>
-    </div>
 
-    @if (Source != null && Source.Count > 0)
-    {
+    <div class="container">
+        <div class="container-header">
+            <h3>Kategorileriniz</h3>
+            <Colosus.Client.Components.Button Text="Kategori Ekle" OnClick='()=>navigationManager.NavigateTo("/Category/Add")'></Colosus.Client.Components.Button>
+        </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Adı </th>
-                    <th>Vergisi</th>
-                    <th>Operasyonlar</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Source)
-                {
+        @if (Source != null && Source.Count > 0)
+        {
+
+            <table>
+                <thead>
                     <tr>
-                        <td>@item.Name</td>
-                        <td>@item.Tax.ToString()</td>
-                        <td>
-                            <Colosus.Client.Components.Button Class="table-button"
-                                                              Icon="fa fa-remove"
-                                                              OnClick="async ()=> await DeleteCategory(item.PublicKey)"></Colosus.Client.Components.Button>
-                        </td>
+                        <th>Adı </th>
+                        <th>Vergisi</th>
+                        <th>Operasyonlar</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Source)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Tax.ToString()</td>
+                            <td>
+                                <Colosus.Client.Components.Button Class="table-button"
+                                                                  Icon="fa fa-remove"
+                                                                  OnClick="async ()=> await DeleteCategory(item.PublicKey)"></Colosus.Client.Components.Button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
 
-    }
+        }
+    </div>
 </div>
 
 @code {

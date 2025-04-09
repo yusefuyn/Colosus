@@ -6,13 +6,14 @@ namespace Colosus.Server.Facades.Login
 {
     public class LoginFacades : ILoginFacades
     {
-        public LoginFacades(IDataConverter dataConverter, IOperations operations, IOperationRunner operationRunner, ITokenService tokenService, IGuid guid)
+        public LoginFacades(IDataConverter dataConverter, IOperations operations, IOperationRunner operationRunner, ITokenService tokenService, IGuid guid, IHash hash)
         {
             this.dataConverter = dataConverter;
             this.operations = operations;
             this.operationRunner = operationRunner;
             this.tokenService = tokenService;
             this.guid = guid;
+            this.hash = hash;
         }
 
         public IDataConverter dataConverter { get; set; }
@@ -20,5 +21,6 @@ namespace Colosus.Server.Facades.Login
         public IOperationRunner operationRunner { get; set; }
         public ITokenService tokenService { get; set; }
         public IGuid guid { get; set; }
+        public IHash hash { get; set; }
     }
 }

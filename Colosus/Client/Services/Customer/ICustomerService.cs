@@ -13,5 +13,6 @@ namespace Colosus.Client.Services.Customer
         public Task<RequestResult> UnPaidDebt(string DebtPublicKey);
         public Task<RequestResult> DeleteDebt(string DebtPublicKey);
         public Task<RequestResult> DeleteCustomer(string CustomerPublicKey);
+        public Task<RequestResult> GetMyUpCommingDebt(string FirmPublicKey);
     }
 }
