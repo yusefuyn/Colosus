@@ -12,6 +12,7 @@ using Colosus.Client.Services.Category;
 using Colosus.Client.Services.Product;
 using Colosus.Client.Services.Customer;
 using Colosus.Client.Services.Settings;
+using Colosus.Client.Services.Pos;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IAdministratorService, AdministratorService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IFirmService, FirmService>();
+builder.Services.AddScoped<IPosService, PosService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped(sp => {
     HttpClient returned = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) };

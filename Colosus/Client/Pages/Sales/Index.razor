@@ -1,10 +1,38 @@
 ﻿@page "/Sales/Index"
+@inject IPosService posService
+@inject IDataConverter dataConverter
+@using Colosus.Client.Services.Pos
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DTO
+@using Colosus.Operations.Abstracts
 <div class="container">
-    <div class="container-header">
-        <h3>Satışlar</h3>
-    </div>
 
+    @foreach (var item in posDTO.Customers.individualCustomers.Where(xd => xd.VisibleFastOperation))
+    {
+        <div class="row">
+            <div class="col"></div>
+        </div>
+    }
+    @foreach (var item in posDTO.Customers.corporateCustomers.Where(xd => xd.VisibleFastOperation))
+    {
+
+    }
+    @foreach (var item in posDTO.Customers.fastCustomers)
+    {
+
+    }
 </div>
 @code {
+    public PosDTO posDTO = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        RequestResult result = await posService.GetMyPosDTO(AppState.SelectedFirmPublicKey);
+        if (result != null && result.Ok())
+        {
+            posDTO = dataConverter.Deserialize<PosDTO>(result.Data);
+            StateHasChanged();
+        }
+    }
 
 }

@@ -35,7 +35,7 @@ namespace Colosus.Server.Controllers
             customerFacades.operationRunner.ActionRunner(() =>
             {
                 string debtPayPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data);
-                DebtPay debtPay = customerFacades.operations.GetDebtPayForPublicKey(debtPayPublicKey);
+                DebtPay debtPay = customerFacades.operations.GetDebtPayWithPublicKey(debtPayPublicKey);
                 customerFacades.operations.RemoveEntity(debtPay);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "DeleteDebtPay Operations Success";
@@ -83,7 +83,7 @@ namespace Colosus.Server.Controllers
                 string CustomerPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data);
                 ICustomer customer = customerFacades.operations.GetICustomerFromCustomerPublicKey(CustomerPublicKey);
                 customerFacades.operations.RemoveEntity(customer);
-                List<Debt> debts = customerFacades.operations.GetsDebitForCustomerKey(customer.CustomerKey);
+                List<Debt> debts = customerFacades.operations.GetsDebitWithCustomerKey(customer.CustomerKey);
                 debts.ForEach(xd => customerFacades.operations.RemoveEntity(xd));
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "DeleteCustomer Operations Success";
@@ -187,7 +187,7 @@ namespace Colosus.Server.Controllers
             {
                 string CustomerPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
                 ICustomer customer = customerFacades.operations.GetICustomerFromCustomerPublicKey(CustomerPublicKey);
-                List<Debt> debts = customerFacades.operations.GetsDebitForCustomerKey(customer.CustomerKey);
+                List<Debt> debts = customerFacades.operations.GetsDebitWithCustomerKey(customer.CustomerKey);
                 List<Colosus.Entity.Concretes.DTO.DebtDTO> returnedObj = customerFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.DebtDTO>(debts);
                 debts.ForEach(xd =>
                 {
@@ -195,7 +195,7 @@ namespace Colosus.Server.Controllers
                     debsts.CustomerName = customer.GetName();
                     debsts.CustomerPublicKey = CustomerPublicKey;
                     debsts.CustomerKey = customer.CustomerKey;
-                    debsts.Pays = customerFacades.operations.GetDebtPayForDebtPrivateKey(xd.PrivateKey);
+                    debsts.Pays = customerFacades.operations.GetDebtPayWithDebtPrivateKey(xd.PrivateKey);
                 });
                 DebtPageDTO returned = new();
                 returned.CustomerName = customer.GetName();
@@ -222,7 +222,7 @@ namespace Colosus.Server.Controllers
             customerFacades.operationRunner.ActionRunner(() =>
             {
                 FastCustomerCreateModel fcustomer = customerFacades.dataConverter.Deserialize<FastCustomerCreateModel>(parameter.Data);
-                Firm firm = customerFacades.operations.GetMyFirmForFirmPublicKey(fcustomer.FirmPublicKey);
+                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(fcustomer.FirmPublicKey);
                 FastCustomer customer = customerFacades.mapping.Convert<FastCustomer>(fcustomer);
                 customer.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.FastCustomer);
                 customer.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.FastCustomer);
@@ -260,7 +260,7 @@ namespace Colosus.Server.Controllers
             customerFacades.operationRunner.ActionRunner(() =>
             {
                 iCustomer icustomer = customerFacades.dataConverter.Deserialize<iCustomer>(parameter.Data);
-                Firm firm = customerFacades.operations.GetMyFirmForFirmPublicKey(icustomer.FirmPublicKey);
+                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(icustomer.FirmPublicKey);
                 IndividualCustomer customer = customerFacades.mapping.Convert<IndividualCustomer>(icustomer);
                 List<ContactAddress> contactAddresses = customerFacades.mapping.ConvertToList<ContactAddress>(icustomer.ContactAddresses);
                 customer.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.IndividualCustomer);
@@ -306,7 +306,7 @@ namespace Colosus.Server.Controllers
             customerFacades.operationRunner.ActionRunner(() =>
             {
                 cCustomer ccustomer = customerFacades.dataConverter.Deserialize<cCustomer>(parameter.Data);
-                Firm firm = customerFacades.operations.GetMyFirmForFirmPublicKey(ccustomer.FirmPublicKey);
+                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(ccustomer.FirmPublicKey);
                 CorporateCustomer customer = customerFacades.mapping.Convert<CorporateCustomer>(ccustomer);
 
                 List<ContactAddress> contactAddresses = customerFacades.mapping.ConvertToList<ContactAddress>(ccustomer.ContactAddresses);
@@ -363,9 +363,9 @@ namespace Colosus.Server.Controllers
             customerFacades.operationRunner.ActionRunner(() =>
             {
                 string firmPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data);
+                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(firmPublicKey);
 
-
-                Colosus.Entity.Concretes.DTO.CustomersDTO resultCustomer = customerFacades.operations.GetMyFirmCustomers(firmPublicKey);
+                Colosus.Entity.Concretes.DTO.CustomersDTO resultCustomer = customerFacades.operations.GetMyFirmCustomersWithPrivateKey(firm.PrivateKey);
 
                 result.Data = customerFacades.dataConverter.Serialize(resultCustomer);
                 result.Result = EnumRequestResult.Ok;

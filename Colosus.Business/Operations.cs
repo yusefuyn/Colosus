@@ -2,6 +2,7 @@
 using Colosus.Business.Concretes;
 using Colosus.Entity.Abstracts;
 using Colosus.Entity.Concretes.DatabaseModel;
+using Colosus.Entity.Concretes.DTO;
 using Colosus.Operations.Abstracts;
 using Colosus.Sql.Entity.Abstracts;
 using System;
@@ -85,10 +86,10 @@ namespace Colosus.Business
             return true;
         }
 
-        public List<Category> GetCategories(string FirmPrivateKey, int skip, int take) => (from c in Context.Categories
-                                                                                           join cfr in Context.CategoryFirmRelations on c.PrivateKey equals cfr.CategoryPrivateKey
-                                                                                           where cfr.FirmPrivateKey == FirmPrivateKey
-                                                                                           select c).Skip(skip).Take(take).ToList();
+        public List<Category> GetCategoriesWithPrivateKey(string FirmPrivateKey) => (from c in Context.Categories
+                                                                                     join cfr in Context.CategoryFirmRelations on c.PrivateKey equals cfr.CategoryPrivateKey
+                                                                                     where cfr.FirmPrivateKey == FirmPrivateKey
+                                                                                     select c).ToList();
 
 
         public Category GetCategory(string categoryPublicKey) => Context.Categories.FirstOrDefault(xd => xd.PublicKey == categoryPublicKey);
@@ -194,35 +195,35 @@ namespace Colosus.Business
         }
 
 
-        public Firm GetMyFirmForFirmPublicKey(string firmpublicKey) => Context.Firms.FirstOrDefault(xd => xd.PublicKey == firmpublicKey);
+        public Firm GetMyFirmWithFirmPublicKey(string firmpublicKey) => Context.Firms.FirstOrDefault(xd => xd.PublicKey == firmpublicKey);
 
-        public List<IndividualCustomer> GetMyFirmIndividualCustomers(string firmPublicKey) => (from cfr in Context.CustomerFirmRelations
-                                                                                               join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
-                                                                                               join c in Context.IndividualCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
-                                                                                               where f.PublicKey == firmPublicKey
-                                                                                               select c).ToList();
+        public List<IndividualCustomer> GetMyFirmIndividualCustomersWithFirmPrivateKey(string firmPrivateKey) => (from cfr in Context.CustomerFirmRelations
+                                                                                                                  join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
+                                                                                                                  join c in Context.IndividualCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
+                                                                                                                  where f.PrivateKey == firmPrivateKey
+                                                                                                                  select c).ToList();
 
-        public List<CorporateCustomer> GetMyFirmCorporateCustomers(string firmPublicKey) => (from cfr in Context.CustomerFirmRelations
-                                                                                             join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
-                                                                                             join c in Context.CorporateCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
-                                                                                             where f.PublicKey == firmPublicKey
-                                                                                             select c).ToList(); 
+        public List<CorporateCustomer> GetMyFirmCorporateCustomersWithFirmPrivateKey(string firmPrivateKey) => (from cfr in Context.CustomerFirmRelations
+                                                                                                                join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
+                                                                                                                join c in Context.CorporateCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
+                                                                                                                where f.PrivateKey == firmPrivateKey
+                                                                                                                select c).ToList();
 
-              public List<FastCustomer> GetMyFirmFastCustomers(string firmPublicKey) => (from cfr in Context.CustomerFirmRelations
-                                                                                                   join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
-                                                                                                   join c in Context.FastCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
-                                                                                                   where f.PublicKey == firmPublicKey
-                                                                                                   select c).ToList();
+        public List<FastCustomer> GetMyFirmFastCustomersWithFirmPrivateKey(string firmPrivateKey) => (from cfr in Context.CustomerFirmRelations
+                                                                                                      join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
+                                                                                                      join c in Context.FastCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
+                                                                                                      where f.PrivateKey == firmPrivateKey
+                                                                                                      select c).ToList();
 
-        public Colosus.Entity.Concretes.DTO.CustomersDTO GetMyFirmCustomers(string firmPublicKey) =>
-            new Entity.Concretes.DTO.CustomersDTO()
+        public CustomersDTO GetMyFirmCustomersWithPrivateKey(string firmPrivateKey) =>
+            new CustomersDTO()
             {
-                corporateCustomers = GetMyFirmCorporateCustomers(firmPublicKey),
-                individualCustomers = GetMyFirmIndividualCustomers(firmPublicKey),
-                fastCustomers = GetMyFirmFastCustomers(firmPublicKey)
+                corporateCustomers = GetMyFirmCorporateCustomersWithFirmPrivateKey(firmPrivateKey),
+                individualCustomers = GetMyFirmIndividualCustomersWithFirmPrivateKey(firmPrivateKey),
+                fastCustomers = GetMyFirmFastCustomersWithFirmPrivateKey(firmPrivateKey)
             };
 
-        public List<Debt> GetsDebitForCustomerKey(string customerKey) => Context.Debts.Where(xd => xd.CustomerKey == customerKey).ToList();
+        public List<Debt> GetsDebitWithCustomerKey(string customerKey) => Context.Debts.Where(xd => xd.CustomerKey == customerKey).ToList();
 
         public ICustomer GetICustomerFromCustomerPublicKey(string customerPublicKey)
         {
@@ -263,14 +264,14 @@ namespace Colosus.Business
         public PaymentType GetPaymentType(string paymentTypePublicKey)
             => Context.PaymentTypes.FirstOrDefault(xd => xd.PublicKey == paymentTypePublicKey);
 
-        public List<PaymentType> GetAllPaymentTypeForFirmPublicKey(string firmPublicKey)
+        public List<PaymentType> GetAllPaymentTypeWithFirmPrivateKey(string firmPrivateKey)
             => (from ptfr in Context.PaymentTypeFirmRelations
                 join f in Context.Firms on ptfr.FirmPrivateKey equals f.PrivateKey
                 join pt in Context.PaymentTypes on ptfr.PaymentTypePrivateKey equals pt.PrivateKey
-                where f.PublicKey == firmPublicKey
+                where f.PrivateKey == firmPrivateKey
                 select pt).ToList();
 
-        public List<Product> GetMyProductForCategoryPrivateKey(string CategoryPrivateKey)
+        public List<Product> GetMyProductWithCategoryPrivateKey(string CategoryPrivateKey)
        => (from p in Context.Products
            join pcr in Context.ProductCategoryRelations on p.PrivateKey equals pcr.ProductPrivateKey
            join c in Context.Categories on pcr.CategoryPrivateKey equals c.PrivateKey
@@ -287,14 +288,14 @@ namespace Colosus.Business
             => Context.Currencies.FirstOrDefault(xd => xd.PublicKey == currencyPublicKey);
 
 
-        public List<Currency> GetAllCurrencyForFirmPublicKey(string firmPublicKey)
+        public List<Currency> GetAllCurrencyWithFirmPrivateKey(string firmPrivateKey)
             => (from cfr in Context.CurrencyFirmRelations
                 join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
                 join c in Context.Currencies on cfr.CurrencyPrivateKey equals c.PrivateKey
-                where f.PublicKey == firmPublicKey
+                where f.PrivateKey == firmPrivateKey
                 select c).ToList();
 
-        public List<Colosus.Entity.Concretes.DTO.DebtPayDTO> GetDebtPayForDebtPrivateKey(string privateKey)
+        public List<Colosus.Entity.Concretes.DTO.DebtPayDTO> GetDebtPayWithDebtPrivateKey(string privateKey)
         => (from dp in Context.DebtPays
             join c in Context.Currencies on dp.CurrencyPrivateKey equals c.PrivateKey
             join p in Context.PaymentTypes on dp.PaymentTypePrivateKey equals p.PrivateKey
@@ -308,11 +309,59 @@ namespace Colosus.Business
                 PaymentTypeName = p.Name
             }).ToList();
 
-        public ProductStock GetProductStockForPublicKey(string stockPublicKey)
+        public ProductStock GetProductStockWithPublicKey(string stockPublicKey)
             => Context.Stocks.FirstOrDefault(xd => xd.PublicKey == stockPublicKey);
 
-        public DebtPay GetDebtPayForPublicKey(string debtPayPublicKey)
+        public DebtPay GetDebtPayWithPublicKey(string debtPayPublicKey)
             => Context.DebtPays.FirstOrDefault(xd => xd.PublicKey == debtPayPublicKey);
-        //Context.DebtPays.Where(xd=> xd.DebtPrivateKey == privateKey).ToList();
+
+        public List<ProductDTO> GetMyProductsDTOsWithFirmPrivateKey(string firmPrivateKey)
+   => (from p in Context.Products
+       join pfr in Context.ProductFirmRelations on p.PrivateKey equals pfr.ProductPrivateKey
+       join f in Context.Firms on pfr.FirmPrivateKey equals f.PrivateKey
+       join pcr in Context.ProductCategoryRelations on p.PrivateKey equals pcr.ProductPrivateKey
+       join c in Context.Categories on pcr.CategoryPrivateKey equals c.PrivateKey
+       join s in Context.Stocks on p.PrivateKey equals s.ProductPrivateKey into stockGroup
+       from s in stockGroup.DefaultIfEmpty()
+       where f.PrivateKey == firmPrivateKey
+       select new ProductDTO()
+       {
+           FirmName = f.Name,
+           Name = p.Name,
+           PublicKey = p.PublicKey,
+           SalePrice = p.SalePrice,
+           PurchasePrice = p.PurchasePrice,
+           CategoryName = c.Name,
+           CategoryPublicKey = c.PublicKey,
+           ProductCategoryRelationPublicKey = pcr.PublicKey,
+           Stock = s == null ? 0 : s.Amount == null ? 0 : s.Amount
+       }).ToList();
+
+        public CustomersDTO GetMyFirmCustomersForFastOps(string firmPrivateKey)
+                    => new Entity.Concretes.DTO.CustomersDTO()
+                    {
+                        corporateCustomers = GetMyFirmCorporateCustomersForFastOps(firmPrivateKey),
+                        individualCustomers = GetMyFirmIndividualCustomersForFastOps(firmPrivateKey),
+                        fastCustomers = GetMyFirmFastCustomersForFastOps(firmPrivateKey)
+                    };
+
+        public List<FastCustomer> GetMyFirmFastCustomersForFastOps(string firmPrivateKey)
+            => (from cfr in Context.CustomerFirmRelations
+                join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
+                join c in Context.FastCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
+                where f.PrivateKey == firmPrivateKey
+                select c).ToList();
+        public List<IndividualCustomer> GetMyFirmIndividualCustomersForFastOps(string firmPrivateKey)
+            => (from cfr in Context.CustomerFirmRelations
+                join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
+                join c in Context.IndividualCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
+                where f.PrivateKey == firmPrivateKey && c.VisibleFastOperation
+                select c).ToList();
+        public List<CorporateCustomer> GetMyFirmCorporateCustomersForFastOps(string firmPrivateKey)
+         => (from cfr in Context.CustomerFirmRelations
+             join f in Context.Firms on cfr.FirmPrivateKey equals f.PrivateKey
+             join c in Context.CorporateCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
+             where f.PrivateKey == firmPrivateKey && c.VisibleFastOperation
+             select c).ToList();
     }
 }

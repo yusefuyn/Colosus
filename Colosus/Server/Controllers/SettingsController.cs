@@ -51,7 +51,7 @@ namespace Colosus.Server.Controllers
             settingFacades.operationRunner.ActionRunner(() =>
             {
                 PaymentTypeRequestModel model = settingFacades.dataConverter.Deserialize<PaymentTypeRequestModel>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmForFirmPublicKey(model.FirmPublicKey);
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(model.FirmPublicKey);
                 PaymentType pytype = settingFacades.operations.GetPaymentType(model.PaymentTypePublicKey);
                 PaymentTypeFirmRelation paymentTypeFirmRelation = new()
                 {
@@ -82,7 +82,7 @@ namespace Colosus.Server.Controllers
             settingFacades.operationRunner.ActionRunner(() =>
             {
                 PaymentTypeCreateModel paymentType = settingFacades.dataConverter.Deserialize<PaymentTypeCreateModel>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmForFirmPublicKey(paymentType.FirmPublicKey);
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(paymentType.FirmPublicKey);
 
                 PaymentType PaymentTypedb = settingFacades.mapping.Convert<PaymentType>(paymentType);
                 PaymentTypedb.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.PaymentType);
@@ -137,7 +137,8 @@ namespace Colosus.Server.Controllers
             settingFacades.operationRunner.ActionRunner(() =>
             {
                 string FirmPublicKey = settingFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
-                List<PaymentType> paymentTypes = settingFacades.operations.GetAllPaymentTypeForFirmPublicKey(FirmPublicKey);
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(FirmPublicKey);
+                List<PaymentType> paymentTypes = settingFacades.operations.GetAllPaymentTypeWithFirmPrivateKey(firm.PrivateKey);
                 List<Colosus.Entity.Concretes.DTO.PaymentTypeDTO> payTypeDtos= settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.PaymentTypeDTO>(paymentTypes);
                 result.Data = settingFacades.dataConverter.Serialize(payTypeDtos);
                 result.Result = EnumRequestResult.Ok;
@@ -186,7 +187,7 @@ namespace Colosus.Server.Controllers
             settingFacades.operationRunner.ActionRunner(() =>
             {
                 CurrencyRequestModel model = settingFacades.dataConverter.Deserialize<CurrencyRequestModel>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmForFirmPublicKey(model.FirmPublicKey);
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(model.FirmPublicKey);
                 Currency currency = settingFacades.operations.GetCurrency(model.CurrencyPublicKey);
                 CurrencyFirmRelation firmRelation = new()
                 {
@@ -217,7 +218,7 @@ namespace Colosus.Server.Controllers
             settingFacades.operationRunner.ActionRunner(() =>
             {
                 CurrencyCreateModel paymentType = settingFacades.dataConverter.Deserialize<CurrencyCreateModel>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmForFirmPublicKey(paymentType.FirmPublicKey);
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(paymentType.FirmPublicKey);
 
                 Currency PaymentTypedb = settingFacades.mapping.Convert<Currency>(paymentType);
                 PaymentTypedb.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Currency);
@@ -272,7 +273,8 @@ namespace Colosus.Server.Controllers
             settingFacades.operationRunner.ActionRunner(() =>
             {
                 string FirmPublicKey = settingFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
-                List<Currency> paymentTypes = settingFacades.operations.GetAllCurrencyForFirmPublicKey(FirmPublicKey);
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(FirmPublicKey);
+                List<Currency> paymentTypes = settingFacades.operations.GetAllCurrencyWithFirmPrivateKey(firm.PrivateKey);
                 List<Colosus.Entity.Concretes.DTO.CurrencyDTO> currencies = settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.CurrencyDTO>(paymentTypes);
                 result.Data = settingFacades.dataConverter.Serialize(currencies);
                 result.Result = EnumRequestResult.Ok;

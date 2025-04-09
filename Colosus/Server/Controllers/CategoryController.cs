@@ -30,7 +30,7 @@ namespace Colosus.Server.Controllers
             categoryFacades.operationRunner.ActionRunner(() =>
             {
                 Colosus.Entity.Concretes.CreateModel.CategoryCreateModel paramCat = categoryFacades.dataConverter.Deserialize<Colosus.Entity.Concretes.CreateModel.CategoryCreateModel>(parameter.Data);
-                Firm firm = categoryFacades.operations.GetMyFirmForFirmPublicKey(paramCat.FirmPublicKey);
+                Firm firm = categoryFacades.operations.GetMyFirmWithFirmPublicKey(paramCat.FirmPublicKey);
                 Category cat = categoryFacades.mapping.Convert<Category>(paramCat);
                 cat.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Category);
                 cat.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Category);
@@ -63,8 +63,8 @@ namespace Colosus.Server.Controllers
             categoryFacades.operationRunner.ActionRunner(() =>
             {
                 string FirmpublicKey = parameter.Data.ToString();
-                Firm firm = categoryFacades.operations.GetMyFirmForFirmPublicKey(FirmpublicKey);
-                List<Category> categories = categoryFacades.operations.GetCategories(firm.PrivateKey, (Convert.ToInt32(parameter.Supply) - 1) * 20, 20);
+                Firm firm = categoryFacades.operations.GetMyFirmWithFirmPublicKey(FirmpublicKey);
+                List<Category> categories = categoryFacades.operations.GetCategoriesWithPrivateKey(firm.PrivateKey);
                 result.Data = categoryFacades.dataConverter.Serialize(categories);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetAllCategoriesButSupply Operation Success";
@@ -85,7 +85,7 @@ namespace Colosus.Server.Controllers
                 string categoryPublicKey = categoryFacades.dataConverter.Deserialize<string>(parameter.Data);
                 var cat = categoryFacades.operations.GetCategory(categoryPublicKey);
 
-                List<Product> prod = categoryFacades.operations.GetMyProductForCategoryPrivateKey(cat.PrivateKey);
+                List<Product> prod = categoryFacades.operations.GetMyProductWithCategoryPrivateKey(cat.PrivateKey);
 
                 categoryFacades.operations.RemoveEntity(cat);
                 result.Result = EnumRequestResult.Ok;

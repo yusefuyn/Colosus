@@ -29,7 +29,7 @@ namespace Colosus.Server.Controllers
             productFacades.operationRunner.ActionRunner(() =>
             {
                 Entity.Concretes.CreateModel.ProductCreateModel parameterObj = productFacades.dataConverter.Deserialize<Entity.Concretes.CreateModel.ProductCreateModel>(parameter.Data);
-                Firm firm = productFacades.operations.GetMyFirmForFirmPublicKey(parameterObj.FirmPublicKey);
+                Firm firm = productFacades.operations.GetMyFirmWithFirmPublicKey(parameterObj.FirmPublicKey);
                 var category = productFacades.operations.GetCategory(parameterObj.CategoryPublicKey);
 
                 Entity.Concretes.DatabaseModel.Product newProduct = new Entity.Concretes.DatabaseModel.Product()
@@ -84,7 +84,7 @@ namespace Colosus.Server.Controllers
             {
 
                 string StockPublicKey = productFacades.dataConverter.Deserialize<string>(parameter.Data);
-                ProductStock stock = productFacades.operations.GetProductStockForPublicKey(StockPublicKey);
+                ProductStock stock = productFacades.operations.GetProductStockWithPublicKey(StockPublicKey);
                 productFacades.operations.RemoveEntity(stock);
                 requestResult.Result = EnumRequestResult.Ok;
                 requestResult.Description = "DeleteStock operations Success";
@@ -107,7 +107,7 @@ namespace Colosus.Server.Controllers
             {
 
                 string FirmPublicKey = productFacades.dataConverter.Deserialize<string>(parameter.Data);
-                Firm myFirm = productFacades.operations.GetMyFirmForFirmPublicKey(FirmPublicKey);
+                Firm myFirm = productFacades.operations.GetMyFirmWithFirmPublicKey(FirmPublicKey);
                 List<Entity.Concretes.DTO.ProductDTO> prods = productFacades.operations.GetMyFirmProductDTOs(myFirm.PrivateKey);
                 requestResult.Data = productFacades.dataConverter.Serialize(prods);
                 requestResult.Result = EnumRequestResult.Ok;
