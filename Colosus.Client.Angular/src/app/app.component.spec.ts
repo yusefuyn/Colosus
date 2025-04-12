@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'Colosus.Client.Angular'`, () => {
+  it(`should have as title 'AngularTest'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('Colosus.Client.Angular');
+    expect(app.title).toEqual('AngularTest');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, Colosus.Client.Angular');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, AngularTest');
   });
 });

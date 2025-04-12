@@ -1,0 +1,12 @@
+<div class="nav-bar container">
+  <button-component Icon="fa fa-home" Class="navbar-button" Route="/Index" Text="Home"></button-component>
+  <button-component Icon="fa fa-gear" Class="navbar-button" Route="/Index" *ngIf="Login" Text="Settings"></button-component>
+  <button-component Icon="fa fa-box" Class="navbar-button" Route="/Index" *ngIf="Login" Text="Products"></button-component>
+  <button-component Icon="fa fa-boxes" Class="navbar-button" Route="/Index" *ngIf="Login" Text="Stocks"></button-component>
+  <button-component Icon="fa fa-users" Class="navbar-button" Route="/Index" *ngIf="Login" Text="Customers"></button-component>
+  <button-component Icon="fa fa-cart-shopping" Class="navbar-button" Route="/Index" *ngIf="Login" Text="Sales"></button-component>
+  <button-component Icon="fa fa-certificate" Class="navbar-button" Route="/Index" *ngIf="Login" Text="Categories"></button-component>
+  <button-component Icon="fa fa-building" Class="navbar-button" Route="/Firms" *ngIf="Login" Text="Firms"></button-component>
+  <button-component Icon="fa fa-sign-in" Class="navbar-button" Route="/Login" *ngIf="!Login" Text="Login"></button-component>
+  <button-component Icon="fa fa-sign-out" Class="navbar-button" Route="/Exit" *ngIf="Login" Text="Exit"></button-component>
+</div>

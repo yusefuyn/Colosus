@@ -1,0 +1,31 @@
+@import 'veriables.css';
+
+input[type=text], input[type=password], input[type=email] {
+  height: 40px;
+  width: 100%;
+  margin: 5px;
+  border: 1px solid #111;
+  background-color: #444;
+  color: var(--font-color);
+}
+
+  input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
+    background-color: #444;
+    color: var(--font-color);
+    border: 1px solid #666;
+  }
+
+input[type=submit] {
+  color: var(--font-color);
+  height: 40px;
+  margin: 5px;
+  width: 100%;
+}
+
+h1, h2, h3, h4, h5, p {
+  color: var(--font-color);
+}
+
+body {
+  background: var(--bg-color);
+}
