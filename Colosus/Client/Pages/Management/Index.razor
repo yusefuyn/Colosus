@@ -1,5 +1,5 @@
 ﻿@page "/Management/Index"
-@using Colosus.Client.Services.Administrator
+@using Colosus.Client.Blazor.Services.Administrator
 @inject IAdministratorService administratorService
 
 <div class="container">
@@ -7,15 +7,15 @@
         <h3>Yönetim</h3>
     </div>
 
-    <Colosus.Client.Components.Button Text="UpdateDatabase" OnClick="async()=> await UpdateDB()"></Colosus.Client.Components.Button>
+    <Colosus.Client.Blazor.Components.Button Text="UpdateDatabase" OnClick="async()=> await UpdateDB()"></Colosus.Client.Blazor.Components.Button>
 
-    <Colosus.Client.Components.Button Text="Kullanıcılar"></Colosus.Client.Components.Button>
-    <Colosus.Client.Components.Button Text="Ürünler"></Colosus.Client.Components.Button>
-    <Colosus.Client.Components.Button Text="Sayfalar"></Colosus.Client.Components.Button>
-    <Colosus.Client.Components.Button Text="Müşteriler"></Colosus.Client.Components.Button>
-    <Colosus.Client.Components.Button Text="Satışlar"></Colosus.Client.Components.Button>
-    <Colosus.Client.Components.Button Text="Firmalar"></Colosus.Client.Components.Button>
-    <Colosus.Client.Components.Button Text="Roller"></Colosus.Client.Components.Button>
+    <Colosus.Client.Blazor.Components.Button Text="Kullanıcılar"></Colosus.Client.Blazor.Components.Button>
+    <Colosus.Client.Blazor.Components.Button Text="Ürünler"></Colosus.Client.Blazor.Components.Button>
+    <Colosus.Client.Blazor.Components.Button Text="Sayfalar"></Colosus.Client.Blazor.Components.Button>
+    <Colosus.Client.Blazor.Components.Button Text="Müşteriler"></Colosus.Client.Blazor.Components.Button>
+    <Colosus.Client.Blazor.Components.Button Text="Satışlar"></Colosus.Client.Blazor.Components.Button>
+    <Colosus.Client.Blazor.Components.Button Text="Firmalar"></Colosus.Client.Blazor.Components.Button>
+    <Colosus.Client.Blazor.Components.Button Text="Roller"></Colosus.Client.Blazor.Components.Button>
 
 </div>
 

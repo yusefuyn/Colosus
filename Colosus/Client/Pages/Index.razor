@@ -1,5 +1,5 @@
 ﻿@page "/"
-@using Colosus.Client.Services.Firm
+@using Colosus.Client.Blazor.Services.Firm
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
 @using Colosus.Operations.Abstracts
@@ -29,7 +29,7 @@
                             background = "#00000063";
 
                         <div class="col-4">
-                            <Colosus.Client.Components.Button Style="@($"background:{background};")" OnClick="()=> ChangeSelectedFirm(item)">
+                            <Colosus.Client.Blazor.Components.Button Style="@($"background:{background};")" OnClick="()=> ChangeSelectedFirm(item)">
                                 <div class="card h-100 shadow-sm company-card" style="background:transparent;">
                                     <div class="card-img-container">
                                         <img src="companies.png" class="card-img-top rounded-top" alt="@item.Name logo">
@@ -38,7 +38,7 @@
                                         <h5 style="color: var(--font-color);" class="card-title mb-0 text-center fw-bold">@item.Name</h5>
                                     </div>
                                 </div>
-                            </Colosus.Client.Components.Button>
+                            </Colosus.Client.Blazor.Components.Button>
                         </div>
                     }
                 </div>

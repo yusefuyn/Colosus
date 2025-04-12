@@ -1,8 +1,8 @@
-﻿using Colosus.Client.Pages.Debt;
+﻿using Colosus.Client.Blazor.Pages.Debt;
 using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.CreateModel;
 
-namespace Colosus.Client.Services.Customer
+namespace Colosus.Client.Blazor.Services.Customer
 {
     public interface ICustomerService
     {

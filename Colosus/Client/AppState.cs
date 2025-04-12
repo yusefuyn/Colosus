@@ -1,5 +1,5 @@
-﻿using Colosus.Client.Components;
-using Colosus.Client.Layouts;
+﻿using Colosus.Client.Blazor.Components;
+using Colosus.Client.Blazor.Layouts;
 using Colosus.Entity.Concretes;
 
 namespace Colosus.Client

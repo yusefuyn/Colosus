@@ -1,6 +1,6 @@
 ﻿using Colosus.Entity.Concretes;
 
-namespace Colosus.Client.Services.Category
+namespace Colosus.Client.Blazor.Services.Category
 {
     public class CategoryService : ICategoryService
     {

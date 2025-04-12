@@ -1,19 +1,19 @@
-﻿@using Colosus.Client.Services.Customer
+﻿@using Colosus.Client.Blazor.Services.Customer
 @using Colosus.Entity.Concretes.CreateModel
 @using Colosus.Entity.Concretes.DatabaseModel
 @inject ICustomerService customerService
 
-<Colosus.Client.Components.Entry Placeholder="Miktar"
+<Colosus.Client.Blazor.Components.Entry Placeholder="Miktar"
                                  TextChanged="(e)=>debt.Price = Convert.ToDecimal(e.ToString())"
-                                 Type="Components.Entry.EntryTypeEnum.Number"></Colosus.Client.Components.Entry>
-<Colosus.Client.Components.Entry @bind-Text="debt.Note"
+                                 Type="Components.Entry.EntryTypeEnum.Number"></Colosus.Client.Blazor.Components.Entry>
+<Colosus.Client.Blazor.Components.Entry @bind-Text="debt.Note"
                                  Placeholder="Note"
-                                 Type="Components.Entry.EntryTypeEnum.Text"></Colosus.Client.Components.Entry>
-<Colosus.Client.Components.Entry Placeholder="Ödeme Tarihi"
+                                 Type="Components.Entry.EntryTypeEnum.Text"></Colosus.Client.Blazor.Components.Entry>
+<Colosus.Client.Blazor.Components.Entry Placeholder="Ödeme Tarihi"
                                  TextChanged="(e)=>debt.PayDate = DateTime.Parse(e)"
-                                 Type="Components.Entry.EntryTypeEnum.Date"></Colosus.Client.Components.Entry>
-<Colosus.Client.Components.Button Text="Ekle"
-                                  OnClick="async ()=>await AddDeb()"></Colosus.Client.Components.Button>
+                                 Type="Components.Entry.EntryTypeEnum.Date"></Colosus.Client.Blazor.Components.Entry>
+<Colosus.Client.Blazor.Components.Button Text="Ekle"
+                                  OnClick="async ()=>await AddDeb()"></Colosus.Client.Blazor.Components.Button>
 @code {
 
     [Parameter] public DebitType Type { get; set; }

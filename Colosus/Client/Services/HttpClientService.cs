@@ -5,7 +5,7 @@ using System;
 using Colosus.Operations.Abstracts;
 using Colosus.Entity.Concretes;
 
-namespace Colosus.Client.Services
+namespace Colosus.Client.Blazor.Services
 {
     public class HttpClientService
     {

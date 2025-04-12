@@ -3,7 +3,7 @@
 @inject IJSRuntime jSRuntime
 @inject NavigationManager navigationManager
 @page "/Stock/Index"
-@using Colosus.Client.Services.Product
+@using Colosus.Client.Blazor.Services.Product
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
 @using Colosus.Operations.Abstracts
@@ -38,12 +38,12 @@
                         <td>@item.Stock.ToString() Adet</td>
                         <td>@item.FirmName.ToString()</td>
                         <td>
-                            <Colosus.Client.Components.Button Class="table-button"
+                            <Colosus.Client.Blazor.Components.Button Class="table-button"
                                                               Icon="fa fa-plus"
-                                                              OnClick="async ()=> await AddStock(item.PublicKey,item.Name)"></Colosus.Client.Components.Button>
-                            <Colosus.Client.Components.Button Class="table-button"
+                                                              OnClick="async ()=> await AddStock(item.PublicKey,item.Name)"></Colosus.Client.Blazor.Components.Button>
+                            <Colosus.Client.Blazor.Components.Button Class="table-button"
                                                               Icon="fa fa-angle-double-up"
-                                                              OnClick='()=> navigationManager.NavigateTo("/Stock/History/" + item.PublicKey)'></Colosus.Client.Components.Button>
+                                                              OnClick='()=> navigationManager.NavigateTo("/Stock/History/" + item.PublicKey)'></Colosus.Client.Blazor.Components.Button>
                         </td>
                     </tr>
                 }

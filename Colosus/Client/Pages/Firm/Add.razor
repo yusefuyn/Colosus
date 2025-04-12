@@ -1,5 +1,5 @@
 ﻿@page "/Firm/Add"
-@using Colosus.Client.Services.Firm
+@using Colosus.Client.Blazor.Services.Firm
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
 @inject IFirmService firmService
@@ -9,8 +9,8 @@
     <div class="container-header">
         <h3>Firma Oluştur</h3>
     </div>
-    <Colosus.Client.Components.Entry Placeholder="Firma Adı" @bind-Text="firm.Name"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Button Text="Oluştur" OnClick="async()=> await AddFirm()"></Colosus.Client.Components.Button>
+    <Colosus.Client.Blazor.Components.Entry Placeholder="Firma Adı" @bind-Text="firm.Name"></Colosus.Client.Blazor.Components.Entry>
+    <Colosus.Client.Blazor.Components.Button Text="Oluştur" OnClick="async()=> await AddFirm()"></Colosus.Client.Blazor.Components.Button>
 </div>
 
 @code {

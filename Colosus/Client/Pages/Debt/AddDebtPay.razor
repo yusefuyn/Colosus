@@ -1,5 +1,5 @@
-﻿@using Colosus.Client.Services.Customer
-@using Colosus.Client.Services.Settings
+﻿@using Colosus.Client.Blazor.Services.Customer
+@using Colosus.Client.Blazor.Services.Settings
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.CreateModel
 @using Colosus.Operations.Abstracts
@@ -8,24 +8,24 @@
 @inject IDataConverter dataConverter
 @inject ICustomerService customerService
 
-<Colosus.Client.Components.ComboBox Empty="true"
+<Colosus.Client.Blazor.Components.ComboBox Empty="true"
 Source="payType"
 Ttemp="PaymentType"
 ValueBinding="xd=> xd.Name"
 DataBinding="xd=> xd.PublicKey"
-SelectedValueChanged="(e)=> PaymentTypePublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
+SelectedValueChanged="(e)=> PaymentTypePublicKey = e.Value.ToString()"></Colosus.Client.Blazor.Components.ComboBox>
 
-<Colosus.Client.Components.ComboBox Empty="true"
+<Colosus.Client.Blazor.Components.ComboBox Empty="true"
 Source="currency"
 Ttemp="Currency"
 ValueBinding="xd=> xd.Name"
 
 DataBinding="xd=> xd.PublicKey"
-SelectedValueChanged="(e)=> CurrencyPublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
+SelectedValueChanged="(e)=> CurrencyPublicKey = e.Value.ToString()"></Colosus.Client.Blazor.Components.ComboBox>
 
-<Colosus.Client.Components.Entry Placeholder="Miktar" Type="Components.Entry.EntryTypeEnum.Number" TextChanged="(e)=> Price = decimal.Parse(e)"></Colosus.Client.Components.Entry>
+<Colosus.Client.Blazor.Components.Entry Placeholder="Miktar" Type="Components.Entry.EntryTypeEnum.Number" TextChanged="(e)=> Price = decimal.Parse(e)"></Colosus.Client.Blazor.Components.Entry>
 
-<Colosus.Client.Components.Button Text="Tamam" OnClick="async()=> await Ekle()"></Colosus.Client.Components.Button>
+<Colosus.Client.Blazor.Components.Button Text="Tamam" OnClick="async()=> await Ekle()"></Colosus.Client.Blazor.Components.Button>
 @code {
     public string CurrencyPublicKey { get; set; }
     public string PaymentTypePublicKey { get; set; }

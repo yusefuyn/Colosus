@@ -4,8 +4,8 @@
 @inject NavigationManager navigationManager
 
 @page "/Product/Add"
-@using Colosus.Client.Services.Category
-@using Colosus.Client.Services.Product
+@using Colosus.Client.Blazor.Services.Category
+@using Colosus.Client.Blazor.Services.Product
 @using Colosus.Entity.Concretes.DatabaseModel
 @using Colosus.Operations.Abstracts
 
@@ -14,18 +14,18 @@
         <h3>Ürün ekle</h3>
     </div>
 
-    <Colosus.Client.Components.Entry Placeholder="Ürün Adı" @bind-Text="product.Name"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Entry Placeholder="Alış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
-    TextChanged="(e)=> product.PurchasePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Entry Placeholder="Satış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
-    TextChanged="(e)=> product.SalePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.ComboBox Ttemp="Colosus.Entity.Concretes.DatabaseModel.Category"
+    <Colosus.Client.Blazor.Components.Entry Placeholder="Ürün Adı" @bind-Text="product.Name"></Colosus.Client.Blazor.Components.Entry>
+    <Colosus.Client.Blazor.Components.Entry Placeholder="Alış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
+    TextChanged="(e)=> product.PurchasePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Blazor.Components.Entry>
+    <Colosus.Client.Blazor.Components.Entry Placeholder="Satış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
+    TextChanged="(e)=> product.SalePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Blazor.Components.Entry>
+    <Colosus.Client.Blazor.Components.ComboBox Ttemp="Colosus.Entity.Concretes.DatabaseModel.Category"
     DataBinding="xd=> xd.PublicKey"
     Source="Categories"
     ValueBinding="xd=> xd.Name"
     Empty="true"
-    SelectedValueChanged="(e)=>  product.CategoryPublicKey = e.Value.ToString()"></Colosus.Client.Components.ComboBox>
-    <Colosus.Client.Components.Button Text="Ekle" OnClick=" async ()=>await AddProduct()"></Colosus.Client.Components.Button>
+    SelectedValueChanged="(e)=>  product.CategoryPublicKey = e.Value.ToString()"></Colosus.Client.Blazor.Components.ComboBox>
+    <Colosus.Client.Blazor.Components.Button Text="Ekle" OnClick=" async ()=>await AddProduct()"></Colosus.Client.Blazor.Components.Button>
 </div>
 
 @code {

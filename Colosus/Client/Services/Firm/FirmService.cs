@@ -1,6 +1,6 @@
 ﻿using Colosus.Entity.Concretes;
 
-namespace Colosus.Client.Services.Firm
+namespace Colosus.Client.Blazor.Services.Firm
 {
     public class FirmService : IFirmService
     {

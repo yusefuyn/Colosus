@@ -1,6 +1,6 @@
 ﻿using Colosus.Entity.Concretes;
 
-namespace Colosus.Client.Services.Settings
+namespace Colosus.Client.Blazor.Services.Settings
 {
     public interface ISettingsService
     {

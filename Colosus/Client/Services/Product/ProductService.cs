@@ -2,7 +2,7 @@
 using Colosus.Entity.Concretes.CreateModel;
 using Colosus.Entity.Concretes.DTO;
 
-namespace Colosus.Client.Services.Product
+namespace Colosus.Client.Blazor.Services.Product
 {
     public class ProductService : IProductService
     {

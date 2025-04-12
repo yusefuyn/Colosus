@@ -1,6 +1,6 @@
 ﻿using Colosus.Entity.Concretes;
 
-namespace Colosus.Client.Services.Pos
+namespace Colosus.Client.Blazor.Services.Pos
 {
     public class PosService : IPosService
     {

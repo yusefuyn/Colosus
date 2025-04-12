@@ -1,7 +1,7 @@
 ﻿using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.DatabaseModel;
 
-namespace Colosus.Client.Services.Login
+namespace Colosus.Client.Blazor.Services.Login
 {
     public class LoginService : ILoginService
     {

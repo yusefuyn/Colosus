@@ -1,7 +1,7 @@
 ﻿using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.CreateModel;
 
-namespace Colosus.Client.Services.Product
+namespace Colosus.Client.Blazor.Services.Product
 {
     public interface IProductService
     {

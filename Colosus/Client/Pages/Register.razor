@@ -1,7 +1,7 @@
 ﻿@page "/Register"
 @inject IHash hash
-@using Colosus.Client.Components
-@using Colosus.Client.Services.Login
+@using Colosus.Client.Blazor.Components
+@using Colosus.Client.Blazor.Services.Login
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
 @using Colosus.Operations.Abstracts
@@ -13,14 +13,14 @@
         <h3>Kayıt Ol</h3>
     </div>
     <div style="max-width:400px">
-        <Colosus.Client.Components.Entry @bind-Text="user.EMail" Placeholder="E-Posta"></Colosus.Client.Components.Entry>
-        <Colosus.Client.Components.Entry @bind-Text="user.UserName" Placeholder="Kullanıcı Adı"></Colosus.Client.Components.Entry>
-        <Colosus.Client.Components.Entry @bind-Text="user.FirstName" Placeholder="Adınız"></Colosus.Client.Components.Entry>
-        <Colosus.Client.Components.Entry @bind-Text="user.LastName" Placeholder="Soyadınız"></Colosus.Client.Components.Entry>
-        <Colosus.Client.Components.Entry @bind-Text="Passwd" Placeholder="Şifre" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Components.Entry>
-        <Colosus.Client.Components.Entry @bind-Text="PasswdR" Placeholder="Şifre Tekrarı" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Components.Entry>
-        <Colosus.Client.Components.Label>Hesabınız var mı? <a href="/Login">Giriş yapın</a></Colosus.Client.Components.Label>
-        <Colosus.Client.Components.Button Text="Kayıt ol" OnClick="async ()=>await RegisterOp()"></Colosus.Client.Components.Button>
+        <Colosus.Client.Blazor.Components.Entry @bind-Text="user.EMail" Placeholder="E-Posta"></Colosus.Client.Blazor.Components.Entry>
+        <Colosus.Client.Blazor.Components.Entry @bind-Text="user.UserName" Placeholder="Kullanıcı Adı"></Colosus.Client.Blazor.Components.Entry>
+        <Colosus.Client.Blazor.Components.Entry @bind-Text="user.FirstName" Placeholder="Adınız"></Colosus.Client.Blazor.Components.Entry>
+        <Colosus.Client.Blazor.Components.Entry @bind-Text="user.LastName" Placeholder="Soyadınız"></Colosus.Client.Blazor.Components.Entry>
+        <Colosus.Client.Blazor.Components.Entry @bind-Text="Passwd" Placeholder="Şifre" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Blazor.Components.Entry>
+        <Colosus.Client.Blazor.Components.Entry @bind-Text="PasswdR" Placeholder="Şifre Tekrarı" Type="Components.Entry.EntryTypeEnum.Password"></Colosus.Client.Blazor.Components.Entry>
+        <Colosus.Client.Blazor.Components.Label>Hesabınız var mı? <a href="/Login">Giriş yapın</a></Colosus.Client.Blazor.Components.Label>
+        <Colosus.Client.Blazor.Components.Button Text="Kayıt ol" OnClick="async ()=>await RegisterOp()"></Colosus.Client.Blazor.Components.Button>
     </div>
 </div>
 @code {

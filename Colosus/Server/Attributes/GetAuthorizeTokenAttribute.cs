@@ -1,4 +1,4 @@
-﻿using Colosus.Client.Services;
+﻿using Colosus.Client.Blazor.Services;
 using Colosus.Entity.Concretes;
 using Colosus.Server.Services.Token;
 using Microsoft.AspNetCore.Mvc.Filters;

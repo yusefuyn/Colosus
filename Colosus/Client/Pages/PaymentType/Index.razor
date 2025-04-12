@@ -1,5 +1,5 @@
 ﻿@page "/PaymentType/Index"
-@using Colosus.Client.Services.Settings
+@using Colosus.Client.Blazor.Services.Settings
 @using Colosus.Entity.Concretes
 @using Colosus.Operations.Abstracts
 @inject ISettingsService settingsService
@@ -7,10 +7,10 @@
 @inject IDataConverter dataConverter
 <div class="container">
     <div class="row">
-        <Colosus.Client.Components.Button Class="col-12"
+        <Colosus.Client.Blazor.Components.Button Class="col-12"
                                           Text="Yeni Ekle"
                                           Style="height:40px;"
-                                          OnClick='()=> navigationManager.NavigateTo("/PaymentType/Add")'></Colosus.Client.Components.Button>
+                                          OnClick='()=> navigationManager.NavigateTo("/PaymentType/Add")'></Colosus.Client.Blazor.Components.Button>
     </div>
 
     <div class="row">
@@ -36,11 +36,11 @@
                             <td>@item.PictureUri</td>
                             @if (item.Added != true)
                             {
-                                <td><Colosus.Client.Components.Button Icon="fa fa-add" OnClick="async ()=> await AddRecommendedType(item.PublicKey)"></Colosus.Client.Components.Button></td>
+                                <td><Colosus.Client.Blazor.Components.Button Icon="fa fa-add" OnClick="async ()=> await AddRecommendedType(item.PublicKey)"></Colosus.Client.Blazor.Components.Button></td>
                             }
                             else
                             {
-                                <td><Colosus.Client.Components.Label>Eklenmiş.</Colosus.Client.Components.Label></td>
+                                <td><Colosus.Client.Blazor.Components.Label>Eklenmiş.</Colosus.Client.Blazor.Components.Label></td>
                             }
                         </tr>
                     }
@@ -72,7 +72,7 @@
                         <tr>
                             <td>@item.Name</td>
                             <td>@item.PictureUri</td>
-                            <td><Colosus.Client.Components.Button Style="color:red;" Icon="fa fa-remove" OnClick="async ()=> await Delete(item.PublicKey)"></Colosus.Client.Components.Button></td>
+                            <td><Colosus.Client.Blazor.Components.Button Style="color:red;" Icon="fa fa-remove" OnClick="async ()=> await Delete(item.PublicKey)"></Colosus.Client.Blazor.Components.Button></td>
                         </tr>
                     }
                 </tbody>

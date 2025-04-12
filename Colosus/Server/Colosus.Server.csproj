@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Colosus.Business\Colosus.Business.csproj" />
-    <ProjectReference Include="..\Client\Colosus.Client.csproj" />
+    <ProjectReference Include="..\Client\Colosus.Client.Blazor.csproj" />
   </ItemGroup>
 
 </Project>

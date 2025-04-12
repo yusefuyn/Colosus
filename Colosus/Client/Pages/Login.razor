@@ -1,6 +1,6 @@
 ﻿@page "/Login"
-@using Colosus.Client.Services
-@using Colosus.Client.Services.Login
+@using Colosus.Client.Blazor.Services
+@using Colosus.Client.Blazor.Services.Login
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
 @using Colosus.Entity.Concretes.RequestModel
@@ -16,14 +16,14 @@
         <h3>Giriş yap</h3>
     </div>
     <div style="max-width:400px">
-        <Colosus.Client.Components.Entry @bind-Text="user.UserName"
+        <Colosus.Client.Blazor.Components.Entry @bind-Text="user.UserName"
                                          Type="Components.Entry.EntryTypeEnum.Text"
-                                         Placeholder="Kullanıcı Adı"></Colosus.Client.Components.Entry>
-        <Colosus.Client.Components.Entry @bind-Text="user.Password"
+                                         Placeholder="Kullanıcı Adı"></Colosus.Client.Blazor.Components.Entry>
+        <Colosus.Client.Blazor.Components.Entry @bind-Text="user.Password"
                                          Type="Components.Entry.EntryTypeEnum.Password"
-                                         Placeholder="Şifre"></Colosus.Client.Components.Entry>
-        <Colosus.Client.Components.Label>Hesabınız mı yok?<a href="/Register">Hemen Oluşturun</a></Colosus.Client.Components.Label>
-        <Colosus.Client.Components.Button Text="Giriş yap" OnClick="async()=>await LoginOpAsync()"></Colosus.Client.Components.Button>
+                                         Placeholder="Şifre"></Colosus.Client.Blazor.Components.Entry>
+        <Colosus.Client.Blazor.Components.Label>Hesabınız mı yok?<a href="/Register">Hemen Oluşturun</a></Colosus.Client.Blazor.Components.Label>
+        <Colosus.Client.Blazor.Components.Button Text="Giriş yap" OnClick="async()=>await LoginOpAsync()"></Colosus.Client.Blazor.Components.Button>
     </div>
 </div>
 @code {

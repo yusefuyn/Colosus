@@ -1,5 +1,5 @@
 ﻿@page "/Product/Index"
-@using Colosus.Client.Services.Product
+@using Colosus.Client.Blazor.Services.Product
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
 @using Colosus.Operations.Abstracts
@@ -11,7 +11,7 @@
 <div class="container">
     <div class="container-header">
         <h3>Ürünler</h3>
-        <Colosus.Client.Components.Button Class="header-right-button" OnClick='()=> navigationManager.NavigateTo("/Product/Add")' Text="Yeni ekle"></Colosus.Client.Components.Button>
+        <Colosus.Client.Blazor.Components.Button Class="header-right-button" OnClick='()=> navigationManager.NavigateTo("/Product/Add")' Text="Yeni ekle"></Colosus.Client.Blazor.Components.Button>
     </div>
     @if (Products != null && Products.Count > 0)
     {
@@ -39,9 +39,9 @@
                         <td>@item.Stock.ToString() Adet</td>
                         <td>@item.FirmName.ToString()</td>
                         <td>
-                            <Colosus.Client.Components.Button Icon="fa fa-remove"
+                            <Colosus.Client.Blazor.Components.Button Icon="fa fa-remove"
                                                               Class="table-button"
-                                                              OnClick="async ()=> await DeleteProduct(item.PublicKey)"></Colosus.Client.Components.Button>
+                                                              OnClick="async ()=> await DeleteProduct(item.PublicKey)"></Colosus.Client.Blazor.Components.Button>
                         </td>
                     </tr>
                 }

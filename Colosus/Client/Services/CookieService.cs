@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Colosus.Client.Services
+namespace Colosus.Client.Blazor.Services
 {
     public class CookieService
     {

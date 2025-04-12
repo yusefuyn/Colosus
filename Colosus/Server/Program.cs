@@ -1,3 +1,4 @@
+
 using Colosus.Business;
 using Colosus.Business.Abstracts;
 using Colosus.Business.Concretes;
@@ -22,16 +23,16 @@ List<DataBaseSetting> dbSettingsSection = builder.Configuration.GetSection("DbSe
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAll",
-//        policy =>
-//        {
-//            policy.AllowAnyOrigin()       // Herhangi bir domain'ye izin verir
-//                  .AllowAnyHeader()       // Herhangi bir header'a izin verir
-//                  .AllowAnyMethod();      // Herhangi bir HTTP metoduna izin verir
-//        });
-//});
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()       // Herhangi bir domain'ye izin verir
+                  .AllowAnyHeader()       // Herhangi bir header'a izin verir
+                  .AllowAnyMethod();      // Herhangi bir HTTP metoduna izin verir
+        });
+});
 
 #region Services
 

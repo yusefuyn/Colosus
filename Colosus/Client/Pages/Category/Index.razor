@@ -1,5 +1,5 @@
 ﻿@page "/Category/Index"
-@using Colosus.Client.Services.Category
+@using Colosus.Client.Blazor.Services.Category
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
 @using Colosus.Operations.Abstracts
@@ -12,7 +12,7 @@
     <div class="container">
         <div class="container-header">
             <h3>Kategorileriniz</h3>
-            <Colosus.Client.Components.Button Text="Kategori Ekle" OnClick='()=>navigationManager.NavigateTo("/Category/Add")'></Colosus.Client.Components.Button>
+            <Colosus.Client.Blazor.Components.Button Text="Kategori Ekle" OnClick='()=>navigationManager.NavigateTo("/Category/Add")'></Colosus.Client.Blazor.Components.Button>
         </div>
 
         @if (Source != null && Source.Count > 0)
@@ -35,9 +35,9 @@
                             <td>@item.Tax.ToString()</td>
                             <td><i class="@AppState.ConvertBoolToIcon(item.VisibleWeb)"></i></td>
                             <td>
-                                <Colosus.Client.Components.Button Class="table-button"
+                                <Colosus.Client.Blazor.Components.Button Class="table-button"
                                                                   Icon="fa fa-remove"
-                                                                  OnClick="async ()=> await DeleteCategory(item.PublicKey)"></Colosus.Client.Components.Button>
+                                                                  OnClick="async ()=> await DeleteCategory(item.PublicKey)"></Colosus.Client.Blazor.Components.Button>
                             </td>
                         </tr>
                     }

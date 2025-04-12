@@ -2,7 +2,7 @@
 using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.CreateModel;
 
-namespace Colosus.Client.Services.Customer
+namespace Colosus.Client.Blazor.Services.Customer
 {
     public class CustomerService : ICustomerService
     {

@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using Colosus.Operations.Abstracts;
 
-namespace Colosus.Client.Services
+namespace Colosus.Client.Blazor.Services
 {
     public class CustomAuthStateProvider
         : AuthenticationStateProvider

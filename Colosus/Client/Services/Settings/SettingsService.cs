@@ -4,7 +4,7 @@ using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Entity.Concretes.DTO;
 using Colosus.Entity.Concretes.RequestModel;
 
-namespace Colosus.Client.Services.Settings
+namespace Colosus.Client.Blazor.Services.Settings
 {
     public class SettingsService : ISettingsService
     {

@@ -1,5 +1,5 @@
 ﻿@page "/Category/Add"
-@using Colosus.Client.Services.Category
+@using Colosus.Client.Blazor.Services.Category
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
 @inject ICategoryService categoryService
@@ -8,14 +8,14 @@
     <div class="container-header">
         <h3>Yeni Kategori Ekle</h3>
     </div>
-    <Colosus.Client.Components.Entry @bind-Text="category.Name"
-                                     Placeholder="Kategori Adı"></Colosus.Client.Components.Entry>
-    <Colosus.Client.Components.Number @bind-Value="category.Tax"
+    <Colosus.Client.Blazor.Components.Entry @bind-Text="category.Name"
+                                     Placeholder="Kategori Adı"></Colosus.Client.Blazor.Components.Entry>
+    <Colosus.Client.Blazor.Components.Number @bind-Value="category.Tax"
                                       MinValue="0"
                                       MaxValue="100"
-                                      Placeholder="Vergi Yüzdesi"></Colosus.Client.Components.Number>
-    <Colosus.Client.Components.CheckBox Text="Web'de gözüksün" @bind-IsChecked="category.VisibleWeb"></Colosus.Client.Components.CheckBox>
-    <Colosus.Client.Components.Button Text="Ekle" OnClick="async()=>await AddCategory()"></Colosus.Client.Components.Button>
+                                      Placeholder="Vergi Yüzdesi"></Colosus.Client.Blazor.Components.Number>
+    <Colosus.Client.Blazor.Components.CheckBox Text="Web'de gözüksün" @bind-IsChecked="category.VisibleWeb"></Colosus.Client.Blazor.Components.CheckBox>
+    <Colosus.Client.Blazor.Components.Button Text="Ekle" OnClick="async()=>await AddCategory()"></Colosus.Client.Blazor.Components.Button>
 </div>
 
 @code {

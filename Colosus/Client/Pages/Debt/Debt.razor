@@ -1,7 +1,7 @@
 ﻿@page "/Customer/Debt/{CustomerPublicKey}"
-@using Colosus.Client.Components
-@using Colosus.Client.Pages.Debt
-@using Colosus.Client.Services.Customer
+@using Colosus.Client.Blazor.Components
+@using Colosus.Client.Blazor.Pages.Debt
+@using Colosus.Client.Blazor.Services.Customer
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.CreateModel
 @using Colosus.Entity.Concretes.DTO
@@ -15,10 +15,10 @@
     </div>
     <div class="row">
         <div class="col-6">
-            <Colosus.Client.Components.Button Text="Alacak Ekle" OnClick="()=> ShowTakeBox()"></Colosus.Client.Components.Button>
+            <Colosus.Client.Blazor.Components.Button Text="Alacak Ekle" OnClick="()=> ShowTakeBox()"></Colosus.Client.Blazor.Components.Button>
         </div>
         <div class="col-6">
-            <Colosus.Client.Components.Button Text="Ödeme Ekle" OnClick="()=> ShowGiveBox()"></Colosus.Client.Components.Button>
+            <Colosus.Client.Blazor.Components.Button Text="Ödeme Ekle" OnClick="()=> ShowGiveBox()"></Colosus.Client.Blazor.Components.Button>
         </div>
     </div>
 
@@ -98,26 +98,26 @@
 </div>
 
 
-<Colosus.Client.Components.CustomBox @ref="addTakeBox">
+<Colosus.Client.Blazor.Components.CustomBox @ref="addTakeBox">
     <AddDebt @ref="addTake"
     CustomerPublicKey="@CustomerPublicKey.ToString()"
     Type="Entity.Concretes.DatabaseModel.DebitType.Take"
     CloseAction="new Task( async ()=>{ await CloseAndRefreshData(); })"></AddDebt>
-</Colosus.Client.Components.CustomBox>
+</Colosus.Client.Blazor.Components.CustomBox>
 
 
-<Colosus.Client.Components.CustomBox @ref="addGiveBox">
+<Colosus.Client.Blazor.Components.CustomBox @ref="addGiveBox">
     <AddDebt @ref="addGive"
     CustomerPublicKey="@CustomerPublicKey.ToString()"
     Type="Entity.Concretes.DatabaseModel.DebitType.Give"
     CloseAction="new Task( async ()=>{ await CloseAndRefreshData(); })"></AddDebt>
-</Colosus.Client.Components.CustomBox>
+</Colosus.Client.Blazor.Components.CustomBox>
 
 
-<Colosus.Client.Components.CustomBox @ref="addDebtPayBox">
+<Colosus.Client.Blazor.Components.CustomBox @ref="addDebtPayBox">
     <AddDebtPay @ref="addDebtPay"
     CloseAction="new Task( async ()=>{ await AddDebtPay(); })"></AddDebtPay>
-</Colosus.Client.Components.CustomBox>
+</Colosus.Client.Blazor.Components.CustomBox>
 @code {
     [Parameter] public string CustomerPublicKey { get; set; } = "";
     DebtPageDTO debts = new();

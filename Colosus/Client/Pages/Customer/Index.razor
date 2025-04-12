@@ -1,13 +1,13 @@
 ﻿@page "/Customer/Index"
-@using Colosus.Client.Services.Customer
+@using Colosus.Client.Blazor.Services.Customer
 @using Colosus.Entity.Concretes
 @using Colosus.Operations.Abstracts
 @inject ICustomerService customerService
 @inject NavigationManager navigationManager
 @inject IDataConverter dataConverter
 <div class="container">
-    <Colosus.Client.Components.Button Text="Ekle"
-                                      OnClick='()=> navigationManager.NavigateTo("/Customer/Add")'></Colosus.Client.Components.Button>
+    <Colosus.Client.Blazor.Components.Button Text="Ekle"
+                                      OnClick='()=> navigationManager.NavigateTo("/Customer/Add")'></Colosus.Client.Blazor.Components.Button>
     <br />
     @if (Customers != null)
     {
@@ -32,14 +32,14 @@
                                 <td>@item.Name @item.MiddleName @item.LastName</td>
                                 <td>@item.Note</td>
                                 <td>
-                                    <Colosus.Client.Components.Button Class="table-button" Icon="fa fa-info"
-                                                                      OnClick="async ()=> await Task.Delay(10)"></Colosus.Client.Components.Button>
-                                    <Colosus.Client.Components.Button Class="table-button"
+                                    <Colosus.Client.Blazor.Components.Button Class="table-button" Icon="fa fa-info"
+                                                                      OnClick="async ()=> await Task.Delay(10)"></Colosus.Client.Blazor.Components.Button>
+                                    <Colosus.Client.Blazor.Components.Button Class="table-button"
                                                                       Icon="fa fa-c"
-                                                                      OnClick='async ()=>navigationManager.NavigateTo("/Customer/Debt/" + item.PublicKey)'></Colosus.Client.Components.Button>
-                                    <Colosus.Client.Components.Button Class="table-button"
+                                                                      OnClick='async ()=>navigationManager.NavigateTo("/Customer/Debt/" + item.PublicKey)'></Colosus.Client.Blazor.Components.Button>
+                                    <Colosus.Client.Blazor.Components.Button Class="table-button"
                                                                       Icon="fa fa-remove"
-                                                                      OnClick="async ()=> await DeleteCustomer(item.PublicKey)"></Colosus.Client.Components.Button>
+                                                                      OnClick="async ()=> await DeleteCustomer(item.PublicKey)"></Colosus.Client.Blazor.Components.Button>
                                 </td>
                             </tr>
                         }
@@ -80,15 +80,15 @@
                                 <td>@item.TaxOffice</td>
                                 <td>@item.TaxNo</td>
                                 <td>
-                                    <Colosus.Client.Components.Button Class="table-button"
+                                    <Colosus.Client.Blazor.Components.Button Class="table-button"
                                                                       Icon="fa fa-info"
-                                                                      OnClick="async ()=> await Task.Delay(10)"></Colosus.Client.Components.Button>
-                                    <Colosus.Client.Components.Button Class="table-button"
+                                                                      OnClick="async ()=> await Task.Delay(10)"></Colosus.Client.Blazor.Components.Button>
+                                    <Colosus.Client.Blazor.Components.Button Class="table-button"
                                                                       Icon="fa fa-c"
-                                                                      OnClick='async ()=>navigationManager.NavigateTo("/Customer/Debt/" + item.PublicKey)'></Colosus.Client.Components.Button>
-                                    <Colosus.Client.Components.Button Class="table-button"
+                                                                      OnClick='async ()=>navigationManager.NavigateTo("/Customer/Debt/" + item.PublicKey)'></Colosus.Client.Blazor.Components.Button>
+                                    <Colosus.Client.Blazor.Components.Button Class="table-button"
                                                                       Icon="fa fa-remove"
-                                                                      OnClick="async ()=> await DeleteCustomer(item.PublicKey)"></Colosus.Client.Components.Button>
+                                                                      OnClick="async ()=> await DeleteCustomer(item.PublicKey)"></Colosus.Client.Blazor.Components.Button>
                                 </td>
                             </tr>
                         }
@@ -124,9 +124,9 @@
                             <tr>
                                 <td>@item.Name </td>
                                 <td>
-                                <Colosus.Client.Components.Button Class="table-button"
+                                <Colosus.Client.Blazor.Components.Button Class="table-button"
                                                                       Icon="fa fa-remove"
-                                                                      OnClick="async ()=> await DeleteCustomer(item.PublicKey)"></Colosus.Client.Components.Button>
+                                                                      OnClick="async ()=> await DeleteCustomer(item.PublicKey)"></Colosus.Client.Blazor.Components.Button>
                                 </td>
                             </tr>
                         }
