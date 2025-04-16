@@ -1,0 +1,10 @@
+<div class="form-floating">
+  <input type="{{ type.toString() }}"
+         [value]="value"
+         (input)="onInput($event)"
+         (blur)="onTouched()"
+         class="form-control {{ class.toString() }}"
+         id="floatingPassword"
+         placeholder="Password">
+  <label class="custom-input-placeholder" for="floatingPassword">{{ placeholder.toString() }}</label>
+</div>

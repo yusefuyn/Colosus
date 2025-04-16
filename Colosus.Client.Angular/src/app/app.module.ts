@@ -15,6 +15,7 @@ import { FirmsComponent } from './firms/firms.component';
 
 
 import { ButtonComponent } from '../components/button/button.component';
+import { InputComponent } from '../components/input/input.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ButtonComponent } from '../components/button/button.component';
     RegisterComponent,
     ButtonComponent,
     ExitComponent,
-    FirmsComponent
+    FirmsComponent,
+    InputComponent
   ],
   imports: [
     BrowserModule,

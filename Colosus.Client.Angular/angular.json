@@ -37,7 +37,7 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/css/styles.css"
             ],
             "scripts": []
           },
@@ -98,7 +98,7 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/css/styles.css"
             ],
             "scripts": [],
             "karmaConfig": "karma.conf.js"
@@ -106,5 +106,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "b1507ef5-ec80-4c23-ba28-dc0d1390f9c4"
   }
 }

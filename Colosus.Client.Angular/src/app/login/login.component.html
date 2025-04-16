@@ -5,8 +5,9 @@
       <div class="container-header">
         <h3>Giriş Yap</h3>
       </div>
-      <input class="form-control row" type="text" [(ngModel)]="username" placeholder="Kullanıcı Adınız :" />
-      <input class="form-control row" type="password" [(ngModel)]="password" placeholder="Şifreniz :" />
+      <input-component [(ngModel)]="username" class="row" type="text" placeholder="Kullanıcı Adınız :"></input-component>
+      <input-component [(ngModel)]="password" class="row" type="password" placeholder="Şifreniz :"></input-component>
+
       <p class="">Hesabınız mı yok? <a routerLink="/Register">Üye Ol</a></p>
       <input class="btn btn-success row" (click)="onLoginSubmit()" type="submit" value="Giriş" />
     </div>
