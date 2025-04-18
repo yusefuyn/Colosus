@@ -3,9 +3,9 @@ using Colosus.Operations.Abstracts;
 
 namespace Colosus.Server.Facades.Pos
 {
-    public class PosFacades : IPosFacades
+    public class SaleFacades : ISaleFacades
     {
-        public PosFacades(IDataConverter dataConverter, IOperations operations, IGuid guid, IOperationRunner operationRunner, IMapping mapping)
+        public SaleFacades(IDataConverter dataConverter, IOperations operations, IGuid guid, IOperationRunner operationRunner, IMapping mapping)
         {
             this.dataConverter = dataConverter;
             this.operations = operations;

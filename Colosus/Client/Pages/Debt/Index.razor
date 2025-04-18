@@ -2,6 +2,7 @@
 @using Colosus.Client.Blazor.Services.Customer
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 @inject ICustomerService customerService
 @inject IDataConverter dataConverter
@@ -97,8 +98,8 @@
 
     public async Task RefreshData()
     {
-        RequestResult result = await customerService.GetMyUpCommingDebt(AppState.SelectedFirmPublicKey);
-        if (result != null)
-            upCommingDebts = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.UpCommingDebtDTO>>(result.Data);
+        var result = await customerService.GetMyUpCommingDebt(AppState.SelectedFirmPublicKey);
+        // if (result != null)
+        //     upCommingDebts = result.Data;
     }
 }

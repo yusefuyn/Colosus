@@ -1,4 +1,4 @@
-﻿using Colosus.Entity.Concretes;
+﻿using Colosus.Entity.Concretes.RequestModel;
 
 namespace Colosus.Client.Blazor.Services.Administrator
 {

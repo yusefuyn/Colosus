@@ -2,6 +2,7 @@
 @using Colosus.Client.Blazor.Services.Product
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 
 @inject NavigationManager navigationManager
@@ -40,8 +41,8 @@
                         <td>@item.FirmName.ToString()</td>
                         <td>
                             <Colosus.Client.Blazor.Components.Button Icon="fa fa-remove"
-                                                              Class="table-button"
-                                                              OnClick="async ()=> await DeleteProduct(item.PublicKey)"></Colosus.Client.Blazor.Components.Button>
+                                                                     Class="table-button"
+                                                                     OnClick="async ()=> await DeleteProduct(item.PublicKey)"></Colosus.Client.Blazor.Components.Button>
                         </td>
                     </tr>
                 }
@@ -67,7 +68,7 @@
             AppState.AddMessage("Bir hata meydana geldi");
             return;
         }
-        List<Colosus.Entity.Concretes.DTO.ProductDTO> resProducts = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.ProductDTO>>(res.Data);
+        List<Colosus.Entity.Concretes.DTO.ProductDTO> resProducts = res.Data;
         Products.AddRange(resProducts);
     }
 

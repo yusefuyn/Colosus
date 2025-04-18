@@ -1,11 +1,11 @@
-﻿using Colosus.Entity.Concretes;
-using Colosus.Server.Facades.Setting;
+﻿using Colosus.Server.Facades.Setting;
 using Microsoft.AspNetCore.Mvc;
 using PaymentTypeCreateModel = Colosus.Entity.Concretes.CreateModel.PaymentTypeCreateModel;
 using PaymentType = Colosus.Entity.Concretes.DatabaseModel.PaymentType;
 using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Entity.Concretes.RequestModel;
 using Colosus.Entity.Concretes.CreateModel;
+using Colosus.Entity.Concretes.DTO;
 namespace Colosus.Server.Controllers
 {
     [ApiController]
@@ -23,14 +23,13 @@ namespace Colosus.Server.Controllers
 
 
         [HttpPost]
-        public string RecommendedPaymentType([FromBody] RequestParameter parameter)
+        public RequestResult<List<PaymentType>> RecommendedPaymentType([FromBody] RequestParameter parameter)
         {
-            RequestResult result = new("RecommendedPaymentType");
-
+            RequestResult<List<PaymentType>> result = new("RecommendedPaymentType");
             settingFacades.operationRunner.ActionRunner(() =>
             {
                 List<PaymentType> paymentTypes = settingFacades.operations.RecommendedPaymentType();
-                result.Data = settingFacades.dataConverter.Serialize(paymentTypes);
+                result.Data = paymentTypes;
 
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "RecommendedPaymentType operation success";
@@ -40,19 +39,19 @@ namespace Colosus.Server.Controllers
                 result.Description = "RecommendedPaymentType operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
-        public string AddPaymentTypeRelation([FromBody] RequestParameter parameter)
+        public RequestResult AddPaymentTypeRelation([FromBody] RequestParameter<PaymentTypeRequestModel> parameter)
         {
             RequestResult result = new("AddPaymentTypeRelation");
 
             settingFacades.operationRunner.ActionRunner(() =>
             {
-                PaymentTypeRequestModel model = settingFacades.dataConverter.Deserialize<PaymentTypeRequestModel>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(model.FirmPublicKey);
-                PaymentType pytype = settingFacades.operations.GetPaymentType(model.PaymentTypePublicKey);
+
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
+                PaymentType pytype = settingFacades.operations.GetPaymentType(parameter.Data.PaymentTypePublicKey);
                 PaymentTypeFirmRelation paymentTypeFirmRelation = new()
                 {
                     PaymentTypePrivateKey = pytype.PrivateKey,
@@ -70,25 +69,21 @@ namespace Colosus.Server.Controllers
                 result.Description = "AddPaymentTypeRelation operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
         [HttpPost]
-        public string AddPaymentType([FromBody] RequestParameter parameter)
+        public RequestResult AddPaymentType([FromBody] RequestParameter<PaymentTypeCreateModel> parameter)
         {
             RequestResult result = new("AddPaymentType");
-
             settingFacades.operationRunner.ActionRunner(() =>
             {
-                PaymentTypeCreateModel paymentType = settingFacades.dataConverter.Deserialize<PaymentTypeCreateModel>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(paymentType.FirmPublicKey);
-
-                PaymentType PaymentTypedb = settingFacades.mapping.Convert<PaymentType>(paymentType);
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
+                PaymentType PaymentTypedb = settingFacades.mapping.Convert<PaymentType>(parameter.Data);
                 PaymentTypedb.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.PaymentType);
                 PaymentTypedb.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.PaymentType);
                 settingFacades.operations.SaveEntity(PaymentTypedb);
-
                 PaymentTypeFirmRelation paymentTypeFirmRelation = new()
                 {
                     PaymentTypePrivateKey = PaymentTypedb.PrivateKey,
@@ -97,7 +92,6 @@ namespace Colosus.Server.Controllers
                     PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.PaymentTypeFirmRelation),
                 };
                 settingFacades.operations.SaveEntity(paymentTypeFirmRelation);
-
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "AddPaymentType operation success";
             }, () =>
@@ -106,18 +100,16 @@ namespace Colosus.Server.Controllers
                 result.Description = "AddPaymentType operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
-        public string DeletePaymentType([FromBody] RequestParameter parameter)
+        public RequestResult DeletePaymentType([FromBody] RequestParameter<PaymentTypeRequestModel> parameter)
         {
             RequestResult result = new("DeletePaymentType");
-
             settingFacades.operationRunner.ActionRunner(() =>
             {
-                PaymentTypeRequestModel delModel = settingFacades.dataConverter.Deserialize<PaymentTypeRequestModel>(parameter.Data.ToString());
-                PaymentTypeFirmRelation relation = settingFacades.operations.GetCurrencyFirmRelation(delModel.PaymentTypePublicKey, delModel.FirmPublicKey);
+                PaymentTypeFirmRelation relation = settingFacades.operations.GetCurrencyFirmRelation(parameter.Data.PaymentTypePublicKey, parameter.Data.FirmPublicKey);
                 settingFacades.operations.RemoveEntity(relation);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "DeletePaymentType operation success";
@@ -127,20 +119,19 @@ namespace Colosus.Server.Controllers
                 result.Description = "DeletePaymentType operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
-        public string GetAllPaymentTypeForFirmPublicKey([FromBody] RequestParameter parameter)
+        public RequestResult<List<PaymentTypeDTO>> GetAllPaymentTypeForFirmPublicKey([FromBody] RequestParameter<string> parameter)
         {
-            RequestResult result = new("GetAllPaymentTypeForFirmPublicKey");
+            RequestResult<List<PaymentTypeDTO>> result = new("GetAllPaymentTypeForFirmPublicKey");
             settingFacades.operationRunner.ActionRunner(() =>
             {
-                string FirmPublicKey = settingFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(FirmPublicKey);
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data);
                 List<PaymentType> paymentTypes = settingFacades.operations.GetAllPaymentTypeWithFirmPrivateKey(firm.PrivateKey);
-                List<Colosus.Entity.Concretes.DTO.PaymentTypeDTO> payTypeDtos= settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.PaymentTypeDTO>(paymentTypes);
-                result.Data = settingFacades.dataConverter.Serialize(payTypeDtos);
+                List<PaymentTypeDTO> payTypeDtos= settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.PaymentTypeDTO>(paymentTypes);
+                result.Data = payTypeDtos;
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetAllPaymentTypeForFirmPublicKey operation success";
             }, () =>
@@ -149,7 +140,7 @@ namespace Colosus.Server.Controllers
                 result.Description = "GetAllPaymentTypeForFirmPublicKey operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
@@ -159,15 +150,13 @@ namespace Colosus.Server.Controllers
 
 
         [HttpPost]
-        public string RecommendedCurrency([FromBody] RequestParameter parameter)
+        public RequestResult<List<Currency>> RecommendedCurrency([FromBody] RequestParameter parameter)
         {
-            RequestResult result = new("RecommendedCurrency");
-
+            RequestResult<List<Currency>> result = new("RecommendedCurrency");
             settingFacades.operationRunner.ActionRunner(() =>
             {
                 List<Currency> currencies = settingFacades.operations.RecommendedCurrency();
-                result.Data = settingFacades.dataConverter.Serialize(currencies);
-
+                result.Data = currencies;
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "RecommendedCurrency operation success";
             }, () =>
@@ -176,19 +165,19 @@ namespace Colosus.Server.Controllers
                 result.Description = "RecommendedCurrency operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
-        public string AddCurrencyRelation([FromBody] RequestParameter parameter)
+        public RequestResult AddCurrencyRelation([FromBody] RequestParameter<CurrencyRequestModel> parameter)
         {
             RequestResult result = new("AddCurrencyRelation");
 
             settingFacades.operationRunner.ActionRunner(() =>
             {
-                CurrencyRequestModel model = settingFacades.dataConverter.Deserialize<CurrencyRequestModel>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(model.FirmPublicKey);
-                Currency currency = settingFacades.operations.GetCurrency(model.CurrencyPublicKey);
+
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
+                Currency currency = settingFacades.operations.GetCurrency(parameter.Data.CurrencyPublicKey);
                 CurrencyFirmRelation firmRelation = new()
                 {
                     CurrencyPrivateKey = currency.PrivateKey,
@@ -206,21 +195,21 @@ namespace Colosus.Server.Controllers
                 result.Description = "AddCurrencyRelation operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
         [HttpPost]
-        public string AddCurrency([FromBody] RequestParameter parameter)
+        public RequestResult AddCurrency([FromBody] RequestParameter<CurrencyCreateModel> parameter)
         {
             RequestResult result = new("AddCurrency");
 
             settingFacades.operationRunner.ActionRunner(() =>
             {
-                CurrencyCreateModel paymentType = settingFacades.dataConverter.Deserialize<CurrencyCreateModel>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(paymentType.FirmPublicKey);
 
-                Currency PaymentTypedb = settingFacades.mapping.Convert<Currency>(paymentType);
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
+
+                Currency PaymentTypedb = settingFacades.mapping.Convert<Currency>(parameter.Data);
                 PaymentTypedb.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Currency);
                 PaymentTypedb.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Currency);
                 settingFacades.operations.SaveEntity(PaymentTypedb);
@@ -242,18 +231,18 @@ namespace Colosus.Server.Controllers
                 result.Description = "AddCurrency operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
-        public string DeleteCurrency([FromBody] RequestParameter parameter)
+        public RequestResult DeleteCurrency([FromBody] RequestParameter<CurrencyRequestModel> parameter)
         {
             RequestResult result = new("DeleteCurrency");
 
             settingFacades.operationRunner.ActionRunner(() =>
             {
-                CurrencyRequestModel delModel = settingFacades.dataConverter.Deserialize<CurrencyRequestModel>(parameter.Data.ToString());
-                PaymentTypeFirmRelation relation = settingFacades.operations.GetCurrencyFirmRelation(delModel.CurrencyPublicKey, delModel.FirmPublicKey);
+            
+                PaymentTypeFirmRelation relation = settingFacades.operations.GetCurrencyFirmRelation(parameter.Data.CurrencyPublicKey, parameter.Data.FirmPublicKey);
                 settingFacades.operations.RemoveEntity(relation);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "DeleteCurrency operation success";
@@ -263,20 +252,20 @@ namespace Colosus.Server.Controllers
                 result.Description = "DeleteCurrency operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
-        public string GetAllCurrencyForFirmPublicKey([FromBody] RequestParameter parameter)
+        public RequestResult<List<CurrencyDTO>> GetAllCurrencyForFirmPublicKey([FromBody] RequestParameter<string> parameter)
         {
-            RequestResult result = new("GetAllCurrencyForFirmPublicKey");
+            RequestResult<List<CurrencyDTO>> result = new("GetAllCurrencyForFirmPublicKey");
             settingFacades.operationRunner.ActionRunner(() =>
             {
-                string FirmPublicKey = settingFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
-                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(FirmPublicKey);
+
+                Firm firm = settingFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data);
                 List<Currency> paymentTypes = settingFacades.operations.GetAllCurrencyWithFirmPrivateKey(firm.PrivateKey);
-                List<Colosus.Entity.Concretes.DTO.CurrencyDTO> currencies = settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.CurrencyDTO>(paymentTypes);
-                result.Data = settingFacades.dataConverter.Serialize(currencies);
+                List<CurrencyDTO> currencies = settingFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.CurrencyDTO>(paymentTypes);
+                result.Data = currencies;
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetAllCurrencyForFirmPublicKey operation success";
             }, () =>
@@ -285,7 +274,7 @@ namespace Colosus.Server.Controllers
                 result.Description = "GetAllCurrencyForFirmPublicKey operation not success";
             });
 
-            return settingFacades.dataConverter.Serialize(result);
+            return result;
         }
 
     }

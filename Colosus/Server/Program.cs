@@ -15,6 +15,7 @@ using Colosus.Server.Facades.Setting;
 using Colosus.Server.Services.Token;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,8 @@ List<DataBaseSetting> dbSettingsSection = builder.Configuration.GetSection("DbSe
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors(options =>
 {
@@ -61,7 +64,7 @@ builder.Services.AddScoped<ICategoryFacades, CategoryFacades>();
 builder.Services.AddScoped<ILoginFacades, LoginFacades>();
 builder.Services.AddScoped<IProductFacades, ProductFacades>();
 builder.Services.AddScoped<ICustomerFacades, CustomerFacades>();
-builder.Services.AddScoped<IPosFacades, PosFacades>();
+builder.Services.AddScoped<ISaleFacades, SaleFacades>();
 builder.Services.AddScoped<ISettingFacades, SettingFacades>();
 #endregion
 
@@ -71,10 +74,30 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    var url = app.Configuration.GetValue("URLS", "").Split(";")[0] + "/swagger/index.html"; // portunu kontrol et!
+    await Task.Run(() =>
+    {
+        // Küçük bir gecikme veriyoruz ki API tam otursun
+        Thread.Sleep(2000);
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = url,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Swagger UI açýlýrken hata: {ex.Message}");
+        }
+    });
+
 }
 else
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

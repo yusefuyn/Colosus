@@ -1,6 +1,7 @@
 ﻿using Colosus.Client.Blazor.Pages.Debt;
-using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.CreateModel;
+using Colosus.Entity.Concretes.DTO;
+using Colosus.Entity.Concretes.RequestModel;
 
 namespace Colosus.Client.Blazor.Services.Customer
 {
@@ -9,8 +10,8 @@ namespace Colosus.Client.Blazor.Services.Customer
         public Task<RequestResult> AddIndividualCustomer(IndividualCustomerCreateModel customer);
         public Task<RequestResult> AddCorporateCustomer(CorporateCustomerCreateModel customer); 
         public Task<RequestResult> AddFastCustomer(FastCustomerCreateModel customer); 
-        public Task<RequestResult> GetMyCustomers(string FirmPublicKey);
-        public Task<RequestResult> GetCustomerDebtsForCustomerPublicKey(string CustomerPublicKey);
+        public Task<RequestResult<CustomersDTO>> GetMyCustomers(string FirmPublicKey);
+        public Task<RequestResult<DebtPageDTO>> GetCustomerDebtsForCustomerPublicKey(string CustomerPublicKey);
         public Task<RequestResult> AddDebt(DebtCreateModel debt);
         public Task<RequestResult> PayedDebt(string DebtPublicKey); 
         public Task<RequestResult> UnPaidDebt(string DebtPublicKey);

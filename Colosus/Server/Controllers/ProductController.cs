@@ -1,7 +1,7 @@
-﻿using Colosus.Entity.Concretes;
-using Colosus.Entity.Concretes.CreateModel;
+﻿using Colosus.Entity.Concretes.CreateModel;
 using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Entity.Concretes.DTO;
+using Colosus.Entity.Concretes.RequestModel;
 using Colosus.Server.Attributes;
 using Colosus.Server.Facades.Product;
 using Colosus.Server.Facades.Setting;
@@ -23,20 +23,20 @@ namespace Colosus.Server.Controllers
             => productFacades.guid.Generate(keyType, entityType);
 
         [HttpPost]
-        public string AddProduct([FromBody] RequestParameter parameter)
+        public RequestResult AddProduct([FromBody] RequestParameter<ProductCreateModel> parameter)
         {
             RequestResult requestResult = new("AddProduct");
             productFacades.operationRunner.ActionRunner(() =>
             {
-                Entity.Concretes.CreateModel.ProductCreateModel parameterObj = productFacades.dataConverter.Deserialize<Entity.Concretes.CreateModel.ProductCreateModel>(parameter.Data);
-                Firm firm = productFacades.operations.GetMyFirmWithFirmPublicKey(parameterObj.FirmPublicKey);
-                var category = productFacades.operations.GetCategory(parameterObj.CategoryPublicKey);
+
+                Firm firm = productFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
+                var category = productFacades.operations.GetCategory(parameter.Data.CategoryPublicKey);
 
                 Entity.Concretes.DatabaseModel.Product newProduct = new Entity.Concretes.DatabaseModel.Product()
                 {
-                    Name = parameterObj.Name,
-                    SalePrice = parameterObj.SalePrice,
-                    PurchasePrice = parameterObj.PurchasePrice,
+                    Name = parameter.Data.Name,
+                    SalePrice = parameter.Data.SalePrice,
+                    PurchasePrice = parameter.Data.PurchasePrice,
                     PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Product),
                     PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Product)
                 };
@@ -71,20 +71,18 @@ namespace Colosus.Server.Controllers
                 requestResult.Result = EnumRequestResult.Error;
                 requestResult.Description = "Bir hata meydana geldi";
             });
-            return productFacades.dataConverter.Serialize(requestResult);
+            return requestResult;
         }
 
 
         [HttpPost]
-        public string DeleteStock([FromBody] RequestParameter parameter)
+        public RequestResult DeleteStock([FromBody] RequestParameter<string> parameter)
         {
             RequestResult requestResult = new("DeleteStock");
 
             productFacades.operationRunner.ActionRunner(() =>
             {
-
-                string StockPublicKey = productFacades.dataConverter.Deserialize<string>(parameter.Data);
-                ProductStock stock = productFacades.operations.GetProductStockWithPublicKey(StockPublicKey);
+                ProductStock stock = productFacades.operations.GetProductStockWithPublicKey(parameter.Data);
                 productFacades.operations.RemoveEntity(stock);
                 requestResult.Result = EnumRequestResult.Ok;
                 requestResult.Description = "DeleteStock operations Success";
@@ -95,21 +93,19 @@ namespace Colosus.Server.Controllers
                 requestResult.Description = "DeleteStock operations not success";
             });
 
-            return productFacades.dataConverter.Serialize(requestResult);
+            return requestResult;
         }
 
         [HttpPost]
-        public string GetMyFirmProducts([FromBody] RequestParameter parameter)
+        public RequestResult<List<ProductDTO>> GetMyFirmProducts([FromBody] RequestParameter<string> parameter)
         {
-            RequestResult requestResult = new("GetMyFirmProducts");
+            RequestResult<List<ProductDTO>> requestResult = new("GetMyFirmProducts");
 
             productFacades.operationRunner.ActionRunner(() =>
             {
-
-                string FirmPublicKey = productFacades.dataConverter.Deserialize<string>(parameter.Data);
-                Firm myFirm = productFacades.operations.GetMyFirmWithFirmPublicKey(FirmPublicKey);
-                List<Entity.Concretes.DTO.ProductDTO> prods = productFacades.operations.GetMyFirmProductDTOs(myFirm.PrivateKey);
-                requestResult.Data = productFacades.dataConverter.Serialize(prods);
+                Firm myFirm = productFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data);
+                List<ProductDTO> prods = productFacades.operations.GetMyFirmProductDTOs(myFirm.PrivateKey);
+                requestResult.Data = prods;
                 requestResult.Result = EnumRequestResult.Ok;
                 requestResult.Description = "Success";
 
@@ -119,23 +115,23 @@ namespace Colosus.Server.Controllers
                 requestResult.Description = "Bir hata meydana geldi";
             });
 
-            return productFacades.dataConverter.Serialize(requestResult);
+            return requestResult;
         }
 
 
 
         [HttpPost]
-        public string GetStockHistoryDTO([FromBody] RequestParameter parameter)
+        public RequestResult<List<ProductStockDTO>> GetStockHistoryDTO([FromBody] RequestParameter<string> parameter)
         {
-            RequestResult requestResult = new("GetStockHistoryDTO");
+            RequestResult<List<ProductStockDTO>> requestResult = new("GetStockHistoryDTO");
 
             productFacades.operationRunner.ActionRunner(() =>
             {
-                string ProductPublicKey = productFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
-                List<Colosus.Entity.Concretes.DTO.ProductStockDTO> returnedList = new();
-                returnedList = productFacades.operations.GetProductStockHistoryDTOs(ProductPublicKey);
+
+                List<ProductStockDTO> returnedList = new();
+                returnedList = productFacades.operations.GetProductStockHistoryDTOs(parameter.Data);
                 requestResult.Result = EnumRequestResult.Ok;
-                requestResult.Data = productFacades.dataConverter.Serialize(returnedList);
+                requestResult.Data = returnedList;
                 requestResult.Description = "Success";
 
             }, () =>
@@ -144,35 +140,35 @@ namespace Colosus.Server.Controllers
                 requestResult.Description = "Bir hata meydana geldi";
             });
 
-            return productFacades.dataConverter.Serialize(requestResult);
+            return requestResult;
         }
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string AddStockForProduct([FromBody] RequestParameter parameter)
+        public RequestResult<ProductDTO> AddStockForProduct([FromBody] RequestParameter<StockCreateModel> parameter)
         {
-            RequestResult requestResult = new("AddStockForProduct");
+            RequestResult<ProductDTO> requestResult = new("AddStockForProduct");
 
             productFacades.operationRunner.ActionRunner(() =>
             {
 
                 Firm myFirms = productFacades.operations.GetMyFirm(parameter.Token.ToString());
-                Entity.Concretes.CreateModel.StockCreateModel parameterStock = productFacades.dataConverter.Deserialize<Entity.Concretes.CreateModel.StockCreateModel>(parameter.Data);
-                Entity.Concretes.DatabaseModel.Product prod = productFacades.operations.GetMyProduct(parameterStock.ProductPublicKey);
 
-                Entity.Concretes.DatabaseModel.ProductStock productStock = new();
+                Product prod = productFacades.operations.GetMyProduct(parameter.Data.ProductPublicKey);
+
+                ProductStock productStock = new();
                 productStock.ProductPrivateKey = prod.PrivateKey;
                 productStock.FirmPrivateKey = myFirms.PrivateKey;
                 productStock.UserPrivateKey = parameter.Token.ToString();
                 productStock.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.ProductStock);
                 productStock.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.ProductStock);
-                productStock.Amount = parameterStock.Amount;
-                productStock.Description = parameterStock.Description;
+                productStock.Amount = parameter.Data.Amount;
+                productStock.Description = parameter.Data.Description;
 
                 productFacades.operations.SaveEntity(productStock);
 
-                Entity.Concretes.DTO.ProductDTO newProd = productFacades.operations.GetMyProductDTOs(prod.PrivateKey);
-                requestResult.Data = productFacades.dataConverter.Serialize(newProd);
+                ProductDTO newProd = productFacades.operations.GetMyProductDTOs(prod.PrivateKey);
+                requestResult.Data = newProd;
 
                 requestResult.Result = EnumRequestResult.Ok;
                 requestResult.Description = "Success";
@@ -183,36 +179,28 @@ namespace Colosus.Server.Controllers
                 requestResult.Description = "Bir hata meydana geldi";
             });
 
-            return productFacades.dataConverter.Serialize(requestResult);
+            return requestResult;
         }
 
-
-
-
         [HttpPost]
-        public string DeleteProduct([FromBody] RequestParameter parameter)
+        public RequestResult DeleteProduct([FromBody] RequestParameter<string> parameter)
         {
             RequestResult requestResult = new("DeleteProduct");
-
             productFacades.operationRunner.ActionRunner(() =>
             {
-
-                string productPublicKey = productFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
-                Colosus.Entity.Concretes.DatabaseModel.Product prod = productFacades.operations.GetMyProduct(productPublicKey);
-                List<Colosus.Entity.Concretes.DatabaseModel.ProductStock> stocks = productFacades.operations.GetProductStocks(prod.PrivateKey);
-
+                Product prod = productFacades.operations.GetMyProduct(parameter.Data);
+                List<ProductStock> stocks = productFacades.operations.GetProductStocks(prod.PrivateKey);
                 productFacades.operations.RemoveEntity(prod);
                 stocks.ForEach(xd => productFacades.operations.RemoveEntity(xd));
                 requestResult.Result = EnumRequestResult.Ok;
                 requestResult.Description = "Success";
-
             }, () =>
             {
                 requestResult.Result = EnumRequestResult.Error;
                 requestResult.Description = "Bir hata meydana geldi";
             });
 
-            return productFacades.dataConverter.Serialize(requestResult);
+            return requestResult;
         }
     }
 }

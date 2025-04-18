@@ -2,6 +2,7 @@
 @using Colosus.Client.Blazor.Services.Settings
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.CreateModel
+@using Colosus.Entity.Concretes.DTO
 @using Colosus.Operations.Abstracts
 @using Colosus.Entity.Concretes.DatabaseModel
 @inject ISettingsService settingsService
@@ -9,19 +10,18 @@
 @inject ICustomerService customerService
 
 <Colosus.Client.Blazor.Components.ComboBox Empty="true"
-Source="payType"
-Ttemp="PaymentType"
-ValueBinding="xd=> xd.Name"
-DataBinding="xd=> xd.PublicKey"
-SelectedValueChanged="(e)=> PaymentTypePublicKey = e.Value.ToString()"></Colosus.Client.Blazor.Components.ComboBox>
+                                           Source="payType"
+                                           Ttemp="PaymentTypeDTO"
+                                           ValueBinding="xd=> xd.Name"
+                                           DataBinding="xd=> xd.PublicKey"
+                                           SelectedValueChanged="(e)=> PaymentTypePublicKey = e.Value.ToString()"></Colosus.Client.Blazor.Components.ComboBox>
 
 <Colosus.Client.Blazor.Components.ComboBox Empty="true"
-Source="currency"
-Ttemp="Currency"
-ValueBinding="xd=> xd.Name"
-
-DataBinding="xd=> xd.PublicKey"
-SelectedValueChanged="(e)=> CurrencyPublicKey = e.Value.ToString()"></Colosus.Client.Blazor.Components.ComboBox>
+                                           Source="currency"
+                                           Ttemp="CurrencyDTO"
+                                           ValueBinding="xd=> xd.Name"
+                                           DataBinding="xd=> xd.PublicKey"
+                                           SelectedValueChanged="(e)=> CurrencyPublicKey = e.Value.ToString()"></Colosus.Client.Blazor.Components.ComboBox>
 
 <Colosus.Client.Blazor.Components.Entry Placeholder="Miktar" Type="Components.Entry.EntryTypeEnum.Number" TextChanged="(e)=> Price = decimal.Parse(e)"></Colosus.Client.Blazor.Components.Entry>
 
@@ -37,16 +37,16 @@ SelectedValueChanged="(e)=> CurrencyPublicKey = e.Value.ToString()"></Colosus.Cl
         var curRes = await settingsService.GetAllCurrencyForFirmPublicKey(AppState.SelectedFirmPublicKey);
 
         if (payRes != null && payRes.Ok())
-            payType = dataConverter.Deserialize<List<PaymentType>>(payRes.Data);
+            payType = payRes.Data;
 
         if (curRes != null && curRes.Ok())
-            currency = dataConverter.Deserialize<List<Currency>>(curRes.Data);
+            currency = curRes.Data;
 
         StateHasChanged();
     }
 
-    List<PaymentType> payType { get; set; }
-    List<Currency> currency { get; set; }
+    List<PaymentTypeDTO> payType { get; set; }
+    List<CurrencyDTO> currency { get; set; }
 
     [Parameter] public Task CloseAction { get; set; }
 

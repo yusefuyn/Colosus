@@ -1,6 +1,6 @@
 ﻿using Colosus.Business.Abstracts;
-using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.DatabaseModel;
+using Colosus.Entity.Concretes.RequestModel;
 using Colosus.Operations.Abstracts;
 using Colosus.Server.Attributes;
 using Colosus.Server.Facades.Firm;
@@ -25,9 +25,9 @@ namespace Colosus.Server.Controllers
         private string GenKey(string keyType, string entityType) => firmFacades.guid.Generate(keyType, entityType);
         [HttpPost]
         [GetAuthorizeToken]
-        public string GetMyFirm([FromBody] RequestParameter parameter)
+        public RequestResult<List<Firm>> GetMyFirm([FromBody] RequestParameter parameter)
         {
-            RequestResult result = new("Get my Firm");
+            RequestResult<List<Firm>> result = new("Get my Firm");
             firmFacades.operationRunner.ActionRunner(() =>
             {
                 result.Result = EnumRequestResult.Ok;
@@ -35,19 +35,19 @@ namespace Colosus.Server.Controllers
                 List<Firm> source = new();
                 if (!string.IsNullOrEmpty(parameter.Token))
                     source = firmFacades.operations.GetsMyFirms(parameter.Token);
-                result.Data = firmFacades.dataConverter.Serialize(source);
+                result.Data = source;
             }, () =>
             {
                 result.Result = EnumRequestResult.Error;
                 result.Description = "Firmalar gelmedi.";
             });
-            return firmFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
         [GetAuthorizeToken]
 
-        public string AddNewFirm([FromBody] RequestParameter parameter)
+        public RequestResult AddNewFirm([FromBody] RequestParameter<Firm> parameter)
         {
             RequestResult result = new("Add new Firm");
             firmFacades.operationRunner.ActionRunner(() =>
@@ -64,16 +64,16 @@ namespace Colosus.Server.Controllers
                 {
                     result.Result = EnumRequestResult.Ok;
                     result.Description = "Successfly";
-                    Firm firm = firmFacades.dataConverter.Deserialize<Firm>(parameter.Data);
-                    firm.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Firm);
-                    firm.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Firm);
-                    firm.PublicID = "F" + new Random().Next(100000, 999999).ToString();
-                    firmFacades.operations.SaveEntity(firm);
+
+                    parameter.Data.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Firm);
+                    parameter.Data.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Firm);
+                    parameter.Data.PublicID = "F" + new Random().Next(100000, 999999).ToString();
+                    firmFacades.operations.SaveEntity(parameter.Data);
 
                     FirmRole role = new()
                     {
                         Name = "Manager",
-                        FirmPrivateKey = firm.PrivateKey,
+                        FirmPrivateKey = parameter.Data.PrivateKey,
                         PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.FirmRole),
                         PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.FirmRole),
                     };
@@ -82,7 +82,7 @@ namespace Colosus.Server.Controllers
 
                     FirmUserRelation relation = new()
                     {
-                        FirmPrivateKey = firm.PrivateKey,
+                        FirmPrivateKey = parameter.Data.PrivateKey,
                         PositionPrivateKey = role.PrivateKey,
                         UserPrivateKey = parameter.Token,
                         PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.FirmUserRelation),
@@ -97,7 +97,7 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "Firma eklenemedi.";
             });
-            return firmFacades.dataConverter.Serialize(result);
+            return result;
         }
     }
 }

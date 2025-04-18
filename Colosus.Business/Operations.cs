@@ -363,5 +363,45 @@ namespace Colosus.Business
              join c in Context.CorporateCustomers on cfr.CustomerPrivateKey equals c.PrivateKey
              where f.PrivateKey == firmPrivateKey && c.VisibleFastOperation
              select c).ToList();
+
+        public ICustomer GetMyFirmCustomerWithCustomerKey(string CustomerKey)
+        {
+            var ccustomer = Context.CorporateCustomers.FirstOrDefault(xd => xd.CustomerKey == CustomerKey);
+            var icustomer = Context.IndividualCustomers.FirstOrDefault(xd => xd.CustomerKey == CustomerKey);
+            var fcustomer = Context.FastCustomers.FirstOrDefault(xd => xd.CustomerKey == CustomerKey);
+
+            if (ccustomer != null)
+                return ccustomer;
+
+            if (icustomer != null)
+                return icustomer;
+
+            if (fcustomer != null)
+                return fcustomer;
+
+            return null;
+        }
+
+        public List<ICustomer> GetMyFirmSaleCustomersWithFirmPrivateKey(string privateKey)
+        {
+            List<ICustomer> returnedList = new();
+            returnedList.AddRange((from cc in Context.CorporateCustomers
+                                   join cfr in Context.CustomerFirmRelations on cc.PrivateKey equals cfr.CustomerPrivateKey
+                                   where cfr.FirmPrivateKey == privateKey && cc.VisibleFastOperation
+                                   select cc).ToList());
+
+            returnedList.AddRange((from fc in Context.FastCustomers
+                              join cfr in Context.CustomerFirmRelations on fc.PrivateKey equals cfr.CustomerPrivateKey
+                              where cfr.FirmPrivateKey == privateKey
+                              select fc).ToList());
+
+
+            returnedList.AddRange((from ic in Context.IndividualCustomers
+                              join cfr in Context.CustomerFirmRelations on ic.PrivateKey equals cfr.CustomerPrivateKey
+                              where cfr.FirmPrivateKey == privateKey && ic.VisibleFastOperation
+                              select ic).ToList());
+
+            return returnedList;
+        }
     }
 }

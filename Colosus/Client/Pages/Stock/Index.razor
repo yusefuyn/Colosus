@@ -5,7 +5,9 @@
 @page "/Stock/Index"
 @using Colosus.Client.Blazor.Services.Product
 @using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DTO
 @using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 <div class="container">
     <div class="container-header">
@@ -39,11 +41,11 @@
                         <td>@item.FirmName.ToString()</td>
                         <td>
                             <Colosus.Client.Blazor.Components.Button Class="table-button"
-                                                              Icon="fa fa-plus"
-                                                              OnClick="async ()=> await AddStock(item.PublicKey,item.Name)"></Colosus.Client.Blazor.Components.Button>
+                                                                     Icon="fa fa-plus"
+                                                                     OnClick="async ()=> await AddStock(item.PublicKey,item.Name)"></Colosus.Client.Blazor.Components.Button>
                             <Colosus.Client.Blazor.Components.Button Class="table-button"
-                                                              Icon="fa fa-angle-double-up"
-                                                              OnClick='()=> navigationManager.NavigateTo("/Stock/History/" + item.PublicKey)'></Colosus.Client.Blazor.Components.Button>
+                                                                     Icon="fa fa-angle-double-up"
+                                                                     OnClick='()=> navigationManager.NavigateTo("/Stock/History/" + item.PublicKey)'></Colosus.Client.Blazor.Components.Button>
                         </td>
                     </tr>
                 }
@@ -70,7 +72,8 @@
             AppState.AddMessage("Hata meydana geldi.");
             return;
         }
-        Products = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.ProductDTO>>(res.Data);
+        Products = res.Data
+        ;
     }
 
     public async Task AddStock(string productPublicKey, string ProductName)
@@ -78,7 +81,7 @@
         inputAmountDescriptionResult inputRes = await jSRuntime.InvokeAsync<inputAmountDescriptionResult>("stockModal", $"{ProductName} isimli ürüne");
         int convertedValue = 0;
         int.TryParse(inputRes.Amount, out convertedValue);
-        RequestResult requestResult = null;
+        RequestResult<ProductDTO> requestResult = null;
         if (convertedValue != 0 || convertedValue != null)
         {
             Colosus.Entity.Concretes.CreateModel.StockCreateModel stock = new();

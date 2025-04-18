@@ -6,6 +6,7 @@
 @using Colosus.Entity.Concretes.CreateModel
 @using Colosus.Entity.Concretes.DTO
 @using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 @inject ICustomerService customerService
 @inject IDataConverter dataConverter
@@ -178,10 +179,10 @@
 
     public async Task RefreshData()
     {
-        RequestResult result = await customerService.GetCustomerDebtsForCustomerPublicKey(CustomerPublicKey);
+        var result = await customerService.GetCustomerDebtsForCustomerPublicKey(CustomerPublicKey);
         if (result.Result == EnumRequestResult.Ok)
         {
-            debts = dataConverter.Deserialize<DebtPageDTO>(result.Data);
+            debts = result.Data;
             CustomerName = debts.CustomerName;
             StateHasChanged();
         }

@@ -1,38 +1,40 @@
 ﻿@page "/Sales/Index"
-@inject IPosService posService
-@inject IDataConverter dataConverter
-@using Colosus.Client.Blazor.Services.Pos
-@using Colosus.Entity.Concretes
-@using Colosus.Entity.Concretes.DTO
+@using Colosus.Client.Blazor.Services.Sale
+@using Colosus.Entity.Abstracts
+@using Colosus.Entity.Concretes.RequestModel
+@using Colosus.Entity.Concretes.ResultModel
 @using Colosus.Operations.Abstracts
-<div class="container">
+@inject ISaleService saleService
+@inject IDataConverter dataConverter
+@inject NavigationManager navigationManager
+@using Colosus.Client.Blazor.Components;
 
-    @foreach (var item in posDTO.Customers.individualCustomers.Where(xd => xd.VisibleFastOperation))
-    {
-        <div class="row">
-            <div class="col"></div>
-        </div>
-    }
-    @foreach (var item in posDTO.Customers.corporateCustomers.Where(xd => xd.VisibleFastOperation))
-    {
 
-    }
-    @foreach (var item in posDTO.Customers.fastCustomers)
+<div class="container d-flex flex-wrap gap-2">
+    @if (myCustomers != null && myCustomers.Count > 0)
     {
-
+        @foreach (var item in myCustomers)
+        {
+            <Button OnClick='()=> navigationManager.NavigateTo($"/Sales/Pos/{item.PublicKey}") ' Style="aspect-ratio: 1 / 1;" Class="btn btn-success w-100 col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2" Text="@item.GetName()"></Button>
+        }
     }
 </div>
+
+
+
 @code {
-    public PosDTO posDTO = null;
+    List<BasicCustomerResultModel> myCustomers = new();
 
     protected override async Task OnInitializedAsync()
     {
-        RequestResult result = await posService.GetMyPosDTO(AppState.SelectedFirmPublicKey);
-        if (result != null && result.Ok())
-        {
-            posDTO = dataConverter.Deserialize<PosDTO>(result.Data);
-            StateHasChanged();
-        }
+        await RefreshData();
     }
 
+    public async Task RefreshData()
+    {
+        var res = await saleService.GetMyCustomers(AppState.SelectedFirmPublicKey);
+        if (res.Result == EnumRequestResult.Ok)
+            myCustomers = res.Data;
+
+    }
 }

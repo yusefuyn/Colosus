@@ -1,5 +1,4 @@
 ﻿using Colosus.Business.Abstracts;
-using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Entity.Concretes.RequestModel;
 using Colosus.Operations.Abstracts;
@@ -28,15 +27,15 @@ namespace Colosus.Server.Controllers
             => loginFacades.guid.Generate(keyType, entityType);
 
         [HttpPost]
-        public string Register([FromBody] RequestParameter parameter)
+        public RequestResult Register([FromBody] RequestParameter<User> parameter)
         {
             RequestResult result = new(KeyTypes.SaveUser);
             loginFacades.operationRunner.ActionRunner(() =>
             {
-                User usera = loginFacades.dataConverter.Deserialize<User>(parameter.Data);
-                usera.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.User);
-                usera.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.User);
-                loginFacades.operations.SaveEntity(usera);
+
+                parameter.Data.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.User);
+                parameter.Data.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.User);
+                loginFacades.operations.SaveEntity(parameter.Data);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "Successfuly Registered";
             }, () =>
@@ -44,19 +43,19 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = $"Error #{DateTime.Now}";
             });
-            return loginFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
         [HttpPost]
-        public string Login([FromBody] RequestParameter parameter)
+        public RequestResult<string> Login([FromBody] RequestParameter<LoginUserRequestModel> parameter)
         {
-            RequestResult result = new(KeyTypes.LoginUser);
+            RequestResult<string> result = new(KeyTypes.LoginUser);
             loginFacades.operationRunner.ActionRunner(() =>
             {
-                LoginUserRequestModel paramUser = loginFacades.dataConverter.Deserialize<LoginUserRequestModel>(parameter.Data);
-                string pas = paramUser.HashedToPass == true ? paramUser.Password : loginFacades.hash.Calc(paramUser.Password);
-                User usera = loginFacades.operations.GetUser(paramUser.UserName, pas);
+              
+                string pas = parameter.Data.HashedToPass == true ? parameter.Data.Password : loginFacades.hash.Calc(parameter.Data.Password);
+                User usera = loginFacades.operations.GetUser(parameter.Data.UserName, pas);
                 List<Role> userRoles = loginFacades.operations.GetUserRole(usera.PrivateKey);
                 if (usera != null)
                 {
@@ -74,7 +73,7 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = $"Error #{DateTime.Now}";
             });
-            return loginFacades.dataConverter.Serialize(result);
+            return result;
         }
 
     }

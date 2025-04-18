@@ -1,6 +1,7 @@
 ﻿using Colosus.Business.Abstracts;
-using Colosus.Entity.Concretes;
+using Colosus.Entity.Concretes.CreateModel;
 using Colosus.Entity.Concretes.DatabaseModel;
+using Colosus.Entity.Concretes.RequestModel;
 using Colosus.Operations.Abstracts;
 using Colosus.Server.Attributes;
 using Colosus.Server.Facades.Category;
@@ -24,14 +25,13 @@ namespace Colosus.Server.Controllers
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string AddCategory([FromBody] RequestParameter parameter)
+        public RequestResult AddCategory([FromBody] RequestParameter<CategoryCreateModel> parameter)
         {
             RequestResult result = new("Add Category");
             categoryFacades.operationRunner.ActionRunner(() =>
             {
-                Colosus.Entity.Concretes.CreateModel.CategoryCreateModel paramCat = categoryFacades.dataConverter.Deserialize<Colosus.Entity.Concretes.CreateModel.CategoryCreateModel>(parameter.Data);
-                Firm firm = categoryFacades.operations.GetMyFirmWithFirmPublicKey(paramCat.FirmPublicKey);
-                Category cat = categoryFacades.mapping.Convert<Category>(paramCat);
+                Firm firm = categoryFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
+                Category cat = categoryFacades.mapping.Convert<Category>(parameter.Data);
                 cat.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Category);
                 cat.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.Category);
                 categoryFacades.operations.SaveEntity(cat);
@@ -51,21 +51,20 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "AddCategory Operations not Success";
             });
-            return categoryFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
 
         [HttpPost]
-        public string GetAllCategoriesButSupply([FromBody] RequestParameter parameter)
+        public RequestResult<List<Category>> GetAllCategoriesButSupply([FromBody] RequestParameter<string> parameter)
         {
-            RequestResult result = new("GetAllCategoriesButSupply");
+            RequestResult<List<Category>> result = new("GetAllCategoriesButSupply");
             categoryFacades.operationRunner.ActionRunner(() =>
             {
                 string FirmpublicKey = parameter.Data.ToString();
                 Firm firm = categoryFacades.operations.GetMyFirmWithFirmPublicKey(FirmpublicKey);
-                List<Category> categories = categoryFacades.operations.GetCategoriesWithPrivateKey(firm.PrivateKey);
-                result.Data = categoryFacades.dataConverter.Serialize(categories);
+                result.Data = categoryFacades.operations.GetCategoriesWithPrivateKey(firm.PrivateKey);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetAllCategoriesButSupply Operation Success";
             }, () =>
@@ -73,21 +72,17 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "GetAllCategoriesButSupply Operation Failed";
             });
-            return categoryFacades.dataConverter.Serialize(result);
+            return result;
         }
         [HttpPost]
-        public string DeleteCategory([FromBody] RequestParameter parameter)
+        public RequestResult DeleteCategory([FromBody] RequestParameter<Category> parameter)
         {
-            RequestResult result = new($"DeleteCategory Category {parameter.Data.ToString()}");
+            RequestResult result = new($"DeleteCategory Category {parameter.Data.PublicKey.ToString()}");
 
             categoryFacades.operationRunner.ActionRunner(() =>
             {
-                string categoryPublicKey = categoryFacades.dataConverter.Deserialize<string>(parameter.Data);
-                var cat = categoryFacades.operations.GetCategory(categoryPublicKey);
-
-                List<Product> prod = categoryFacades.operations.GetMyProductWithCategoryPrivateKey(cat.PrivateKey);
-
-                categoryFacades.operations.RemoveEntity(cat);
+                List<Product> prod = categoryFacades.operations.GetMyProductWithCategoryPrivateKey(parameter.Data.PrivateKey);
+                categoryFacades.operations.RemoveEntity(parameter.Data);
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "DeleteCategory Operations Success";
             }, () =>
@@ -95,18 +90,17 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "DeleteCategory Operations not Success";
             });
-            return categoryFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
-        public string GetAllCategories([FromBody] RequestParameter parameter)
+        public RequestResult<List<Category>> GetAllCategories([FromBody] RequestParameter parameter)
         {
-            RequestResult result = new($"GetAllCategories");
+            RequestResult<List<Category>> result = new($"GetAllCategories");
 
             categoryFacades.operationRunner.ActionRunner(() =>
             {
-                List<Category> res = categoryFacades.operations.GetAllCategories();
-                result.Data = categoryFacades.dataConverter.Serialize(res);
+                result.Data = categoryFacades.operations.GetAllCategories();
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetAllCategories Operations Success";
             }, () =>
@@ -114,7 +108,7 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "GetAllCategories not Operations Success";
             });
-            return categoryFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 

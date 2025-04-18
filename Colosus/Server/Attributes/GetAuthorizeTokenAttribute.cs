@@ -1,5 +1,5 @@
 ﻿using Colosus.Client.Blazor.Services;
-using Colosus.Entity.Concretes;
+using Colosus.Entity.Abstracts;
 using Colosus.Server.Services.Token;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.ComponentModel;
@@ -20,7 +20,7 @@ namespace Colosus.Server.Attributes
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             HttpContext httpContext = context.HttpContext;
-            RequestParameter? parameter = context.ActionArguments["parameter"] as RequestParameter;
+            IRequestParameter parameter = context.ActionArguments["parameter"] as IRequestParameter;
             string requestToken = httpContext.Request.Headers["Authorization"].ToString();
             var tokenService = (ITokenService)context.HttpContext.RequestServices.GetService(typeof(ITokenService));
 

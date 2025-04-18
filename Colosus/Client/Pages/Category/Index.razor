@@ -2,6 +2,7 @@
 @using Colosus.Client.Blazor.Services.Category
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 @inject NavigationManager navigationManager
 @inject ICategoryService categoryService
@@ -36,8 +37,8 @@
                             <td><i class="@AppState.ConvertBoolToIcon(item.VisibleWeb)"></i></td>
                             <td>
                                 <Colosus.Client.Blazor.Components.Button Class="table-button"
-                                                                  Icon="fa fa-remove"
-                                                                  OnClick="async ()=> await DeleteCategory(item.PublicKey)"></Colosus.Client.Blazor.Components.Button>
+                                                                         Icon="fa fa-remove"
+                                                                         OnClick="async ()=> await DeleteCategory(item)"></Colosus.Client.Blazor.Components.Button>
                             </td>
                         </tr>
                     }
@@ -58,7 +59,7 @@
         await RefreshData(1);
     }
 
-    public async Task DeleteCategory(string publicKey)
+    public async Task DeleteCategory(Category publicKey)
     {
         bool result = await jSRuntime.InvokeAsync<bool>("messageModal", "Bu kategoriyi silmek istediğinizden emin misiniz?");
 
@@ -77,7 +78,8 @@
     {
         Supply = supply;
         Source = new();
-        var res = await categoryService.GetsCategory(AppState.SelectedFirmPublicKey, supply);
-        Source.AddRange(dataConverter.Deserialize<List<Category>>(res.Data));
+        var res = await categoryService.GetsCategory(AppState.SelectedFirmPublicKey);
+        if (res != null && res.Ok())
+            Source.AddRange(res.Data);
     }
 }

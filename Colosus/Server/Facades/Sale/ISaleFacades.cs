@@ -3,7 +3,7 @@ using Colosus.Operations.Abstracts;
 
 namespace Colosus.Server.Facades.Pos
 {
-    public interface IPosFacades
+    public interface ISaleFacades
     {
 
         IDataConverter dataConverter { get; set; }

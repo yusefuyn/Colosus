@@ -1,0 +1,56 @@
+﻿@page "/Sales/Pos/{musteriid}"
+@inject ISaleService saleService
+@inject IDataConverter dataConverter
+@using Colosus.Client.Blazor.Services.Sale
+@using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DTO
+@using Colosus.Entity.Concretes.RequestModel
+@using Colosus.Operations.Abstracts
+@if (posDTO != null)
+{
+    <div class="row">
+        <h3>@posDTO.Customer.GetName()</h3>
+    </div>
+    <div class="row w-100">
+        <div class="col-1">
+            <button class="btn btn-info w-100">Grupla</button>
+            <button class="btn btn-info w-100">Ürün Sil</button>
+            <button class="btn btn-info w-100">Para Birimi</button>
+        </div>
+        <div class="col-3">
+            <div class="row">
+                <p>satılanlar</p>
+            </div>
+            <div class="row">
+                <p>ödeme ayars</p>
+            </div>
+        </div>
+        <div class="col-2">
+            @if (posDTO.Categories != null && posDTO.Categories.Count > 0)
+            {
+                @foreach (var item in posDTO.Categories)
+                {
+                    <button class="btn btn-success row w-100">@item.Name.ToString()</button>
+                }
+            }
+        </div>
+        <div class="col-6">
+        </div>
+    </div>
+}
+@code {
+    public PosDTO posDTO = null;
+    [Parameter]
+    public string musteriid { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await saleService.GetMyPosDTO(AppState.SelectedFirmPublicKey, musteriid);
+        if (result != null && result.Ok())
+        {
+            posDTO = result.Data;
+            StateHasChanged();
+        }
+    }
+
+}

@@ -32,7 +32,7 @@
     public async Task LoginOpAsync()
     {
         string PassHash = hash.Calc(user.Password);
-        RequestResult result = await loginService.LoginAsync(user.UserName, PassHash);
+        var result = await loginService.LoginAsync(user.UserName, PassHash);
         if (result.Result == EnumRequestResult.Ok)
         {
             await cookieService.SetCookie("Token", result.Data, 120);

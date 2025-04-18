@@ -1,6 +1,7 @@
 ﻿@page "/Customer/Index"
 @using Colosus.Client.Blazor.Services.Customer
 @using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 @inject ICustomerService customerService
 @inject NavigationManager navigationManager
@@ -169,10 +170,10 @@
 
     private async Task RefreshData()
     {
-        RequestResult res = await customerService.GetMyCustomers(AppState.SelectedFirmPublicKey);
+        var res = await customerService.GetMyCustomers(AppState.SelectedFirmPublicKey);
         if (res != null && res.Result == EnumRequestResult.Ok)
         {
-            Customers = dataConverter.Deserialize<Colosus.Entity.Concretes.DTO.CustomersDTO>(res.Data);
+            Customers = res.Data;
             StateHasChanged();
         }
         else

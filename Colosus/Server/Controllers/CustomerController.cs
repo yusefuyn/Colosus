@@ -1,5 +1,4 @@
 ﻿using Colosus.Client;
-using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Server.Attributes;
 using Colosus.Server.Facades.Customer;
@@ -11,6 +10,7 @@ using Colosus.Server.Facades.Setting;
 using Colosus.Entity.Concretes.CreateModel;
 using System.Security.Cryptography.X509Certificates;
 using Colosus.Entity.Concretes.DTO;
+using Colosus.Entity.Concretes.RequestModel;
 namespace Colosus.Server.Controllers
 {
     [ApiController]
@@ -29,12 +29,12 @@ namespace Colosus.Server.Controllers
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string DeleteDebtPay([FromBody] RequestParameter parameter)
+        public RequestResult DeleteDebtPay([FromBody] RequestParameter<string> parameter)
         {
             RequestResult result = new("DeleteDebtPay");
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                string debtPayPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data);
+                string debtPayPublicKey = parameter.Data.ToString();
                 DebtPay debtPay = customerFacades.operations.GetDebtPayWithPublicKey(debtPayPublicKey);
                 customerFacades.operations.RemoveEntity(debtPay);
                 result.Result = EnumRequestResult.Ok;
@@ -44,19 +44,19 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "DeleteDebtPay Operations Not Success";
             });
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string AddCustomerDebt([FromBody] RequestParameter parameter)
+        public RequestResult<string> AddCustomerDebt([FromBody] RequestParameter<DebtCreateModel> parameter)
         {
-            RequestResult result = new("AddCustomerDebts");
+            RequestResult<string> result = new("AddCustomerDebt");
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                DebtCreateModel debt = customerFacades.dataConverter.Deserialize<DebtCreateModel>(parameter.Data);
-                ICustomer customer = customerFacades.operations.GetICustomerFromCustomerPublicKey(debt.CustomerPublicKey);
-                Debt res = customerFacades.mapping.Convert<Debt>(debt);
+
+                ICustomer customer = customerFacades.operations.GetICustomerFromCustomerPublicKey(parameter.Data.CustomerPublicKey);
+                Debt res = customerFacades.mapping.Convert<Debt>(parameter.Data);
                 res.CustomerKey = customer.CustomerKey;
                 res.UserPrivateKey = parameter.Token.ToString();
                 res.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.Debt);
@@ -69,13 +69,13 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "AddCustomerDebts Operations Not Success";
             });
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string DeleteCustomer([FromBody] RequestParameter parameter)
+        public RequestResult DeleteCustomer([FromBody] RequestParameter<string> parameter)
         {
             RequestResult result = new("DeleteCustomer");
             customerFacades.operationRunner.ActionRunner(() =>
@@ -92,12 +92,12 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "DeleteCustomer Operations Not Success";
             });
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string DeleteDebt([FromBody] RequestParameter parameter)
+        public RequestResult DeleteDebt([FromBody] RequestParameter<string> parameter)
         {
             RequestResult result = new("DeleteDebt");
             customerFacades.operationRunner.ActionRunner(() =>
@@ -113,20 +113,20 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "DeleteDebt Operations Not Success";
             });
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string PayedDebt([FromBody] RequestParameter parameter)
+        public RequestResult PayedDebt([FromBody] RequestParameter<DebtPayCreateModel> parameter)
         {
             RequestResult result = new("PayedDebt");
 
             customerFacades.operationRunner.ActionRunner(() =>
             {
                 DebtPayCreateModel model = customerFacades.dataConverter.Deserialize<DebtPayCreateModel>(parameter.Data.ToString());
-                Debt debt = customerFacades.operations.GetDebt(model.DebtPublicKey);
+                Debt debt = customerFacades.operations.GetDebt(parameter.Data.DebtPublicKey);
                 Currency currency = customerFacades.operations.GetCurrency(model.CurrencyPublicKey);
                 PaymentType paymentType = customerFacades.operations.GetPaymentType(model.PaymentTypePublicKey);
                 DebtPay pay = new()
@@ -148,20 +148,20 @@ namespace Colosus.Server.Controllers
                 result.Description = "PayedDebt Operations Not Success";
             });
 
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string UnPaidDebt([FromBody] RequestParameter parameter)
+        public RequestResult UnPaidDebt([FromBody] RequestParameter<string> parameter)
         {
             RequestResult result = new("UnPaidDebt");
 
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                string DebtPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
+                string DebtPublicKey = parameter.Data.ToString();
 
                 Debt debt = customerFacades.operations.GetDebt(DebtPublicKey);
                 customerFacades.operations.UpdateEntity(debt);
@@ -173,27 +173,26 @@ namespace Colosus.Server.Controllers
                 result.Description = "UnPaidDebt Operations Not Success";
             });
 
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string GetCustomerDebtsForCustomerPublicKey([FromBody] RequestParameter parameter)
+        public RequestResult<DebtPageDTO> GetCustomerDebtsForCustomerPublicKey([FromBody] RequestParameter<string> parameter)
         {
-            RequestResult result = new("GetCustomerDebtsForCustomerPublicKey");
+            RequestResult<DebtPageDTO> result = new("GetCustomerDebtsForCustomerPublicKey");
 
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                string CustomerPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data.ToString());
-                ICustomer customer = customerFacades.operations.GetICustomerFromCustomerPublicKey(CustomerPublicKey);
+                ICustomer customer = customerFacades.operations.GetICustomerFromCustomerPublicKey(parameter.Data.ToString());
                 List<Debt> debts = customerFacades.operations.GetsDebitWithCustomerKey(customer.CustomerKey);
                 List<Colosus.Entity.Concretes.DTO.DebtDTO> returnedObj = customerFacades.mapping.ConvertToList<Colosus.Entity.Concretes.DTO.DebtDTO>(debts);
                 debts.ForEach(xd =>
                 {
                     var debsts = returnedObj.FirstOrDefault(dx => dx.PublicKey == xd.PublicKey);
                     debsts.CustomerName = customer.GetName();
-                    debsts.CustomerPublicKey = CustomerPublicKey;
+                    debsts.CustomerPublicKey = parameter.Data.ToString();
                     debsts.CustomerKey = customer.CustomerKey;
                     debsts.Pays = customerFacades.operations.GetDebtPayWithDebtPrivateKey(xd.PrivateKey);
                 });
@@ -201,7 +200,7 @@ namespace Colosus.Server.Controllers
                 returned.CustomerName = customer.GetName();
                 returned.Debts = returnedObj;
 
-                result.Data = customerFacades.dataConverter.Serialize(returned);
+                result.Data = returned;
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "GetCustomerDebtsForCustomerPublicKey Operations Success";
             }, () =>
@@ -210,20 +209,20 @@ namespace Colosus.Server.Controllers
                 result.Description = "GetCustomerDebtsForCustomerPublicKey Operations Not Success";
             });
 
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string AddFastCustomer([FromBody] RequestParameter parameter)
+        public RequestResult AddFastCustomer([FromBody] RequestParameter<FastCustomerCreateModel> parameter)
         {
             RequestResult result = new("AddFastCustomer");
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                FastCustomerCreateModel fcustomer = customerFacades.dataConverter.Deserialize<FastCustomerCreateModel>(parameter.Data);
-                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(fcustomer.FirmPublicKey);
-                FastCustomer customer = customerFacades.mapping.Convert<FastCustomer>(fcustomer);
+       
+                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
+                FastCustomer customer = customerFacades.mapping.Convert<FastCustomer>(parameter.Data);
                 customer.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.FastCustomer);
                 customer.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.FastCustomer);
                 customer.CustomerKey = GenKey(KeyTypes.Key, KeyTypes.Customer);
@@ -249,20 +248,20 @@ namespace Colosus.Server.Controllers
                 result.Description = "AddFastCustomer Operations Not Success";
             });
 
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string AddIndividualCustomer([FromBody] RequestParameter parameter)
+        public RequestResult AddIndividualCustomer([FromBody] RequestParameter<iCustomer> parameter)
         {
             RequestResult result = new("AddIndividualCustomer");
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                iCustomer icustomer = customerFacades.dataConverter.Deserialize<iCustomer>(parameter.Data);
-                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(icustomer.FirmPublicKey);
-                IndividualCustomer customer = customerFacades.mapping.Convert<IndividualCustomer>(icustomer);
-                List<ContactAddress> contactAddresses = customerFacades.mapping.ConvertToList<ContactAddress>(icustomer.ContactAddresses);
+
+                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
+                IndividualCustomer customer = customerFacades.mapping.Convert<IndividualCustomer>(parameter.Data);
+                List<ContactAddress> contactAddresses = customerFacades.mapping.ConvertToList<ContactAddress>(parameter.Data.ContactAddresses);
                 customer.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.IndividualCustomer);
                 customer.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.IndividualCustomer);
                 customer.CustomerKey = GenKey(KeyTypes.Key, KeyTypes.Customer);
@@ -294,23 +293,23 @@ namespace Colosus.Server.Controllers
                 result.Description = "AddIndividualCustomer Operations Not Success";
             });
 
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string AddCorporateCustomer([FromBody] RequestParameter parameter)
+        public RequestResult AddCorporateCustomer([FromBody] RequestParameter<cCustomer> parameter)
         {
             RequestResult result = new("AddCorporateCustomer");
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                cCustomer ccustomer = customerFacades.dataConverter.Deserialize<cCustomer>(parameter.Data);
-                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(ccustomer.FirmPublicKey);
-                CorporateCustomer customer = customerFacades.mapping.Convert<CorporateCustomer>(ccustomer);
 
-                List<ContactAddress> contactAddresses = customerFacades.mapping.ConvertToList<ContactAddress>(ccustomer.ContactAddresses);
-                List<PaymentAddress> paymentAddresses = customerFacades.mapping.ConvertToList<PaymentAddress>(ccustomer.PaymentAddresses);
+                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
+                CorporateCustomer customer = customerFacades.mapping.Convert<CorporateCustomer>(parameter.Data);
+
+                List<ContactAddress> contactAddresses = customerFacades.mapping.ConvertToList<ContactAddress>(parameter.Data.ContactAddresses);
+                List<PaymentAddress> paymentAddresses = customerFacades.mapping.ConvertToList<PaymentAddress>(parameter.Data.PaymentAddresses);
                 customer.PrivateKey = GenKey(KeyTypes.PrivateKey, KeyTypes.CorporateCustomer);
                 customer.PublicKey = GenKey(KeyTypes.PublicKey, KeyTypes.CorporateCustomer);
                 customer.CustomerKey = GenKey(KeyTypes.Key, KeyTypes.Customer);
@@ -350,24 +349,22 @@ namespace Colosus.Server.Controllers
                 result.Description = "AddCorporateCustomer Operations Not Success";
             });
 
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
 
 
 
         [HttpPost]
         [GetAuthorizeToken]
-        public string GetMyCustomers([FromBody] RequestParameter parameter)
+        public RequestResult<CustomersDTO> GetMyCustomers([FromBody] RequestParameter<string> parameter)
         {
-            RequestResult result = new("GetMyCustomers");
+            RequestResult<CustomersDTO> result = new("GetMyCustomers");
             customerFacades.operationRunner.ActionRunner(() =>
             {
-                string firmPublicKey = customerFacades.dataConverter.Deserialize<string>(parameter.Data);
-                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(firmPublicKey);
+                Firm firm = customerFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data);
+                CustomersDTO resultCustomer = customerFacades.operations.GetMyFirmCustomersWithPrivateKey(firm.PrivateKey);
 
-                Colosus.Entity.Concretes.DTO.CustomersDTO resultCustomer = customerFacades.operations.GetMyFirmCustomersWithPrivateKey(firm.PrivateKey);
-
-                result.Data = customerFacades.dataConverter.Serialize(resultCustomer);
+                result.Data = resultCustomer;
                 result.Result = EnumRequestResult.Ok;
                 result.Description = "Success";
 
@@ -376,10 +373,7 @@ namespace Colosus.Server.Controllers
                 result.Result = EnumRequestResult.Error;
                 result.Description = "GetMyCustomers Operations Not Success";
             });
-
-            return customerFacades.dataConverter.Serialize(result);
+            return result;
         }
-
-
     }
 }

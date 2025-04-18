@@ -1,6 +1,7 @@
 ﻿@page "/Customer/Add"
 @using Colosus.Client.Blazor.Services.Customer
 @using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Entity.Concretes.RequestModel
 @inject ICustomerService customerService
 @inject NavigationManager navigationManager
 <div class="container">
@@ -156,7 +157,7 @@
     {
         individualCustomer.FirmPublicKey = AppState.SelectedFirmPublicKey;
         var res = await customerService.AddIndividualCustomer(individualCustomer);
-        if (res != null && res.Result == Entity.Concretes.EnumRequestResult.Ok)
+        if (res != null && res.Result == EnumRequestResult.Ok)
             navigationManager.NavigateTo("/Customer/Index");
         AppState.AddMessage(res.Description);
     }
@@ -165,7 +166,7 @@
     {
         corporateCustomer.FirmPublicKey = AppState.SelectedFirmPublicKey;
         var res = await customerService.AddCorporateCustomer(corporateCustomer);
-        if (res != null && res.Result == Entity.Concretes.EnumRequestResult.Ok)
+        if (res != null && res.Result == EnumRequestResult.Ok)
             navigationManager.NavigateTo("/Customer/Index");
         AppState.AddMessage(res.Description);
     }
@@ -174,7 +175,7 @@
     {
         fastCustomerCreateModel.FirmPublicKey = AppState.SelectedFirmPublicKey;
         var res = await customerService.AddFastCustomer(fastCustomerCreateModel);
-        if (res != null && res.Result == Entity.Concretes.EnumRequestResult.Ok)
+        if (res != null && res.Result == EnumRequestResult.Ok)
             navigationManager.NavigateTo("/Customer/Index");
         AppState.AddMessage(res.Description);
     }

@@ -1,6 +1,6 @@
 ﻿using Colosus.Business.Abstracts;
-using Colosus.Entity.Concretes;
 using Colosus.Entity.Concretes.DatabaseModel;
+using Colosus.Entity.Concretes.RequestModel;
 using Colosus.Operations.Abstracts;
 using Colosus.Server.Facades.Administrator;
 using Colosus.Server.Facades.Setting;
@@ -21,7 +21,7 @@ namespace Colosus.Server.Controllers
 
 
         [HttpPost]
-        public string UpdateDatabase([FromBody] RequestParameter parameter)
+        public RequestResult UpdateDatabase([FromBody] RequestParameter parameter)
         {
             RequestResult result = new("Update Database");
             administratorFacades.operationRunner.ActionRunner(() =>
@@ -35,13 +35,13 @@ namespace Colosus.Server.Controllers
                 result.Description = $"Error #{DateTime.Now}";
             });
 
-            return administratorFacades.dataConverter.Serialize(result);
+            return result;
         }
         private string GenKey(string keyType, string entityType)
             => administratorFacades.guid.Generate(keyType, entityType);
 
         [HttpPost]
-        public string Setup([FromBody] RequestParameter parameter)
+        public RequestResult Setup([FromBody] RequestParameter<string> parameter)
         {
             RequestResult result = new("Setup");
             administratorFacades.operationRunner.ActionRunner(() =>
@@ -182,10 +182,7 @@ namespace Colosus.Server.Controllers
                 result.Description = $"Error #{DateTime.Now}";
             });
 
-            return administratorFacades.dataConverter.Serialize(result);
+            return result;
         }
-
-
-
     }
 }

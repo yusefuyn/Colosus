@@ -1,6 +1,7 @@
 ﻿@page "/Currency/Index"
 @using Colosus.Client.Blazor.Services.Settings
 @using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 @inject NavigationManager navigationManager
 @inject ISettingsService settingsService
@@ -104,15 +105,15 @@
 
     public async Task RefreshData()
     {
-        RequestResult res = await settingsService.GetAllCurrencyForFirmPublicKey(AppState.SelectedFirmPublicKey);
+        var res = await settingsService.GetAllCurrencyForFirmPublicKey(AppState.SelectedFirmPublicKey);
         if (res != null && res.Ok())
-            Currencies = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.CurrencyDTO>>(res.Data);
+            Currencies = res.Data;
         else
             AppState.AddMessage("Bir hata meydana geldi.");
 
-        RequestResult result = await settingsService.RecommendedCurrency(AppState.SelectedFirmPublicKey);
+        var result = await settingsService.RecommendedCurrency(AppState.SelectedFirmPublicKey);
         if (result != null && result.Ok())
-            RecommendedCurrencies = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.CurrencyDTO>>(result.Data);
+            RecommendedCurrencies = result.Data;
         else
             AppState.AddMessage("Bir hata meydana geldi.");
 

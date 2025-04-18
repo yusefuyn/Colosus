@@ -1,4 +1,4 @@
-﻿using Colosus.Entity.Concretes;
+﻿using Colosus.Entity.Concretes.RequestModel;
 
 namespace Colosus.Client.Blazor.Services.Administrator
 {
@@ -13,9 +13,6 @@ namespace Colosus.Client.Blazor.Services.Administrator
         public string GetAddress(string Action) => AppState.GetAddress("Administrator", Action);
 
         public async Task<RequestResult> UpdateDatabase()
-        {
-            var res = await httpClientService.GetPostAsync<RequestResult>("", GetAddress("UpdateDatabase"));
-            return res;
-        }
+            => await httpClientService.GetPostAsync(GetAddress("UpdateDatabase"));
     }
 }

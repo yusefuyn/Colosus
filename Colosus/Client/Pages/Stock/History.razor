@@ -2,6 +2,7 @@
 @using Colosus.Client.Blazor.Services.Product
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 @inject IProductService productService
 @inject IDataConverter dataConverter
@@ -53,8 +54,8 @@
 
     public async Task DataRefresh()
     {
-        RequestResult res = await productService.GetStockHistoryDTO(ProductPublicKey);
-        Stocks = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.ProductStockDTO>>(res.Data);
+        var res = await productService.GetStockHistoryDTO(ProductPublicKey);
+        Stocks = res.Data;
         StateHasChanged();
     }
 

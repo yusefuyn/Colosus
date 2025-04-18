@@ -1,8 +1,8 @@
-﻿using Colosus.Entity.Concretes;
-using Colosus.Entity.Concretes.CreateModel;
+﻿using Colosus.Entity.Concretes.CreateModel;
 using Colosus.Entity.Concretes.DatabaseModel;
 using Colosus.Entity.Concretes.DTO;
 using Colosus.Entity.Concretes.RequestModel;
+using System.Collections.Generic;
 
 namespace Colosus.Client.Blazor.Services.Settings
 {
@@ -15,38 +15,37 @@ namespace Colosus.Client.Blazor.Services.Settings
         public string GetAddress(string Action) => AppState.GetAddress("Settings", Action);
 
         public async Task<RequestResult> AddPaymentType(Colosus.Entity.Concretes.CreateModel.PaymentTypeCreateModel paymentType)
-         => await httpClientService.GetPostAsync<RequestResult>(paymentType, GetAddress("AddPaymentType"));
+         => await httpClientService.GetPostAsync(GetAddress("AddPaymentType"), paymentType);
 
         public async Task<RequestResult> DeletePaymentType(PaymentTypeRequestModel paymentType)
-         => await httpClientService.GetPostAsync<RequestResult>(paymentType, GetAddress("DeletePaymentType"));
+         => await httpClientService.GetPostAsync(GetAddress("DeletePaymentType"), paymentType);
 
-        public async Task<RequestResult> GetAllPaymentTypeForFirmPublicKey(string FirmPublicKey)
-         => await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("GetAllPaymentTypeForFirmPublicKey"));
+        public async Task<RequestResult<List<PaymentTypeDTO>>> GetAllPaymentTypeForFirmPublicKey(string FirmPublicKey)
+         => await httpClientService.GetPostAsync<List<PaymentTypeDTO>, string>(GetAddress("GetAllPaymentTypeForFirmPublicKey"), FirmPublicKey);
 
-        public async Task<RequestResult> RecommendedPaymentType(string FirmPublicKey)
-         => await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("RecommendedPaymentType"));
+        public async Task<RequestResult<List<PaymentTypeDTO>>> RecommendedPaymentType(string FirmPublicKey)
+         => await httpClientService.GetPostAsync<List<PaymentTypeDTO>, string>(GetAddress("RecommendedPaymentType"), FirmPublicKey);
 
         public async Task<RequestResult> AddPaymentTypeRelation(PaymentTypeRequestModel deletePaymentType)
-         => await httpClientService.GetPostAsync<RequestResult>(deletePaymentType, GetAddress("AddPaymentTypeRelation"));
+         => await httpClientService.GetPostAsync(GetAddress("AddPaymentTypeRelation"), deletePaymentType);
 
-        public async Task<RequestResult> GetAllCurrencyForFirmPublicKey(string FirmPublicKey)
-         => await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("GetAllCurrencyForFirmPublicKey"));
+        public async Task<RequestResult<List<CurrencyDTO>>> GetAllCurrencyForFirmPublicKey(string FirmPublicKey)
+         => await httpClientService.GetPostAsync<List<CurrencyDTO>, string>(GetAddress("GetAllCurrencyForFirmPublicKey"), FirmPublicKey);
 
 
-        public async Task<RequestResult> RecommendedCurrency(string FirmPublicKey)
-         => await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("RecommendedCurrency"));
+        public async Task<RequestResult<List<CurrencyDTO>>> RecommendedCurrency(string FirmPublicKey)
+         => await httpClientService.GetPostAsync<List<CurrencyDTO>, string>(GetAddress("RecommendedCurrency"), FirmPublicKey);
 
 
         public async Task<RequestResult> AddCurrency(CurrencyCreateModel Currency)
-         => await httpClientService.GetPostAsync<RequestResult>(Currency, GetAddress("AddCurrency"));
+         => await httpClientService.GetPostAsync(GetAddress("AddCurrency"), Currency);
 
 
         public async Task<RequestResult> DeleteCurrency(CurrencyRequestModel deleteCurrency)
-         => await httpClientService.GetPostAsync<RequestResult>(deleteCurrency, GetAddress("DeleteCurrency"));
+         => await httpClientService.GetPostAsync(GetAddress("DeleteCurrency"), deleteCurrency);
 
 
         public async Task<RequestResult> AddCurrencyRelation(CurrencyRequestModel addCurrency)
-         => await httpClientService.GetPostAsync<RequestResult>(addCurrency, GetAddress("AddCurrencyRelation"));
-
+         => await httpClientService.GetPostAsync(GetAddress("AddCurrencyRelation"), addCurrency);
     }
 }

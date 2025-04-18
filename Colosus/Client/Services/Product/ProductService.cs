@@ -1,6 +1,6 @@
-﻿using Colosus.Entity.Concretes;
-using Colosus.Entity.Concretes.CreateModel;
+﻿using Colosus.Entity.Concretes.CreateModel;
 using Colosus.Entity.Concretes.DTO;
+using Colosus.Entity.Concretes.RequestModel;
 
 namespace Colosus.Client.Blazor.Services.Product
 {
@@ -14,23 +14,23 @@ namespace Colosus.Client.Blazor.Services.Product
 
         public string GetAddress(string Action) => AppState.GetAddress("Product", Action);
 
-        public async Task<RequestResult> AddProduct(Entity.Concretes.CreateModel.ProductCreateModel product) =>
-            await httpClientService.GetPostAsync<RequestResult>(product, GetAddress("AddProduct"));
+        public async Task<RequestResult> AddProduct(ProductCreateModel product) =>
+            await httpClientService.GetPostAsync(GetAddress("AddProduct"), product);
 
-        public async Task<RequestResult> GetMyFirmProductDTOs(string FirmPublicKey) =>
-            await httpClientService.GetPostAsync<RequestResult>(FirmPublicKey, GetAddress("GetMyFirmProducts"));
+        public async Task<RequestResult<List<ProductDTO>>> GetMyFirmProductDTOs(string FirmPublicKey) =>
+            await httpClientService.GetPostAsync<List<ProductDTO>, string>(GetAddress("GetMyFirmProducts"), FirmPublicKey);
 
-        public async Task<RequestResult> AddStockForProduct(StockCreateModel product) =>
-            await httpClientService.GetPostAsync<RequestResult>(product, GetAddress("AddStockForProduct"));
+        public async Task<RequestResult<ProductDTO>> AddStockForProduct(StockCreateModel product) =>
+            await httpClientService.GetPostAsync<ProductDTO, StockCreateModel>(GetAddress("AddStockForProduct"), product);
 
-        public async Task<RequestResult> GetStockHistoryDTO(string ProductPublicKey) =>
-            await httpClientService.GetPostAsync<RequestResult>(ProductPublicKey, GetAddress("GetStockHistoryDTO"));
+        public async Task<RequestResult<List<ProductStockDTO>>> GetStockHistoryDTO(string ProductPublicKey) =>
+            await httpClientService.GetPostAsync<List<ProductStockDTO>, string>(GetAddress("GetStockHistoryDTO"), ProductPublicKey);
 
         public async Task<RequestResult> DeleteProduct(string ProductPublicKey) =>
-            await httpClientService.GetPostAsync<RequestResult>(ProductPublicKey, GetAddress("DeleteProduct"));
+            await httpClientService.GetPostAsync(GetAddress("DeleteProduct"), new { PublicKey = ProductPublicKey });
 
         public async Task<RequestResult> DeleteStock(string StockPublicKey)
-           => await httpClientService.GetPostAsync<RequestResult>(StockPublicKey, GetAddress("DeleteStock"));
+           => await httpClientService.GetPostAsync(GetAddress("DeleteStock"), new { PublicKey = StockPublicKey });
 
     }
 }

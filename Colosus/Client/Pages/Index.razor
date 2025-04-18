@@ -2,6 +2,7 @@
 @using Colosus.Client.Blazor.Services.Firm
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DatabaseModel
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 @inject IFirmService firmService
 @inject IDataConverter dataConverter
@@ -71,11 +72,10 @@
     public async Task RefreshData()
     {
         source = new();
-        RequestResult result = await firmService.GetMyFirmAsync();
-        if (result == null)
+        var result = await firmService.GetMyFirmAsync();
+        if (result == null || !result.Ok())
             await RefreshData();
-        List<Entity.Concretes.DatabaseModel.Firm> firms = dataConverter.Deserialize<List<Entity.Concretes.DatabaseModel.Firm>>(result.Data);
-        source.AddRange(firms);
+        source.AddRange(result.Data);
         StateHasChanged();
     }
 

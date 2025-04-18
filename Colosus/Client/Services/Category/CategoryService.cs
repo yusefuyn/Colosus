@@ -1,4 +1,7 @@
-﻿using Colosus.Entity.Concretes;
+﻿using Colosus.Entity.Abstracts;
+using Colosus.Entity.Concretes.CreateModel;
+using Colosus.Entity.Concretes.DatabaseModel;
+using Colosus.Entity.Concretes.RequestModel;
 
 namespace Colosus.Client.Blazor.Services.Category
 {
@@ -11,17 +14,16 @@ namespace Colosus.Client.Blazor.Services.Category
         }
 
         public string GetAddress(string Action) => AppState.GetAddress("Category", Action);
-        public async Task<RequestResult> AddCategory(Entity.Concretes.CreateModel.CategoryCreateModel category) =>
-            await httpClientService.GetPostAsync<RequestResult>(category, GetAddress("AddCategory"));
+        public async Task<RequestResult> AddCategory(CategoryCreateModel category) =>
+            await httpClientService.GetPostAsync(GetAddress("AddCategory"), category);
 
-        public async Task<RequestResult> GetsCategory(string firmPublicKey, int Supply) =>
-            await httpClientService.GetPostAsync<RequestResult>(new RequestParameter() { Data = firmPublicKey, Supply = Supply, Address = GetAddress("GetAllCategoriesButSupply") });
+        public async Task<RequestResult<List<Entity.Concretes.DatabaseModel.Category>>> GetsCategory(string firmPublicKey)
+            => await httpClientService.GetPostAsync<List<Entity.Concretes.DatabaseModel.Category>, string>(GetAddress("GetAllCategoriesButSupply"), firmPublicKey);
 
-        public async Task<RequestResult> DeleteCategory(string publicKey) =>
-            await httpClientService.GetPostAsync<RequestResult>(publicKey, GetAddress("DeleteCategory"));
+        public async Task<RequestResult> DeleteCategory(Entity.Concretes.DatabaseModel.Category category) =>
+            await httpClientService.GetPostAsync<Entity.Concretes.DatabaseModel.Category>(GetAddress("DeleteCategory"), category);
 
-        public async Task<RequestResult> GetAllCategory() =>
-            await httpClientService.GetPostAsync<RequestResult>("", GetAddress("GetAllCategories"));
-
+        public async Task<RequestResult<List<Entity.Concretes.DatabaseModel.Category>>> GetAllCategory() =>
+            await httpClientService.GetPostAsync<List<Entity.Concretes.DatabaseModel.Category>>(GetAddress("GetAllCategories"));
     }
 }

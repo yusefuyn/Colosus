@@ -16,15 +16,15 @@
 
     <Colosus.Client.Blazor.Components.Entry Placeholder="Ürün Adı" @bind-Text="product.Name"></Colosus.Client.Blazor.Components.Entry>
     <Colosus.Client.Blazor.Components.Entry Placeholder="Alış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
-    TextChanged="(e)=> product.PurchasePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Blazor.Components.Entry>
+                                            TextChanged="(e)=> product.PurchasePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Blazor.Components.Entry>
     <Colosus.Client.Blazor.Components.Entry Placeholder="Satış Fiyat" Type="Components.Entry.EntryTypeEnum.Number"
-    TextChanged="(e)=> product.SalePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Blazor.Components.Entry>
+                                            TextChanged="(e)=> product.SalePrice = Convert.ToDecimal(e.ToString())"></Colosus.Client.Blazor.Components.Entry>
     <Colosus.Client.Blazor.Components.ComboBox Ttemp="Colosus.Entity.Concretes.DatabaseModel.Category"
-    DataBinding="xd=> xd.PublicKey"
-    Source="Categories"
-    ValueBinding="xd=> xd.Name"
-    Empty="true"
-    SelectedValueChanged="(e)=>  product.CategoryPublicKey = e.Value.ToString()"></Colosus.Client.Blazor.Components.ComboBox>
+                                               DataBinding="xd=> xd.PublicKey"
+                                               Source="Categories"
+                                               ValueBinding="xd=> xd.Name"
+                                               Empty="true"
+                                               SelectedValueChanged="(e)=>  product.CategoryPublicKey = e.Value.ToString()"></Colosus.Client.Blazor.Components.ComboBox>
     <Colosus.Client.Blazor.Components.Button Text="Ekle" OnClick=" async ()=>await AddProduct()"></Colosus.Client.Blazor.Components.Button>
 </div>
 
@@ -38,9 +38,9 @@
 
     public async Task RefreshData()
     {
-        var catRes = await categoryServie.GetsCategory(AppState.SelectedFirmPublicKey, 1);
+        var catRes = await categoryServie.GetsCategory(AppState.SelectedFirmPublicKey);
         if (catRes != null)
-            Categories = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DatabaseModel.Category>>(catRes.Data);
+            Categories = catRes.Data;
     }
 
     public async Task AddProduct()

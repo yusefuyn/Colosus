@@ -1,6 +1,7 @@
 ﻿@page "/PaymentType/Index"
 @using Colosus.Client.Blazor.Services.Settings
 @using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
 @inject ISettingsService settingsService
 @inject NavigationManager navigationManager
@@ -8,9 +9,9 @@
 <div class="container">
     <div class="row">
         <Colosus.Client.Blazor.Components.Button Class="col-12"
-                                          Text="Yeni Ekle"
-                                          Style="height:40px;"
-                                          OnClick='()=> navigationManager.NavigateTo("/PaymentType/Add")'></Colosus.Client.Blazor.Components.Button>
+                                                 Text="Yeni Ekle"
+                                                 Style="height:40px;"
+                                                 OnClick='()=> navigationManager.NavigateTo("/PaymentType/Add")'></Colosus.Client.Blazor.Components.Button>
     </div>
 
     <div class="row">
@@ -100,15 +101,15 @@
 
     public async Task RefreshData()
     {
-        RequestResult res = await settingsService.GetAllPaymentTypeForFirmPublicKey(AppState.SelectedFirmPublicKey);
+        var res = await settingsService.GetAllPaymentTypeForFirmPublicKey(AppState.SelectedFirmPublicKey);
         if (res != null && res.Ok())
-            PaymentTypes = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.PaymentTypeDTO>>(res.Data);
+            PaymentTypes = res.Data;
         else
             AppState.AddMessage("Bir hata meydana geldi.");
 
-        RequestResult result = await settingsService.RecommendedPaymentType(AppState.SelectedFirmPublicKey);
+        var result = await settingsService.RecommendedPaymentType(AppState.SelectedFirmPublicKey);
         if (result != null && result.Ok())
-            RecommendedPaymentType = dataConverter.Deserialize<List<Colosus.Entity.Concretes.DTO.PaymentTypeDTO>>(result.Data);
+            RecommendedPaymentType = result.Data;
         else
             AppState.AddMessage("Bir hata meydana geldi.");
 
