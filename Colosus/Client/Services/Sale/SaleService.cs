@@ -15,8 +15,8 @@ namespace Colosus.Client.Blazor.Services.Sale
 
         public string GetAddress(string Action) => AppState.GetAddress("Sale", Action);
 
-        public Task<RequestResult<PosDTO>> GetMyPosDTO(string firmPublicKey, string CustomerPublicKey) // TODO : Sarmalla
-            => clientService.GetPostAsync<PosDTO, dynamic>(GetAddress("GetMyPosDTO"), new { FirmPublicKey = firmPublicKey, CustomerPublicKey = CustomerPublicKey });
+        public Task<RequestResult<PosDTO>> GetMyPosDTO(PosRequestModel posRequestModel) 
+            => clientService.GetPostAsync<PosDTO, dynamic>(GetAddress("GetMyPosDTO"), posRequestModel);
 
         public Task<RequestResult<List<BasicCustomerResultModel>>> GetMyCustomers(string firmPublicKey)
             => clientService.GetPostAsync<List<BasicCustomerResultModel>, string>(GetAddress("GetMyCustomersWithFirmPubKey"), firmPublicKey);

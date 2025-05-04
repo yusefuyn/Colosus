@@ -17,10 +17,9 @@ namespace Colosus.Business
     {
         private List<DataBaseSetting> dbSettings { get; set; }
         public IContext Context;
-        IGuid guidService;
-        public Operations(IGuid guidService)
+        public Operations()
         {
-            this.guidService = guidService;
+  
         }
 
         public void AddDbSettings(List<DataBaseSetting> settings)
@@ -402,6 +401,24 @@ namespace Colosus.Business
                               select ic).ToList());
 
             return returnedList;
+        }
+
+        public ICustomer GetMyFirmCustomersWithPublicKey(string customerPublicKey)
+        {
+            var ccustomer = Context.CorporateCustomers.FirstOrDefault(xd => xd.PublicKey == customerPublicKey);
+            var icustomer = Context.IndividualCustomers.FirstOrDefault(xd => xd.PublicKey == customerPublicKey);
+            var fcustomer = Context.FastCustomers.FirstOrDefault(xd => xd.PublicKey == customerPublicKey);
+
+            if (ccustomer != null)
+                return ccustomer;
+
+            if (icustomer != null)
+                return icustomer;
+
+            if (fcustomer != null)
+                return fcustomer;
+
+            return null;
         }
     }
 }

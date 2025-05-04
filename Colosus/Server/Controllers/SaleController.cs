@@ -18,20 +18,17 @@ namespace Colosus.Server.Controllers
             this.saleFacades = saleFacades;
         }
         [HttpPost]
-        public RequestResult<PosDTO> GetMyPosDTO([FromBody] RequestParameter<dynamic> parameter)
+        public RequestResult<PosDTO> GetMyPosDTO([FromBody] RequestParameter<PosRequestModel> parameter)
         {
             RequestResult<PosDTO> result = new("GetMyPosDTO");
             saleFacades.operationRunner.ActionRunner(() =>
             {
-
-                string FirmPublicKey = parameter.Data["FirmPublicKey"];
-                string CustomerPublicKey = parameter.Data["CustomerPublicKey"];
-                Firm myFirm = saleFacades.operations.GetMyFirmWithFirmPublicKey(FirmPublicKey);
+                Firm myFirm = saleFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.FirmPublicKey);
                 PosDTO posDTO = new()
                 {
                     Categories = saleFacades.mapping.ConvertToList<CategoryDTO>(saleFacades.operations.GetCategoriesWithPrivateKey(myFirm.PrivateKey)),
                     Currencies = saleFacades.mapping.ConvertToList<CurrencyDTO>(saleFacades.operations.GetAllCurrencyWithFirmPrivateKey(myFirm.PrivateKey)),
-                    Customer = saleFacades.operations.GetMyFirmCustomerWithCustomerKey(CustomerPublicKey),
+                    Customer = saleFacades.mapping.Convert<CustomerDTO>(saleFacades.operations.GetMyFirmCustomersWithPublicKey(parameter.Data.CustomerPublicKey)),
                     PayTypes = saleFacades.mapping.ConvertToList<PaymentTypeDTO>(saleFacades.operations.GetAllPaymentTypeWithFirmPrivateKey(myFirm.PrivateKey)),
                     Products = saleFacades.operations.GetMyProductsDTOsWithFirmPrivateKey(myFirm.PrivateKey)
                 };

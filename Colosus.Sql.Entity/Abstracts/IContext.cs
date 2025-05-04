@@ -21,7 +21,7 @@ namespace Colosus.Sql.Entity.Abstracts
         public DbSet<PaymentAddress> PaymentAddresseses { get; set; }
         public DbSet<CurrencyFirmRelation> CurrencyFirmRelations { get; set; }
         public DbSet<DebtPay> DebtPays { get; set; }
-
+        public DbSet<Sale> Sales { get; set; }
 
         public DbSet<CustomerFirmRelation> CustomerFirmRelations { get; set; }
         public DbSet<Currency> Currencies { get; set; }

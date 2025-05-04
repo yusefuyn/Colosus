@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Colosus.Entity.Concretes.DTO
+namespace Colosus.Entity.Concretes.RequestModel
 {
-    public class CategoryDTO
+    public class PublicKeyRequestModel
     {
-        public string Name { get; set; }
-        public decimal Tax { get; set; }
         public string PublicKey { get; set; }
     }
 }

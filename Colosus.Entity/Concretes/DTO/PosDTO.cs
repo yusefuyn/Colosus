@@ -17,7 +17,7 @@ namespace Colosus.Entity.Concretes.DTO
             PayTypes = new();
         }
 
-        public ICustomer Customer { get; set; }
+        public CustomerDTO Customer { get; set; }
         public List<ProductDTO> Products { get; set; }
         public List<CategoryDTO> Categories { get; set; }
         public List<CurrencyDTO> Currencies { get; set; }

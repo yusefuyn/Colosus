@@ -76,13 +76,13 @@ namespace Colosus.Server.Controllers
 
 
         [HttpPost]
-        public RequestResult DeleteStock([FromBody] RequestParameter<string> parameter)
+        public RequestResult DeleteStock([FromBody] RequestParameter<PublicKeyRequestModel> parameter)
         {
             RequestResult requestResult = new("DeleteStock");
 
             productFacades.operationRunner.ActionRunner(() =>
             {
-                ProductStock stock = productFacades.operations.GetProductStockWithPublicKey(parameter.Data);
+                ProductStock stock = productFacades.operations.GetProductStockWithPublicKey(parameter.Data.PublicKey.ToString());
                 productFacades.operations.RemoveEntity(stock);
                 requestResult.Result = EnumRequestResult.Ok;
                 requestResult.Description = "DeleteStock operations Success";
@@ -97,13 +97,13 @@ namespace Colosus.Server.Controllers
         }
 
         [HttpPost]
-        public RequestResult<List<ProductDTO>> GetMyFirmProducts([FromBody] RequestParameter<string> parameter)
+        public RequestResult<List<ProductDTO>> GetMyFirmProducts([FromBody] RequestParameter<PublicKeyRequestModel> parameter)
         {
             RequestResult<List<ProductDTO>> requestResult = new("GetMyFirmProducts");
 
             productFacades.operationRunner.ActionRunner(() =>
             {
-                Firm myFirm = productFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data);
+                Firm myFirm = productFacades.operations.GetMyFirmWithFirmPublicKey(parameter.Data.PublicKey.ToString());
                 List<ProductDTO> prods = productFacades.operations.GetMyFirmProductDTOs(myFirm.PrivateKey);
                 requestResult.Data = prods;
                 requestResult.Result = EnumRequestResult.Ok;
@@ -121,7 +121,7 @@ namespace Colosus.Server.Controllers
 
 
         [HttpPost]
-        public RequestResult<List<ProductStockDTO>> GetStockHistoryDTO([FromBody] RequestParameter<string> parameter)
+        public RequestResult<List<ProductStockDTO>> GetStockHistoryDTO([FromBody] RequestParameter<PublicKeyRequestModel> parameter)
         {
             RequestResult<List<ProductStockDTO>> requestResult = new("GetStockHistoryDTO");
 
@@ -129,7 +129,7 @@ namespace Colosus.Server.Controllers
             {
 
                 List<ProductStockDTO> returnedList = new();
-                returnedList = productFacades.operations.GetProductStockHistoryDTOs(parameter.Data);
+                returnedList = productFacades.operations.GetProductStockHistoryDTOs(parameter.Data.PublicKey.ToString());
                 requestResult.Result = EnumRequestResult.Ok;
                 requestResult.Data = returnedList;
                 requestResult.Description = "Success";
@@ -183,12 +183,12 @@ namespace Colosus.Server.Controllers
         }
 
         [HttpPost]
-        public RequestResult DeleteProduct([FromBody] RequestParameter<string> parameter)
+        public RequestResult DeleteProduct([FromBody] RequestParameter<PublicKeyRequestModel> parameter)
         {
             RequestResult requestResult = new("DeleteProduct");
             productFacades.operationRunner.ActionRunner(() =>
             {
-                Product prod = productFacades.operations.GetMyProduct(parameter.Data);
+                Product prod = productFacades.operations.GetMyProduct(parameter.Data.PublicKey.ToString());
                 List<ProductStock> stocks = productFacades.operations.GetProductStocks(prod.PrivateKey);
                 productFacades.operations.RemoveEntity(prod);
                 stocks.ForEach(xd => productFacades.operations.RemoveEntity(xd));

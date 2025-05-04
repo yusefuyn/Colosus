@@ -58,5 +58,6 @@ namespace Colosus.Business.Abstracts
         CustomersDTO GetMyFirmCustomersForFastOps(string privateKey);
         ICustomer GetMyFirmCustomerWithCustomerKey(string CustomerKey);
         List<ICustomer> GetMyFirmSaleCustomersWithFirmPrivateKey(string privateKey);
+        ICustomer GetMyFirmCustomersWithPublicKey(string customerPublicKey);
     }
 }

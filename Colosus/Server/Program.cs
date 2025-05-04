@@ -51,7 +51,7 @@ builder.Services.AddScoped<IMapping, BasicMapping>();
 builder.Services.AddScoped<IGuid, Colosus.Operations.Concretes.Guid>();
 builder.Services.AddScoped<IOperations, Operations>((e) => {
     IGuid guidService = e.GetRequiredService<IGuid>();
-    Operations returnedOperations = new(guidService);
+    Operations returnedOperations = new();
     returnedOperations.AddDbSettings(dbSettingsSection);
     return returnedOperations;
 });

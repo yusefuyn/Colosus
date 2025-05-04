@@ -18,19 +18,19 @@ namespace Colosus.Client.Blazor.Services.Product
             await httpClientService.GetPostAsync(GetAddress("AddProduct"), product);
 
         public async Task<RequestResult<List<ProductDTO>>> GetMyFirmProductDTOs(string FirmPublicKey) =>
-            await httpClientService.GetPostAsync<List<ProductDTO>, string>(GetAddress("GetMyFirmProducts"), FirmPublicKey);
+            await httpClientService.GetPostAsync<List<ProductDTO>, PublicKeyRequestModel>(GetAddress("GetMyFirmProducts"), new PublicKeyRequestModel() { PublicKey = FirmPublicKey });
 
         public async Task<RequestResult<ProductDTO>> AddStockForProduct(StockCreateModel product) =>
             await httpClientService.GetPostAsync<ProductDTO, StockCreateModel>(GetAddress("AddStockForProduct"), product);
 
         public async Task<RequestResult<List<ProductStockDTO>>> GetStockHistoryDTO(string ProductPublicKey) =>
-            await httpClientService.GetPostAsync<List<ProductStockDTO>, string>(GetAddress("GetStockHistoryDTO"), ProductPublicKey);
+            await httpClientService.GetPostAsync<List<ProductStockDTO>, PublicKeyRequestModel>(GetAddress("GetStockHistoryDTO"), new PublicKeyRequestModel() { PublicKey = ProductPublicKey });
 
         public async Task<RequestResult> DeleteProduct(string ProductPublicKey) =>
-            await httpClientService.GetPostAsync(GetAddress("DeleteProduct"), new { PublicKey = ProductPublicKey });
+            await httpClientService.GetPostAsync(GetAddress("DeleteProduct"), new PublicKeyRequestModel() { PublicKey = ProductPublicKey });
 
         public async Task<RequestResult> DeleteStock(string StockPublicKey)
-           => await httpClientService.GetPostAsync(GetAddress("DeleteStock"), new { PublicKey = StockPublicKey });
+           => await httpClientService.GetPostAsync(GetAddress("DeleteStock"), new PublicKeyRequestModel() { PublicKey = StockPublicKey });
 
     }
 }

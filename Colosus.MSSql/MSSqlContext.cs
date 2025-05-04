@@ -39,6 +39,7 @@ namespace Colosus.Sql.MSSql
         public DbSet<FirmUserRelation> FirmUserRelations { get; set; }
         public DbSet<UserRoleRelations> UserRoleRelations { get; set; }
         public DbSet<PaymentAddress> PaymentAddresseses { get; set; }
+        public DbSet<Sale> Sales { get; set; }
 
         private readonly string _connectionString;
 

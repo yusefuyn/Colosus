@@ -40,6 +40,8 @@ namespace Colosus.Sql.SQLite
         public DbSet<FirmRole> FirmRoles { get; set; }
         public DbSet<FirmUserRelation> FirmUserRelations { get; set; }
         public DbSet<ProductStock> Stocks { get; set; }
+        public DbSet<Sale> Sales { get; set; }
+
 
         private readonly string _connectionString;
 
