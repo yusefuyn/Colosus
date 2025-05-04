@@ -5,7 +5,7 @@ namespace Colosus.Server.Facades.Product
 {
     public class ProductFacades : IProductFacades
     {
-        public ProductFacades(IDataConverter dataConverter, IOperationRunner operationRunner, IGuid guid, IOperations operations)
+        public ProductFacades(IDataConverter dataConverter, IOperationRunner operationRunner, IGuid guid, IDatabaseOperations operations)
         {
             this.dataConverter = dataConverter;
             this.operationRunner = operationRunner;
@@ -16,6 +16,6 @@ namespace Colosus.Server.Facades.Product
         public IDataConverter dataConverter { get; set; }
         public IOperationRunner operationRunner { get; set; }
         public IGuid guid { get; set; }
-        public IOperations operations { get; set; }
+        public IDatabaseOperations operations { get; set; }
     }
 }

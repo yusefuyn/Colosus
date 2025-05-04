@@ -3,6 +3,7 @@
 @using Colosus.Client.Blazor.Components
 @using Colosus.Client.Blazor.Services.Login
 @using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.CreateModel
 @using Colosus.Entity.Concretes.DatabaseModel
 @using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
@@ -25,13 +26,17 @@
     </div>
 </div>
 @code {
-    User user = new();
+    RegisterCreateModel user = new();
     string Passwd = "";
     string PasswdR = "";
 
     public async Task RegisterOp()
     {
-        if (string.IsNullOrEmpty(user.EMail) || string.IsNullOrEmpty(user.UserName) || string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName) || string.IsNullOrEmpty(Passwd))
+        if (string.IsNullOrEmpty(user.EMail) ||
+        string.IsNullOrEmpty(user.UserName) ||
+        string.IsNullOrEmpty(user.FirstName) ||
+        string.IsNullOrEmpty(user.LastName) ||
+        string.IsNullOrEmpty(Passwd))
         {
             AppState.AddMessage("Herhangi bir boş olan bırakılamaz.");
             return;
@@ -44,6 +49,7 @@
         }
 
         user.Password = hash.Calc(Passwd);
+        user.PasswdHashed = true;
         var res = await loginService.RegisterAsync(user);
 
         AppState.AddMessage(res.Description);

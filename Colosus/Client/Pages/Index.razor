@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Colosus.Client.Blazor.Services.Firm
 @using Colosus.Entity.Concretes
+@using Colosus.Entity.Concretes.DTO
 @using Colosus.Entity.Concretes.DatabaseModel
 @using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
@@ -13,7 +14,9 @@
         @if (source != null && source.Count == 0)
         {
             <div class="center-container">
-                <a class="special-button" style="font-size:22px;" href="/Firm/Add">Hiç firmanız yok tıklayın oluşturun.</a>
+                <h5>Hiç firmanız yok</h5>
+                <a class="special-button" style="font-size:22px;" href="/Firm/Add">Tıklayın yeni oluşturun.</a>
+                <a class="special-button" style="font-size:22px;" href="/Firm/Join">Tıklayın birine katılın.</a>
             </div>
         }
         else if (source != null && source.Count > 0)
@@ -23,7 +26,7 @@
                 <h3 class="text-center mb-5">İşlem yapmak istediğiniz firmayı seçiniz.</h3>
 
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4 justify-content-center">
-                    @foreach (Colosus.Entity.Concretes.DatabaseModel.Firm item in source)
+                    @foreach (var item in source)
                     {
                         string background = "transparent";
                         if (AppState.SelectedFirmPublicKey == item.PublicKey)
@@ -63,7 +66,7 @@
 </AuthorizeView>
 
 @code {
-    List<Entity.Concretes.DatabaseModel.Firm> source = null;
+    List<FirmDTO> source = null;
 
     protected async override Task OnInitializedAsync()
     {
@@ -80,7 +83,7 @@
         StateHasChanged();
     }
 
-    private void ChangeSelectedFirm(Entity.Concretes.DatabaseModel.Firm selectedFirm)
+    private void ChangeSelectedFirm(FirmDTO selectedFirm)
     {
         AppState.SelectedFirmName = selectedFirm.Name;
         AppState.SelectedFirmPublicKey = selectedFirm.PublicKey;

@@ -1,5 +1,3 @@
-
-using Colosus.Business;
 using Colosus.Business.Abstracts;
 using Colosus.Business.Concretes;
 using Colosus.Operations.Abstracts;
@@ -12,6 +10,7 @@ using Colosus.Server.Facades.Login;
 using Colosus.Server.Facades.Pos;
 using Colosus.Server.Facades.Product;
 using Colosus.Server.Facades.Setting;
+using Colosus.Server.Hubs;
 using Colosus.Server.Services.Token;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +24,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSwaggerGen();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
@@ -49,9 +49,9 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IDataConverter, Json>();
 builder.Services.AddScoped<IMapping, BasicMapping>();
 builder.Services.AddScoped<IGuid, Colosus.Operations.Concretes.Guid>();
-builder.Services.AddScoped<IOperations, Operations>((e) => {
+builder.Services.AddScoped<IDatabaseOperations, DatabaseOperations>((e) => {
     IGuid guidService = e.GetRequiredService<IGuid>();
-    Operations returnedOperations = new();
+    DatabaseOperations returnedOperations = new();
     returnedOperations.AddDbSettings(dbSettingsSection);
     return returnedOperations;
 });
@@ -107,10 +107,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseCors(); // Sunumdan sonra kapat
 
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
+
+app.MapHub<SaleHub>("/salehub");
 
 app.Run();

@@ -13,6 +13,9 @@ namespace Colosus.Entity.Concretes.DatabaseModel
         [Key]
         public int Key { get; set;  }
         public string PrivateKey { get; set;  }
+        /// <summary>
+        /// İç paylaşım anahtarı
+        /// </summary>
         public string PublicKey { get; set;  }
         public string Name { get; set; }
         /// <summary>

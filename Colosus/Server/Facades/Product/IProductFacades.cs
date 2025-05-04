@@ -8,7 +8,7 @@ namespace Colosus.Server.Facades.Product
         IDataConverter dataConverter { get; set; }
         IOperationRunner operationRunner { get; set; }
         IGuid guid { get; set; }
-        IOperations operations { get; set; }
+        IDatabaseOperations operations { get; set; }
 
     }
 }

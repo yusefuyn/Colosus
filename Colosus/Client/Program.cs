@@ -13,6 +13,8 @@ using Colosus.Client.Blazor.Services.Product;
 using Colosus.Client.Blazor.Services.Customer;
 using Colosus.Client.Blazor.Services.Settings;
 using Colosus.Client.Blazor.Services.Sale;
+using Colosus.Client.Blazor.Services.SignalR;
+using Microsoft.JSInterop;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<Colosus.Client.Blazor.App>("#app");
@@ -23,7 +25,13 @@ builder.Services.AddHttpClient("Colosus.ServerAPI", client => client.BaseAddress
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Colosus.ServerAPI"));
 builder.Services.AddScoped<IHash, Sha256HashAlg>();
-builder.Services.AddScoped<CookieService>();
+
+builder.Services.AddScoped(sp => { 
+    CookieService returned = new CookieService(sp.GetRequiredService<IJSRuntime>());
+    AppState.cookieService = returned;
+    return returned;
+});
+
 builder.Services.AddScoped<IDataConverter, Json>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -39,10 +47,10 @@ builder.Services.AddScoped(sp => {
 });
 builder.Services.AddScoped<HttpClientService>();
 
-
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddSingleton<PosPage>();
 
 await builder.Build().RunAsync();

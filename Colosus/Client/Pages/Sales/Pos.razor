@@ -1,54 +1,132 @@
 ﻿@page "/Sales/Pos/{musteriid}"
 @inject ISaleService saleService
 @inject IDataConverter dataConverter
+@using Colosus.Client.Blazor.Services
 @using Colosus.Client.Blazor.Services.Sale
+@using Colosus.Client.Blazor.Services.SignalR
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DTO
 @using Colosus.Entity.Concretes.RequestModel
 @using Colosus.Operations.Abstracts
+@inject PosPage posPageHub
 @if (posDTO != null)
 {
-    <div class="container h-100">
+    @* Ana Ekran *@
+    <div class="h-100 w-100 m-3">
+        @* Başlıklar *@
         <div class="row h-5">
-            <div class="col-4">
+            <div class="col-1" style="text-align:center;">
                 <h3>@posDTO.Customer.GetName()</h3>
             </div>
-            <div class="col-2">
+            <div class="col-3" style="text-align:center;">
+                <h3>
+                    Satılanlar
+                </h3>
+            </div>
+            <div class="col-2" style="text-align:center;">
                 <h3>Kategoriler</h3>
             </div>
-            <div class="col-6">
+            <div class="col-6" style="text-align:center;">
                 <h3>Ürünler</h3>
             </div>
         </div>
+        @* İç *Ürünler *Satılanlar *Operasyonlar vb *@
         <div class="row w-100 h-95">
+            @* Operasyon Tuşları *@
             <div class="col-1">
-                <button class="btn btn-info w-100">Grupla</button>
-                <button class="btn btn-info w-100">Ürün Sil</button>
-                <button class="btn btn-info w-100">Para Birimi</button>
+                <button class="btn btn-info w-100" style="margin:5px;">Grupla</button>
+                <button class="btn btn-info w-100" style="margin:5px;">Ürün Sil</button>
+                <button class="btn btn-info w-100" style="margin:5px;">Para Birimi</button>
             </div>
-            <div class="col-3 h-100">
-                <div class="row h-50">
-                    <p>satılanlar</p>
+            @* Satılanlar ve Ödeme Operasyonları *@
+            <div class="outer-wrapper col-3" style="height: 100%; max-height: 100%; overflow: hidden;">
+                @* Satılanlar ve satılacak olanlar *@
+                <div style="height: 400px; display: flex; flex-direction: column;border:none;">
+
+                    <!-- Scrollable ürün listesi -->
+                    <div style="flex: 1; overflow-y: auto; padding: 5px;">
+                        @if (posDTO.ProductsForSale != null && posDTO.ProductsForSale.Count > 0)
+                        {
+                            @foreach (var item in posDTO.ProductsForSale)
+                            {
+                                <div style="height:60px;margin:5px; background-color:var(--gray-dark); border-radius:5px;">
+                                    <div style="height:30px;text-align:center;">
+                                        <span style="font-size:20px;">@($"{item.ProductName,-10} ")</span>
+                                    </div>
+                                    @if (item.UserPublicKey == UserPublicKey)
+                                    {
+                                        <div style="height:30px;text-align:center;">
+                                            <button style="background-color:transparent; border:none;" @onclick="async ()=> await AddedProductAmountDecreaseForSale(item)">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                            <span>@($"{item.SalesAmount,-2} adet")</span>
+                                            <button style="background-color:transparent; border:none;" @onclick="async ()=> await AddedProductAmountIncreaseForSale(item)">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                            <button style="background-color:transparent; border:none;" @onclick="async ()=> await RemoveProductForSale(item)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                            <button style="background-color:transparent; color:White; border:none;" @onclick="async ()=> await ApplyDiscountForSaleProduct(item)">
+                                                @item.Discount <i class="fa fa-percent"></i>
+                                            </button>
+                                            <a style="background-color:transparent; color:White; border:none;">
+                                                @item.ProductPrice <i class="fa fa-try"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="height:30px;text-align:center;">
+                                        
+                                            <span>@($"{item.SalesAmount,-2} adet")</span>
+                                            <a style="background-color:transparent; color:White; border:none;">
+                                                @item.ProductPrice <i class="fa fa-try"></i>
+                                            </a>
+                                            <span>(@item.UserName)</span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <!-- Sabit kalan toplam satırı -->
+                    <div style="padding: 10px;  text-align: center;">
+                        @if (posDTO.ProductsForSale != null && posDTO.ProductsForSale.Count > 0)
+                        {
+                            <span class="me-3">Toplam Adet: @posDTO.ProductsForSale.Sum(xd => xd.SalesAmount)</span>
+                            <span>Toplam Fiyat: @posDTO.ProductsForSale.Sum(xd => xd.SalesAmount * xd.ProductPrice) <i class="fa fa-try"></i></span>
+                        }
+                    </div>
+
                 </div>
+
+
+                @* Ödeme Operasyonları *@
                 <div class="row h-50">
                     <p>ödeme ayars</p>
                 </div>
             </div>
+            @* Kategoriler *@
             <div class="col-2 h-100">
                 @if (posDTO.Categories != null && posDTO.Categories.Count > 0)
                 {
                     @foreach (var item in posDTO.Categories)
                     {
-                        <button style="margin:0px;" @onclick="()=>ListToProductWithSelectedCategory(item.PublicKey)" class="btn btn-success row w-100">@item.Name.ToString()</button>
+                        <button style="margin:5px;" @onclick="()=>ListToProductWithSelectedCategory(item.PublicKey)" class="btn btn-danger row w-100">@item.Name.ToString()</button>
                     }
                 }
             </div>
+            @* Ürün Listesi *@
             <div class="col-6 h-100">
                 @if (SelectedCategoryProducts != null && SelectedCategoryProducts.Count > 0)
                 {
                     @foreach (var item in SelectedCategoryProducts)
                     {
-                        <button style="margin:5px 0px;" class="btn btn-success col-12">@item.Name.ToString()</button>
+                        <button style="margin:5px;" @onclick="()=>AddProduct(item)" class="btn btn-success col-12">
+                            @($"{item.Name.ToString()} {item.SalePrice}")
+                            <i class="fa fa-try"></i>
+                        </button>
                     }
                 }
             </div>
@@ -58,7 +136,7 @@
 }
 @code {
     public PosDTO posDTO = null;
-
+    public string UserPublicKey { get; set; } = string.Empty;
     public List<ProductDTO> SelectedCategoryProducts { get; set; }
 
     [Parameter]
@@ -71,6 +149,71 @@
         {
             posDTO = result.Data;
             StateHasChanged();
+        }
+
+        posPageHub.OnProductsUpdated += (list) =>
+        {
+            posDTO.ProductsForSale = list;
+            InvokeAsync(StateHasChanged);
+        };
+
+        UserPublicKey = await AppState.GetUserPublicKey();
+        await posPageHub.ConnectAsync();
+    }
+
+    private async Task ApplyDiscountForSaleProduct(SaleRequestModel saleRequest)
+    {
+        //SignalR Discount tetiklenecek.
+    }
+
+    private async Task RemoveProductForSale(SaleRequestModel saleRequest)
+    {
+        posDTO.ProductsForSale.Remove(saleRequest);
+        await posPageHub.RemoveProduct(saleRequest.SaleRequestModelToken);
+    }
+
+    private async Task AddedProductAmountIncreaseForSale(SaleRequestModel saleRequest)
+    {
+        saleRequest.SalesAmount += 1;
+        await posPageHub.Increase(saleRequest.SaleRequestModelToken);
+    }
+
+    private async Task AddedProductAmountDecreaseForSale(SaleRequestModel saleRequest)
+    {
+        if (saleRequest.SalesAmount > 1)
+        {
+            saleRequest.SalesAmount -= 1;
+            await posPageHub.Decrease(saleRequest.SaleRequestModelToken);
+        }
+
+    }
+
+    private async Task AddProduct(ProductDTO product)
+    {
+        var dahaOnceEklenen = posDTO.ProductsForSale.FirstOrDefault(xd =>
+            xd.ProductPublicKey == product.PublicKey &&     // Aynı ürün sorugusı ve
+            xd.ProductPrice == product.SalePrice &&         // aynı fiyat sorugusu indirimli aynı ürün dahil edilmesin diye.
+            xd.UserPublicKey == UserPublicKey               // Bu kullanıcı tarafından eklenen ürünleri getirsin. Diğer kullanıcı isteği iptal ederse ekleme miktarı gider.
+        );
+        if (dahaOnceEklenen != null)
+        {
+            await AddedProductAmountIncreaseForSale(dahaOnceEklenen);
+        }
+        else
+        {
+            var addObj = new SaleRequestModel()
+                {
+                    CustomerPublicKey = "",
+                    FirmPublicKey = AppState.SelectedFirmPublicKey,
+                    UserPublicKey = UserPublicKey,
+                    UserName = await AppState.GetUserName(),
+                    ProductPublicKey = product.PublicKey,
+                    ProductName = product.Name,
+                    ProductPrice = product.SalePrice,
+                    SalesAmount = 1,
+                };
+            posDTO.ProductsForSale.Add(addObj);
+            await posPageHub.AddProduct(addObj);
         }
     }
 

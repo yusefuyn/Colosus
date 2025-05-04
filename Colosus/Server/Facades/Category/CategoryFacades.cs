@@ -5,7 +5,7 @@ namespace Colosus.Server.Facades.Category
 {
     public class CategoryFacades : ICategoryFacades
     {
-        public CategoryFacades(IDataConverter dataConverter, IHash hash, IOperations operations, IOperationRunner operationRunner, IGuid guid, IMapping mapping)
+        public CategoryFacades(IDataConverter dataConverter, IHash hash, IDatabaseOperations operations, IOperationRunner operationRunner, IGuid guid, IMapping mapping)
         {
             this.dataConverter = dataConverter;
             this.hash = hash;
@@ -17,7 +17,7 @@ namespace Colosus.Server.Facades.Category
 
         public IDataConverter dataConverter { get; set; }
         public IHash hash { get; set; }
-        public IOperations operations { get; set; }
+        public IDatabaseOperations operations { get; set; }
         public IOperationRunner operationRunner { get; set; }
         public IGuid guid { get; set; }
         public IMapping mapping { get; set; }

@@ -1,0 +1,27 @@
+﻿@page "/Firm/Join"
+@using Colosus.Client.Blazor.Components
+@using Colosus.Client.Blazor.Services.Firm
+@inject IFirmService firmService
+@inject NavigationManager navigationManager
+@inject IJSRuntime jsRuntime
+<div class="center-container">
+    <div style="width:400px;">
+        <Entry @bind-Text="FirmPubKey"
+        Type="Components.Entry.EntryTypeEnum.Text"
+        Placeholder="Katılınacak Firma Anahtarı"></Entry>
+        <Button Text="Katıl" OnClick="async()=> await JoinAFirm()"></Button>
+    </div>
+</div>
+
+@code {
+    public string FirmPubKey { get; set; } = "";
+    public async Task JoinAFirm()
+    {
+        var res = await firmService.JoinAFirm(FirmPubKey);
+        if (res.Ok())
+        {
+            AppState.AddMessage("Başarıyla katıldınız.");
+            navigationManager.NavigateTo("/");
+        }
+    }
+}

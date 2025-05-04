@@ -60,7 +60,9 @@
                         OnClick='()=> navigationManager.NavigateTo("/Firm/Index")'
                         Icon="fa fa-building"></Button>
 
-                <Label Class="header-right-button" Style="line-height: 3;">@AppState.SelectedFirmName</Label>
+                <Label Class="header-right-button" Style="line-height: 3;">
+                    <span>@AppState.SelectedFirmName</span>
+                </Label>
 
                 <Button OnClick='()=>navigationManager.NavigateTo("/Logout")'
                         Class="header-button"
@@ -71,11 +73,12 @@
             </Authorized>
         </AuthorizeView>
     </div>
-    <MessageBox></MessageBox>
-    <main class="content">
-        @Body
-    </main>
 </div>
+<MessageBox></MessageBox>
+<main class="content">
+    @Body
+</main>
+
 @code {
     protected override void OnInitialized()
     {

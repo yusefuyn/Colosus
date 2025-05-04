@@ -1,13 +1,60 @@
 ﻿@page "/Firm/Index"
+@using Colosus.Client.Blazor.Services.Firm
+@using Colosus.Entity.Concretes.DTO
 @inject NavigationManager navigationManager
+@inject IFirmService firmService
+@inject IJSRuntime jsRuntime
 <div class="container">
 
     <div class="container-header">
         <h3>Firmalarınız</h3>
         <Colosus.Client.Blazor.Components.Button Text="Ekle" OnClick='()=> navigationManager.NavigateTo("/Firm/Add")'></Colosus.Client.Blazor.Components.Button>
     </div>
-
+    @if (firms == null || firms.Count == 0)
+    {
+        <div class="empty-state">
+            <h4>Henüz bir firmanız yok.</h4>
+            <p>Yeni bir firma eklemek için yukarıdaki "Ekle" butonuna tıklayın.</p>
+        </div>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Firma Paylaşım Anahtarı</th>
+                    <th style="width:40%;">Firma Adı</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in firms)
+                {
+                    <tr>
+                        <td>
+                            <button @onclick="async ()=>await CopyMyFirmPublicKeyForClipboard(item)" style="width:100%;height:100%;border:none;background-color:transparent;color:var(--font-color);">
+                                @item.PublicKey
+                            </button>
+                        </td>
+                        <td>@item.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
 @code {
 
+    private List<FirmDTO> firms = new List<FirmDTO>();
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await firmService.GetMyFirmAsync();
+        if (result.Ok())
+            firms = result.Data;
+    }
+
+    private async Task CopyMyFirmPublicKeyForClipboard(FirmDTO firm)
+    {
+        var res = await jsRuntime.InvokeAsync<bool>("copyTextToClipboard", firm.PublicKey);
+        AppState.AddMessage("Firma paylaşım anahtarınız kopyalandı.");
+    }
 }

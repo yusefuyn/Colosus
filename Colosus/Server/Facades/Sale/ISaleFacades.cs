@@ -7,7 +7,7 @@ namespace Colosus.Server.Facades.Pos
     {
 
         IDataConverter dataConverter { get; set; }
-        IOperations operations { get; set; }
+        IDatabaseOperations operations { get; set; }
         IGuid guid { get; set; }
         IOperationRunner operationRunner { get; set; }
         IMapping mapping { get; set; }

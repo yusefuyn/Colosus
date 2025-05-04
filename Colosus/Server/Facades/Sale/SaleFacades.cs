@@ -5,7 +5,7 @@ namespace Colosus.Server.Facades.Pos
 {
     public class SaleFacades : ISaleFacades
     {
-        public SaleFacades(IDataConverter dataConverter, IOperations operations, IGuid guid, IOperationRunner operationRunner, IMapping mapping)
+        public SaleFacades(IDataConverter dataConverter, IDatabaseOperations operations, IGuid guid, IOperationRunner operationRunner, IMapping mapping)
         {
             this.dataConverter = dataConverter;
             this.operations = operations;
@@ -15,7 +15,7 @@ namespace Colosus.Server.Facades.Pos
         }
 
         public IDataConverter dataConverter { get;set;}
-        public IOperations operations { get;set;}
+        public IDatabaseOperations operations { get;set;}
         public IGuid guid { get;set;}
         public IOperationRunner operationRunner {get;set; }
         public IMapping mapping { get; set; }

@@ -6,7 +6,7 @@ namespace Colosus.Server.Facades.Setting
 {
     public class SettingFacades : ISettingFacades
     {
-        public SettingFacades(IDataConverter dataConverter, IOperations operations, IOperationRunner operationRunner, ITokenService tokenService, IGuid guid, IMapping mapping)
+        public SettingFacades(IDataConverter dataConverter, IDatabaseOperations operations, IOperationRunner operationRunner, ITokenService tokenService, IGuid guid, IMapping mapping)
         {
             this.dataConverter = dataConverter;
             this.operations = operations;
@@ -17,7 +17,7 @@ namespace Colosus.Server.Facades.Setting
         }
 
         public IDataConverter dataConverter {get;set; }
-        public IOperations operations {get;set; }
+        public IDatabaseOperations operations {get;set; }
         public IOperationRunner operationRunner {get;set; }
         public ITokenService tokenService {get;set; }
         public IGuid guid {get;set; }

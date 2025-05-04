@@ -7,7 +7,7 @@ namespace Colosus.Server.Facades.Setting
     public interface ISettingFacades
     {
         public IDataConverter dataConverter { get; set; }
-        public IOperations operations { get; set; }
+        public IDatabaseOperations operations { get; set; }
         public IOperationRunner operationRunner { get; set; }
         public ITokenService tokenService { get; set; }
         public IGuid guid { get; set; }

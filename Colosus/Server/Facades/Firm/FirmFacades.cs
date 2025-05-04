@@ -5,7 +5,7 @@ namespace Colosus.Server.Facades.Firm
 {
     public class FirmFacades : IFirmFacades
     {
-        public FirmFacades(IDataConverter dataConverter, IOperations operations, IOperationRunner operationRunner, IGuid guid)
+        public FirmFacades(IDataConverter dataConverter, IDatabaseOperations operations, IOperationRunner operationRunner, IGuid guid)
         {
             this.dataConverter = dataConverter;
             this.operations = operations;
@@ -14,7 +14,7 @@ namespace Colosus.Server.Facades.Firm
         }
 
         public IDataConverter dataConverter { get;set; }
-        public IOperations operations { get;set; }
+        public IDatabaseOperations operations { get;set; }
         public IOperationRunner operationRunner { get;set; }
         public IGuid guid { get;set; }
     }

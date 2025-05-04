@@ -17,11 +17,11 @@
     </div>
     <div style="max-width:400px">
         <Colosus.Client.Blazor.Components.Entry @bind-Text="user.UserName"
-                                         Type="Components.Entry.EntryTypeEnum.Text"
-                                         Placeholder="Kullanıcı Adı"></Colosus.Client.Blazor.Components.Entry>
+                                                Type="Components.Entry.EntryTypeEnum.Text"
+                                                Placeholder="Kullanıcı Adı"></Colosus.Client.Blazor.Components.Entry>
         <Colosus.Client.Blazor.Components.Entry @bind-Text="user.Password"
-                                         Type="Components.Entry.EntryTypeEnum.Password"
-                                         Placeholder="Şifre"></Colosus.Client.Blazor.Components.Entry>
+                                                Type="Components.Entry.EntryTypeEnum.Password"
+                                                Placeholder="Şifre"></Colosus.Client.Blazor.Components.Entry>
         <Colosus.Client.Blazor.Components.Label>Hesabınız mı yok?<a href="/Register">Hemen Oluşturun</a></Colosus.Client.Blazor.Components.Label>
         <Colosus.Client.Blazor.Components.Button Text="Giriş yap" OnClick="async()=>await LoginOpAsync()"></Colosus.Client.Blazor.Components.Button>
     </div>
@@ -35,9 +35,11 @@
         var result = await loginService.LoginAsync(user.UserName, PassHash);
         if (result.Result == EnumRequestResult.Ok)
         {
-            await cookieService.SetCookie("Token", result.Data, 120);
+            await AppState.SetUserPublicKey(result.Data.UserPublicKey);
+            await AppState.SetToken(result.Data.Token);
+            await AppState.SetUserName(user.UserName);
             navigationManager.NavigateTo("/");
-            navigationManager.Refresh(false);
+            navigationManager.Refresh();
             StateHasChanged();
         }
         AppState.AddMessage(result.Description);

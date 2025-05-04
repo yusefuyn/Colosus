@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Colosus.Business.Operations;
+using static Colosus.Business.Concretes.DatabaseOperations;
 
 namespace Colosus.Business.Abstracts
 {
-    public interface IOperations
+    public interface IDatabaseOperations
     {
 
         public bool DatabaseUpdate();
@@ -24,7 +24,7 @@ namespace Colosus.Business.Abstracts
         ProductDTO GetMyProductDTOs(string privateKey);
         List<ProductStockDTO> GetProductStockHistoryDTOs(string productPublicKey);
         List<ProductStock> GetProductStocks(string privateKey);
-        List<Firm> GetsMyFirms(string UserPrivateKey);
+        List<FirmDTO> GetsMyFirms(string UserPrivateKey);
         public User GetUser(string userName, string password);
         List<Role> GetUserRole(string privateKey);
         void RemoveEntity(object entity);
