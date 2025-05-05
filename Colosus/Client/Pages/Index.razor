@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Colosus.Client.Blazor.Components
 @using Colosus.Client.Blazor.Services.Firm
 @using Colosus.Entity.Concretes
 @using Colosus.Entity.Concretes.DTO
@@ -10,82 +11,106 @@
 @using Microsoft.AspNetCore.Components.Authorization
 
 <AuthorizeView>
-    <Authorized>
-        @if (source != null && source.Count == 0)
-        {
-            <div class="center-container">
-                <h5>Hiç firmanız yok</h5>
-                <a class="special-button" style="font-size:22px;" href="/Firm/Add">Tıklayın yeni oluşturun.</a>
-                <a class="special-button" style="font-size:22px;" href="/Firm/Join">Tıklayın birine katılın.</a>
-            </div>
-        }
-        else if (source != null && source.Count > 0)
-        {
+	<Authorized>
+		@if (source != null && source.Count == 0)
+		{
+			<div class="center-container">
+				<h5>Hiç firmanız yok</h5>
+				<a class="special-button" style="font-size:22px;" href="/Firm/Add">Tıklayın yeni oluşturun.</a>
+				<a class="special-button" style="font-size:22px;" href="/Firm/Join">Tıklayın birine katılın.</a>
+			</div>
+		}
+		else if (source != null && source.Count > 0)
+		{
 
-            <div class="container py-5">
-                <h3 class="text-center mb-5">İşlem yapmak istediğiniz firmayı seçiniz.</h3>
+			<div class="container py-5">
+				<h3 class="text-center mb-5">İşlem yapmak istediğiniz firmayı seçiniz.</h3>
 
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4 justify-content-center">
-                    @foreach (var item in source)
-                    {
-                        string background = "transparent";
-                        if (AppState.SelectedFirmPublicKey == item.PublicKey)
-                            background = "#00000063";
+				<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4 justify-content-center">
+					@foreach (var item in source)
+					{
+						string background = "transparent";
+						if (AppState.SelectedFirmPublicKey == item.PublicKey)
+							background = "#00000063";
 
-                        <div class="col-4">
-                            <Colosus.Client.Blazor.Components.Button Style="@($"background:{background};")" OnClick="()=> ChangeSelectedFirm(item)">
-                                <div class="card h-100 shadow-sm company-card" style="background:transparent;">
-                                    <div class="card-img-container">
-                                        <img src="companies.png" class="card-img-top rounded-top" alt="@item.Name logo">
-                                    </div>
-                                    <div class="card-footer bg-transparent border-top-0">
-                                        <h5 style="color: var(--font-color);" class="card-title mb-0 text-center fw-bold">@item.Name</h5>
-                                    </div>
-                                </div>
-                            </Colosus.Client.Blazor.Components.Button>
-                        </div>
-                    }
-                </div>
-            </div>
+						<div class="col-4">
+							<Colosus.Client.Blazor.Components.Button Style="@($"background:{background};")" OnClick="()=> ChangeSelectedFirm(item)">
+								<div class="card h-100 shadow-sm company-card" style="background:transparent;">
+									<div class="card-img-container">
+										<img src="companies.png" class="card-img-top rounded-top" alt="@item.Name logo">
+									</div>
+									<div class="card-footer bg-transparent border-top-0">
+										<h5 style="color: var(--font-color);" class="card-title mb-0 text-center fw-bold">@item.Name</h5>
+									</div>
+								</div>
+							</Colosus.Client.Blazor.Components.Button>
+						</div>
+					}
+				</div>
+			</div>
 
 
 
-        }
-    </Authorized>
+		}
+	</Authorized>
 
-    <NotAuthorized>
-        <div class="container">
-            <h3>Firma Bazında</h3>
-            <h4>⭐ Envanter Yönetim</h4>
-            <h4>⭐ Cari Yönetim</h4>
-            <h4>⭐ Satış</h4>
-            <h4>⭐ Personel İş Akış Kaydı ve Çalışma Programı</h4>
-            <h4>⭐ Swaager ile Açık Api Alt Yapısı</h4>
-        </div>
-    </NotAuthorized>
+	<NotAuthorized>
+		<div class="container">
+			<h3>Firma Bazında</h3>
+			<h4>⭐ Envanter Yönetim</h4>
+			<h4>⭐ Cari Yönetim</h4>
+			<h4>⭐ Satış</h4>
+			<h4>⭐ Personel İş Akış Kaydı ve Çalışma Programı</h4>
+			<h4>⭐ Swaager ile Açık Api Alt Yapısı</h4>
+			<div class="row">
+				<Colosus.Client.Blazor.Components.Table Title="Test"
+														Columns="tableColumns"
+														PageCount="8"
+														Source="source"
+														SourceCount="20">
+				</Colosus.Client.Blazor.Components.Table>
+			</div>
+		</div>
+	</NotAuthorized>
 </AuthorizeView>
 
+
 @code {
-    List<FirmDTO> source = null;
 
-    protected async override Task OnInitializedAsync()
-    {
-        await RefreshData();
-    }
+	List<TableColumn> tableColumns = new() {
+		new TableColumn() { IsVisible = true, PropertyName = "PublicKey", VisibleName = "Paylaşım Anahtarı", Width = 10 },
+		new TableColumn() { IsVisible = true, PropertyName = "Name", VisibleName = "Adı", Width = 10 },
+	};
 
-    public async Task RefreshData()
-    {
-        source = new();
-        var result = await firmService.GetMyFirmAsync();
-        if (result == null || !result.Ok())
-            await RefreshData();
-        source.AddRange(result.Data);
-        StateHasChanged();
-    }
 
-    private void ChangeSelectedFirm(FirmDTO selectedFirm)
-    {
-        AppState.SelectedFirmName = selectedFirm.Name;
-        AppState.SelectedFirmPublicKey = selectedFirm.PublicKey;
-    }
+	List<FirmDTO> source = new List<FirmDTO>() {
+		new() { Name = "Test1", PublicKey ="PB1" },
+		new() { Name = "Test2", PublicKey ="PB2" },
+		new() { Name = "Test3", PublicKey ="PB3" },
+		new() { Name = "Test4", PublicKey ="PB4" },
+		new() { Name = "Test5", PublicKey ="PB5" },
+		new() { Name = "Test6", PublicKey ="PB6" },
+
+	};
+
+	protected async override Task OnInitializedAsync()
+	{
+		// await RefreshData();
+	}
+
+	public async Task RefreshData()
+	{
+		source = new();
+		var result = await firmService.GetMyFirmAsync();
+		if (result == null || !result.Ok())
+			await RefreshData();
+		source.AddRange(result.Data);
+		StateHasChanged();
+	}
+
+	private void ChangeSelectedFirm(FirmDTO selectedFirm)
+	{
+		AppState.SelectedFirmName = selectedFirm.Name;
+		AppState.SelectedFirmPublicKey = selectedFirm.PublicKey;
+	}
 }

@@ -1,0 +1,120 @@
+﻿@typeparam T
+
+<style>
+	.dark-table {
+		width: 100%;
+		border-collapse: collapse;
+		background-color: #213a30;
+		color: #e0e0e0;
+		font-family: 'Segoe UI', sans-serif;
+		border: 1px solid #3c5e52;
+		background-color: rgba(33, 58, 48, 0.6);
+		border-radius: 8px;
+		overflow: hidden;
+	}
+
+	th, td, tr {
+		height: 40px;
+	}
+
+	.dark-table th {
+		background-color: #2e5145;
+		color: #ffffff;
+		padding: 10px;
+		text-align: left;
+		border: 1px solid #3c5e52;
+	}
+
+	.dark-table td {
+		padding: 10px;
+		border: 1px solid #3c5e52;
+	}
+
+	.dark-table tr:nth-child(even) {
+		background-color: #29453b;
+	}
+
+	.dark-table tr:hover {
+		background-color: #356a5b;
+		transition: background-color 0.2s ease-in-out;
+	}
+
+	.nav-button {
+		height: 40px;
+		width: 40px;
+		color: White;
+		margin: 2px;
+		border: none;
+		background-color: transparent;
+	}
+</style>
+
+<div class="container">
+	<div class="container-header">
+		<h3>@Title</h3>
+	</div>
+
+	<table class="dark-table">
+		<thead>
+			<tr>
+				@foreach (var item in Columns.Where(xd => xd.IsVisible))
+				{
+					<th>@item.VisibleName</th>
+				}
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Source)
+			{
+				<tr>
+					@foreach (var column in VisibleColumn)
+					{
+						<td>@item.GetType().GetProperty(column.PropertyName)?.GetValue(item)</td>
+					}
+				</tr>
+			}
+			@for (int i = 0; i < BosSatirMiktari(); i++)
+			{
+				<tr>
+					<td colspan="@VisibleColumn.Count()"></td>
+				</tr>
+			}
+		</tbody>
+		@if (NextPageButtonsVisible)
+		{
+			<tfoot>
+				<tr>
+					<td colspan="@VisibleColumn.Count()">
+						<button class="nav-button">◀</button>
+						@for (int i = 0; i < PageCount; i++)
+						{
+							<button class="nav-button">@i.ToString()</button>
+						}
+						<button class="nav-button">▶</button>
+					</td>
+				</tr>
+			</tfoot>
+		}
+	</table>
+</div>
+@code {
+
+	private List<TableColumn> VisibleColumn { get; set; }
+
+	[Parameter] public List<T> Source { get; set; }
+	[Parameter] public string Title { get; set; }
+	[Parameter] public List<TableColumn> Columns { get; set; }
+	[Parameter] public int PageCount { get; set; } = 0;
+	[Parameter] public int SourceCount { get; set; } = 20;
+	[Parameter] public bool NextPageButtonsVisible { get; set; } = true;
+
+	protected override void OnInitialized()
+	{
+		VisibleColumn = Columns.Where(xd => xd.IsVisible).ToList();
+	}
+
+	public int BosSatirMiktari()
+	{
+		return SourceCount - Source.Count();
+	}
+}
