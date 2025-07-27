@@ -1,3 +1,5 @@
+Bu proje Asp.net backend blazor frontend kullanmaktadır db seçimi ise esnektir hızlı taşınabilirliği sebebiyle şu anda aktif olarak sqlite kullanmaktadır.
+
 Gelişmiş Cari Yönetimi, Stok Takibi, Müşteri Yönetimi ve Satış Yönetimi özellikleriyle işletmenizin her adımını kolaylaştıran güçlü bir çözüm geliştiriyorum. Çoklu firma desteği ile, her işletmenin ihtiyaçlarına özel esneklik ve kontrol sağlayan bu uygulama, tüm iş süreçlerinizi dijital ortamda yönetmenizi sağlıyor.
 
 Başlıca Özellikler:
