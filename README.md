@@ -25,4 +25,4 @@ Teknolojik Altyapı:
 Uygulamanız, SQLite ve MSSQL veritabanları ile güvenli ve hızlı veri yönetimi sunar. Ayrıca, Entity Framework Core kullanarak veritabanı migrasyonlarını kolayca gerçekleştirir, verilerinizi her zaman güncel tutar. Bu modern altyapı, uygulamanızın ölçeklenebilir ve sürdürülebilir olmasını sağlar.
 
 
-https://colosus.yussefuynstein.com/
+http://colosus.yussefuynstein.com/
